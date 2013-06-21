@@ -1,0 +1,10 @@
+{
+  "name": "Yatta",
+  "version": "0.1.2",
+  "main": "yatta/start.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}
