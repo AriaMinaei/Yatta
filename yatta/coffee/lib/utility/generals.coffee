@@ -34,4 +34,5 @@ define ->
 
 		classReference
 
+	if typeof window isnt 'undefined' then global = window
 	global.implementing = implementing

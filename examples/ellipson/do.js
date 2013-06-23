@@ -15,6 +15,8 @@ var makeCircle = function(i){
 	// Make a new Ellipse(width, height)
 	var c1 = new Ellipse(40, 40);
 
+	c1.setScaleAll(0.75);
+
 	// Fill it with a random RGB color
 	c1.fillWith(190, rand(100, 200), rand(90, 240));
 
@@ -43,11 +45,21 @@ var makeCircle = function(i){
 		c2.setMovementY((radius - 40) * sin(PI * 2 / count * i + 2) + cY);
 		c2.setScaleAll(0.5);
 
-		// Another clone
+		// // Another clone
 		var c3 = c1.clone();
-		c3.setMovementX((radius + 40) * cos(PI * 2 / count * i + 2) + cX);
-		c3.setMovementY((radius + 40) * sin(PI * 2 / count * i + 2) + cY);
+		c3.setMovementX((radius + 40) * cos(PI * 2 / count * i + 3) + cX);
+		c3.setMovementY((radius + 40) * sin(PI * 2 / count * i + 3) + cY);
 		c3.setScaleAll(0.5);
+
+		var c4 = c1.clone();
+		c4.setMovementX((radius - 80) * cos(PI * 2 / count * i + 4) + cX);
+		c4.setMovementY((radius - 80) * sin(PI * 2 / count * i + 4) + cY);
+		c4.setScaleAll(0.25);
+
+		var c5 = c1.clone();
+		c5.setMovementX((radius + 80) * cos(PI * 2 / count * i + 5) + cX);
+		c5.setMovementY((radius + 80) * sin(PI * 2 / count * i + 5) + cY);
+		c5.setScaleAll(0.25);
 
 	});
 }
@@ -59,5 +71,11 @@ for (i = 0; i <= count; i++) {
 
 // Change BG color in one second
 wait(1000, function(){
-	display.setBgColor(150, 150, 150);
+	display.setBgColor(250, 150, 150);
 });
+
+d = new Ellipse(50)
+
+d.wait(1000).moveX(1000)
+
+d.fillWith(100, 100, 100)

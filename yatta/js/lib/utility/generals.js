@@ -6,7 +6,7 @@ if (typeof define !== 'function') {
 }
 
 define(function() {
-  var implementing;
+  var global, implementing;
 
   Function.prototype.define = function(prop, desc) {
     return Object.defineProperty(this.prototype, prop, desc);
@@ -33,5 +33,8 @@ define(function() {
     }
     return classReference;
   };
+  if (typeof window !== 'undefined') {
+    global = window;
+  }
   return global.implementing = implementing;
 });
