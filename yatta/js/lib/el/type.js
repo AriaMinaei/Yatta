@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['./el', '../tools'], function(El, tools) {
+define(['./el', './type/_letter', '../tools'], function(El, _Letter, tools) {
   var Type;
 
   return Type = (function(_super) {
@@ -16,6 +16,7 @@ define(['./el', '../tools'], function(El, tools) {
       node = document.createElement('div');
       node.classList.add('type');
       Type.__super__.constructor.call(this, node);
+      this._letters = [];
       this.setText(text);
       this.setSize();
       this.setColor();
@@ -29,7 +30,26 @@ define(['./el', '../tools'], function(El, tools) {
     });
 
     Type.prototype._applyText = function() {
-      this.node.innerHTML = this._text;
+      var i, l, letter, lettersToApply, newLetter, _i, _len;
+
+      lettersToApply = this._text.split('');
+      for (i = _i = 0, _len = lettersToApply.length; _i < _len; i = ++_i) {
+        l = lettersToApply[i];
+        if (this._letters[i] != null) {
+          this._letters[i].setLetter(l);
+        } else {
+          newLetter = new _Letter(l);
+          newLetter.putIn(this);
+          this._letters.push(newLetter);
+        }
+      }
+      while (true) {
+        if (this._letters.length <= i) {
+          break;
+        }
+        letter = this._letters.pop();
+        letter.remove();
+      }
       return this;
     };
 

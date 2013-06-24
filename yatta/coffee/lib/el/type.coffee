@@ -1,4 +1,4 @@
-define ['./el', '../tools'], (El, tools) ->
+define ['./el', './type/_letter', '../tools'], (El, _Letter, tools) ->
 
 	class Type extends El
 
@@ -8,6 +8,8 @@ define ['./el', '../tools'], (El, tools) ->
 			node.classList.add 'type'
 
 			super node
+
+			@_letters = []
 
 			@setText text
 
@@ -27,7 +29,29 @@ define ['./el', '../tools'], (El, tools) ->
 
 		_applyText: ->
 
-			@node.innerHTML = @_text
+			lettersToApply = @_text.split ''
+
+			for l, i in lettersToApply
+
+				if @_letters[i]?
+
+					@_letters[i].setLetter l
+
+				else
+
+					newLetter = new _Letter l
+
+					newLetter.putIn @
+
+					@_letters.push newLetter
+
+			loop
+
+				break if @_letters.length <= i
+
+				letter = @_letters.pop()
+
+				letter.remove()
 
 			@
 

@@ -43,6 +43,8 @@ define ->
 
 			setTimeout fn, 16
 
+
+
 	tools =
 
 		nextTick: nextTick
@@ -63,8 +65,6 @@ define ->
 
 			needsTextStroke
 
-
-
 		rgb: (r, g, b) ->
 
 			'rgb(' + r + ', ' + g + ', ' + b + ')'
@@ -83,6 +83,16 @@ define ->
 
 			null
 
+		every: (ms, fn) ->
+
+			setInterval ->
+
+				do fn
+
+			, ms
+
+			null
+
 		count: (from, to, fn) ->
 
 			`for (var i = from; i <= to; i++) {
@@ -94,3 +104,4 @@ define ->
 		centerX: -> window.innerWidth / 2
 
 		centerY: -> window.innerHeight / 2
+

@@ -50,6 +50,26 @@ define ['../../methodChain/methodChain', '../../utility/generals'], (MethodChain
 
 				setInterval cb.bind(@), ms
 
+		each: ->
+
+			_interface = @_getNewInterface()
+
+			els = @_children
+
+			if els.length isnt 0
+
+				setTimeout =>
+
+					for el in els
+
+						@_getMethodChain().run _interface, el
+
+					null
+
+				, 0
+
+			return _interface
+
 		_eventEnabledMethod: (args, cb) ->
 
 			fn = args[0] ? null

@@ -71,6 +71,26 @@ define(['../../methodChain/methodChain', '../../utility/generals'], function(Met
       });
     });
 
+    __Interactions.prototype.each = function() {
+      var els, _interface,
+        _this = this;
+
+      _interface = this._getNewInterface();
+      els = this._children;
+      if (els.length !== 0) {
+        setTimeout(function() {
+          var el, _i, _len;
+
+          for (_i = 0, _len = els.length; _i < _len; _i++) {
+            el = els[_i];
+            _this._getMethodChain().run(_interface, el);
+          }
+          return null;
+        }, 0);
+      }
+      return _interface;
+    };
+
     __Interactions.prototype._eventEnabledMethod = function(args, cb) {
       var fn, _interface, _ref,
         _this = this;

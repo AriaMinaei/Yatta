@@ -39,6 +39,15 @@ define(['./_common'], function(common) {
       a.length = a.length - 1;
       return a;
     },
+    pluckItem: function(a, item) {
+      var i;
+
+      i = a.indexOf(item);
+      if (i !== -1) {
+        this.pluck(a, i);
+      }
+      return a;
+    },
     pluckMultiple: function(array, indexesToRemove) {
       var i, removedSoFar, _i, _len;
 

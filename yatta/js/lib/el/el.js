@@ -1,47 +1,83 @@
-define(['../utility/object', './css', '../tools', './_el/__generals', './_el/__transforms', './_el/__filters', './_el/__interactions', '../utility/generals'], function(object, css, tools, __Generals, __Transforms, __Filters, __Interactions) {
-  var El, body;
+define(['../utility/object', '../utility/array', './css', '../tools', './_el/__generals', './_el/__transforms', './_el/__filters', './_el/__interactions', '../utility/generals'], function(object, array, css, tools, __Generals, __Transforms, __Filters, __Interactions) {
+  var El;
 
-  body = document.body;
-  return implementing(__Generals, __Transforms, __Filters, __Interactions, El = (function() {
+  implementing(__Generals, __Transforms, __Filters, __Interactions, El = (function() {
     function El(node) {
       var _this = this;
 
       this.node = node;
+      if (this._shouldCloneInnerHTML == null) {
+        this._shouldCloneInnerHTML = false;
+      }
       this._initTransforms();
       this._initFilters();
       this._initInteractions();
       this._beenAppended = false;
       setTimeout(function() {
         if (!_this._beenAppended) {
-          return _this.putIn(body);
+          if ((_this.node.parentElement == null) && _this.node.tagName !== 'BODY') {
+            return _this.putIn(display);
+          } else {
+            return _this._beenAppended = true;
+          }
         }
       }, 0);
       this._animationEnabled = false;
+      this._parent = null;
+      this._children = [];
     }
 
     El.prototype.clone = function() {
-      var key, newEl, newNode, parent,
+      var newEl, newNode,
         _this = this;
 
       newEl = Object.create(this.constructor.prototype);
-      for (key in this) {
-        if (key === 'el' || key === '_beenAppended') {
-          continue;
+      (function() {
+        var key, _results;
+
+        _results = [];
+        for (key in _this) {
+          if (key === 'el' || key === '_beenAppended' || key === '_children' || key === '_parent') {
+            continue;
+          }
+          if (_this.hasOwnProperty(key)) {
+            _results.push(newEl[key] = object.clone(_this[key], true));
+          } else {
+            _results.push(void 0);
+          }
         }
-        if (this.hasOwnProperty(key)) {
-          newEl[key] = object.clone(this[key], true);
-        }
-      }
+        return _results;
+      })();
       newNode = this.node.cloneNode();
-      newNode.innerHTML = this.node.innerHTML;
-      parent = this.node.parentElement;
       newEl.node = newNode;
-      newEl._beenAppended = false;
-      setTimeout(function() {
-        if (!newEl._beenAppended) {
-          return newEl.putIn(parent);
+      newEl._children = [];
+      (function() {
+        var child, _i, _len, _ref, _results;
+
+        if (_this._shouldCloneInnerHTML) {
+          return newEl.node.innerHTML = _this.node.innerHTML;
+        } else {
+          _ref = _this._children;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            child = _ref[_i];
+            _results.push(child.clone().putIn(newEl));
+          }
+          return _results;
         }
-      }, 0);
+      })();
+      (function() {
+        var parent, _ref, _ref1;
+
+        newEl._parent = null;
+        parent = (_ref = (_ref1 = _this.node._parent) != null ? _ref1 : _this.node.parentElement) != null ? _ref : null;
+        newEl._beenAppended = false;
+        return setTimeout(function() {
+          if (!newEl._beenAppended) {
+            return newEl.putIn(parent);
+          }
+        }, 0);
+      })();
       return newEl;
     };
 
@@ -76,19 +112,57 @@ define(['../utility/object', './css', '../tools', './_el/__generals', './_el/__t
       return this;
     });
 
+    El.prototype._notYourChildAnymore = function(el) {
+      if (!(el instanceof El)) {
+        throw Error("`el` must be an instance of `El`");
+      }
+      array.pluckItem(this._children, el);
+      return this;
+    };
+
     El.prototype.putIn = function(el) {
       if (el == null) {
-        el = body;
+        el = display;
+      }
+      if (this._parent != null) {
+        this._parent._notYourChildAnymore(this);
       }
       if (el instanceof El) {
-        el = el.node;
+        el._append(this);
+        this._parent = el;
+      } else {
+        el.appendChild(this.node);
+        this._parent = null;
       }
       this._beenAppended = true;
-      el.appendChild(this.node);
       return this;
+    };
+
+    El.prototype._append = function(el) {
+      var node;
+
+      if (el instanceof El) {
+        node = el.node;
+        this._children.push(el);
+      } else {
+        node = el;
+      }
+      this.node.appendChild(node);
+      return this;
+    };
+
+    El.prototype.remove = function() {
+      if (this._parent != null) {
+        this._parent._notYourChildAnymore(this);
+      }
+      if (this.node.parentNode != null) {
+        this.node.parentNode.removeChild(this.node);
+      }
+      return null;
     };
 
     return El;
 
   })());
+  return El;
 });

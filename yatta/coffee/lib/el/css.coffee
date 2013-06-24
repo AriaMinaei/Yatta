@@ -36,6 +36,8 @@ define ->
 
 		setTransform: cssPropertySetter 'transform'
 
+		setTransformStyle: cssPropertySetter 'transformStyle'
+
 		setTransformOrigin: cssPropertySetter 'transformOrigin'
 
 		setCssFilter: cssPropertySetter 'filter'

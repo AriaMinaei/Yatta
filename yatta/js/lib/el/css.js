@@ -34,6 +34,7 @@ define(function() {
   };
   return css = {
     setTransform: cssPropertySetter('transform'),
+    setTransformStyle: cssPropertySetter('transformStyle'),
     setTransformOrigin: cssPropertySetter('transformOrigin'),
     setCssFilter: cssPropertySetter('filter'),
     setTransitionDuration: cssPropertySetter('transitionDuration'),

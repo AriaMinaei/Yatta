@@ -36,6 +36,16 @@ define ['./_common'], (common) -> {
 
 		a
 
+	pluckItem: (a, item) ->
+
+		i = a.indexOf item
+
+		if i isnt -1
+
+			@pluck a, i
+
+		a
+
 	pluckMultiple: (array, indexesToRemove) ->
 
 		removedSoFar = 0

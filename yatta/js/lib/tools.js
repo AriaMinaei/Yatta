@@ -63,6 +63,12 @@ define(function() {
       }, ms);
       return null;
     },
+    every: function(ms, fn) {
+      setInterval(function() {
+        return fn();
+      }, ms);
+      return null;
+    },
     count: function(from, to, fn) {
       for (var i = from; i <= to; i++) {
 				fn(i);

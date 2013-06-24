@@ -1,5 +1,6 @@
 define [
 	'../utility/object'
+	'../utility/array'
 	'./css'
 	'../tools'
 	'./_el/__generals'
@@ -7,13 +8,15 @@ define [
 	'./_el/__filters'
 	'./_el/__interactions'
 	'../utility/generals'
-	], (object, css, tools, __Generals, __Transforms, __Filters, __Interactions) ->
-
-	body = document.body
+	], (object, array, css, tools, __Generals, __Transforms, __Filters, __Interactions) ->
 
 	implementing __Generals, __Transforms, __Filters, __Interactions, class El
 
 		constructor: (@node) ->
+
+			if not @_shouldCloneInnerHTML?
+
+				@_shouldCloneInnerHTML = no
 
 			do @_initTransforms
 
@@ -27,40 +30,68 @@ define [
 
 				if not @_beenAppended
 
-					@putIn body
+					if not @node.parentElement? and @node.tagName isnt 'BODY'
+
+						@putIn display
+
+					else
+
+						@_beenAppended = yes
 
 			, 0
 
 			@_animationEnabled = no
 
+			@_parent = null
+
+			@_children = []
+
 		clone: ->
 
 			newEl = Object.create @constructor::
 
-			for key of @
+			do =>
 
-				continue if key is 'el' or key is '_beenAppended'
+				for key of @
 
-				if @hasOwnProperty key
+					continue if key is 'el' or key is '_beenAppended' or key is '_children' or key is '_parent'
 
-					newEl[key] = object.clone @[key], yes
+					if @hasOwnProperty key
+
+						newEl[key] = object.clone @[key], yes
 
 			newNode = @node.cloneNode()
-			newNode.innerHTML = @node.innerHTML
-
-			parent = @node.parentElement
-
 			newEl.node = newNode
 
-			newEl._beenAppended = no
+			newEl._children = []
 
-			setTimeout =>
+			do =>
 
-				if not newEl._beenAppended
+				if @_shouldCloneInnerHTML
 
-					newEl.putIn parent
+					newEl.node.innerHTML = @node.innerHTML
 
-			, 0
+				else
+
+					for child in @_children
+
+						child.clone().putIn newEl
+
+			do =>
+
+				newEl._parent = null
+
+				parent = @node._parent ? @node.parentElement ? null
+
+				newEl._beenAppended = no
+
+				setTimeout =>
+
+					if not newEl._beenAppended
+
+						newEl.putIn parent
+
+				, 0
 
 			newEl
 
@@ -94,14 +125,61 @@ define [
 
 			@
 
-		putIn: (el = body) ->
+		_notYourChildAnymore: (el) ->
+
+			unless el instanceof El
+
+				throw Error "`el` must be an instance of `El`"
+
+			array.pluckItem @_children, el
+
+			@
+
+		putIn: (el = display) ->
+
+			if @_parent?
+
+				@_parent._notYourChildAnymore @
 
 			if el instanceof El
 
-				el = el.node
+				el._append @
+				@_parent = el
+
+			else
+
+				el.appendChild @node
+				@_parent = null
 
 			@_beenAppended = yes
 
-			el.appendChild @node
+			@
+
+		_append: (el) ->
+
+			if el instanceof El
+
+				node = el.node
+				@_children.push el
+
+			else
+
+				node = el
+
+			@node.appendChild node
 
 			@
+
+		remove: ->
+
+			if @_parent?
+
+				@_parent._notYourChildAnymore @
+
+			if @node.parentNode?
+
+				@node.parentNode.removeChild @node
+
+			null
+
+	El
