@@ -38,6 +38,18 @@ define ['../../methodChain/methodChain'], (MethodChain) ->
 
 				setTimeout cb.bind(@), ms
 
+		then: (rest...) ->
+
+			@_eventEnabledMethod rest, (cb) =>
+
+				setTimeout cb.bind(@), 0
+
+		every: (ms, rest...) ->
+
+			@_eventEnabledMethod rest, (cb) =>
+
+				setInterval cb.bind(@), ms
+
 		_eventEnabledMethod: (args, cb) ->
 
 			fn = args[0] ? null

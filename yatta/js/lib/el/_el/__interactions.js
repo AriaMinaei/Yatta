@@ -51,6 +51,26 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
       });
     };
 
+    __Interactions.prototype.then = function() {
+      var rest,
+        _this = this;
+
+      rest = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return this._eventEnabledMethod(rest, function(cb) {
+        return setTimeout(cb.bind(_this), 0);
+      });
+    };
+
+    __Interactions.prototype.every = function() {
+      var ms, rest,
+        _this = this;
+
+      ms = arguments[0], rest = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      return this._eventEnabledMethod(rest, function(cb) {
+        return setInterval(cb.bind(_this), ms);
+      });
+    };
+
     __Interactions.prototype._eventEnabledMethod = function(args, cb) {
       var fn, _interface, _ref,
         _this = this;
