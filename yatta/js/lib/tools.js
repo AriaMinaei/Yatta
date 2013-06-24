@@ -20,7 +20,7 @@ define(function() {
     };
     return function(fn) {
       list.push(fn);
-      to = setTimeout(doIt, 50);
+      to = setTimeout(doIt, 66);
       return null;
     };
   })();

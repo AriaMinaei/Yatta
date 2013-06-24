@@ -1,4 +1,4 @@
-define(['../../visuals/filter', '../css'], function(CSSFilter, css) {
+define(['../../visuals/filter', '../css', '../../utility/generals'], function(CSSFilter, css) {
   var fn, key, __Filters, _fn, _ref;
 
   __Filters = (function() {
@@ -28,10 +28,10 @@ define(['../../visuals/filter', '../css'], function(CSSFilter, css) {
     var _key;
 
     _key = key;
-    __Filters.prototype[_key] = function() {
+    __Filters.prototype[_key] = acceptLazyArgs(function() {
       this._cssFilter[_key].apply(this._cssFilter, arguments);
       return this.updateCssFilter();
-    };
+    });
     return this;
   };
   for (key in _ref) {

@@ -33,6 +33,7 @@ define(['../utility/object', './css', '../tools', './_el/__generals', './_el/__t
         }
       }
       newNode = this.node.cloneNode();
+      newNode.innerHTML = this.node.innerHTML;
       parent = this.node.parentElement;
       newEl.node = newNode;
       newEl._beenAppended = false;
@@ -44,7 +45,7 @@ define(['../utility/object', './css', '../tools', './_el/__generals', './_el/__t
       return newEl;
     };
 
-    El.prototype.enableAnimation = function(duration) {
+    El.prototype.enableAnimation = acceptLazyArgs(function(duration) {
       if (duration == null) {
         duration = 500;
       }
@@ -52,7 +53,7 @@ define(['../utility/object', './css', '../tools', './_el/__generals', './_el/__t
       css.setTransitionDuration(this.node, duration + 's');
       this._animationEnabled = true;
       return this;
-    };
+    });
 
     El.prototype._do = function(fn) {
       var _this = this;
@@ -67,13 +68,13 @@ define(['../utility/object', './css', '../tools', './_el/__generals', './_el/__t
       return this;
     };
 
-    El.prototype.ease = function(func) {
+    El.prototype.ease = acceptLazyArgs(function(func) {
       if (func == null) {
         func = 'ease-out';
       }
       css.setTransitionTimingFunction(this.node, func);
       return this;
-    };
+    });
 
     El.prototype.putIn = function(el) {
       if (el == null) {

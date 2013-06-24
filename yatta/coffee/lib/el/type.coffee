@@ -17,7 +17,7 @@ define ['./el', '../tools'], (El, tools) ->
 
 			do @setFace
 
-		setText: (text) ->
+		setText: acceptLazyArgs (text) ->
 
 			@_text = text
 
@@ -31,7 +31,7 @@ define ['./el', '../tools'], (El, tools) ->
 
 			@
 
-		setFace: (face) ->
+		setFace: acceptLazyArgs (face) ->
 
 			unless face
 
@@ -51,7 +51,7 @@ define ['./el', '../tools'], (El, tools) ->
 
 			@
 
-		setSize: (size) ->
+		setSize: acceptLazyArgs (size) ->
 
 			unless size
 
@@ -71,7 +71,7 @@ define ['./el', '../tools'], (El, tools) ->
 
 			@
 
-		setColor: (r, g, b) ->
+		setColor: acceptLazyArgs (r, g, b) ->
 
 			if arguments.length is 0
 

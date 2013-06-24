@@ -1,4 +1,4 @@
-define ['../../methodChain/methodChain'], (MethodChain) ->
+define ['../../methodChain/methodChain', '../../utility/generals'], (MethodChain) ->
 
 	class __Interactions
 
@@ -32,7 +32,7 @@ define ['../../methodChain/methodChain'], (MethodChain) ->
 
 				@node.addEventListener 'click', cb
 
-		wait: (ms, rest...) ->
+		wait: acceptLazyArgs (ms, rest...) ->
 
 			@_eventEnabledMethod rest, (cb) =>
 
@@ -44,7 +44,7 @@ define ['../../methodChain/methodChain'], (MethodChain) ->
 
 				setTimeout cb.bind(@), 0
 
-		every: (ms, rest...) ->
+		every: acceptLazyArgs (ms, rest...) ->
 
 			@_eventEnabledMethod rest, (cb) =>
 

@@ -1,4 +1,4 @@
-define ->
+define ['./utility/generals'], () ->
 
 	math =
 
@@ -44,8 +44,6 @@ define ->
 
 				return n
 
-
-
 		log: Math.log
 
 		rad: (deg) ->
@@ -55,3 +53,23 @@ define ->
 		deg: (rad) ->
 
 			180 * rad / Math.PI
+
+	math._floor = acceptAndReturnLazily math.floor
+	math._ceil = acceptAndReturnLazily math.ceil
+	math._round = acceptAndReturnLazily math.round
+	math._abs = acceptAndReturnLazily math.abs
+	math._cos = acceptAndReturnLazily math.cos
+	math._acos = acceptAndReturnLazily math.acos
+	math._sin = acceptAndReturnLazily math.sin
+	math._asin = acceptAndReturnLazily math.asin
+	math._tan = acceptAndReturnLazily math.tan
+	math._atan = acceptAndReturnLazily math.atan
+	math._pow = acceptAndReturnLazily math.pow
+	math._sqrt = acceptAndReturnLazily math.sqrt
+	math._random = acceptAndReturnLazily math.random
+	math._rand = acceptAndReturnLazily math.rand
+	math._log = acceptAndReturnLazily math.log
+	math._rad = acceptAndReturnLazily math.rad
+	math._deg = acceptAndReturnLazily math.deg
+
+	math

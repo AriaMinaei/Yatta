@@ -22,18 +22,18 @@ define(['./el', '../tools'], function(El, tools) {
       this.setFace();
     }
 
-    Type.prototype.setText = function(text) {
+    Type.prototype.setText = acceptLazyArgs(function(text) {
       this._text = text;
       this._applyText();
       return this;
-    };
+    });
 
     Type.prototype._applyText = function() {
       this.node.innerHTML = this._text;
       return this;
     };
 
-    Type.prototype.setFace = function(face) {
+    Type.prototype.setFace = acceptLazyArgs(function(face) {
       if (!face) {
         this._face = Type.defaultFace;
       } else {
@@ -41,14 +41,14 @@ define(['./el', '../tools'], function(El, tools) {
       }
       this._applyFace();
       return this;
-    };
+    });
 
     Type.prototype._applyFace = function() {
       this.node.style.fontFamily = this._face;
       return this;
     };
 
-    Type.prototype.setSize = function(size) {
+    Type.prototype.setSize = acceptLazyArgs(function(size) {
       if (!size) {
         this._size = Type.defaultSize;
       } else {
@@ -56,14 +56,14 @@ define(['./el', '../tools'], function(El, tools) {
       }
       this._applySize();
       return this;
-    };
+    });
 
     Type.prototype._applySize = function() {
       this.node.style.fontSize = this._size + 'px';
       return this;
     };
 
-    Type.prototype.setColor = function(r, g, b) {
+    Type.prototype.setColor = acceptLazyArgs(function(r, g, b) {
       if (arguments.length === 0) {
         this._color = Type.defaultColor;
       } else {
@@ -71,7 +71,7 @@ define(['./el', '../tools'], function(El, tools) {
       }
       this._applyColor();
       return this;
-    };
+    });
 
     Type.prototype._applyColor = function() {
       this.node.style.color = this._color;

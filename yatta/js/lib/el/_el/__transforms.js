@@ -1,4 +1,4 @@
-define(['../../visuals/lightmatrix', '../css'], function(LightMatrix, css) {
+define(['../../visuals/lightmatrix', '../css', '../../utility/generals'], function(LightMatrix, css) {
   var fn, key, __Transforms, _fn, _ref;
 
   __Transforms = (function() {
@@ -28,10 +28,10 @@ define(['../../visuals/lightmatrix', '../css'], function(LightMatrix, css) {
     var _key;
 
     _key = key;
-    __Transforms.prototype[_key] = function() {
+    __Transforms.prototype[_key] = acceptLazyArgs(function() {
       this._transform[_key].apply(this._transform, arguments);
       return this._updateTransform();
-    };
+    });
     return this;
   };
   for (key in _ref) {

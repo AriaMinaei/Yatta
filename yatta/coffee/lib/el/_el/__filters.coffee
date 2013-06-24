@@ -1,4 +1,4 @@
-define ['../../visuals/filter', '../css'], (CSSFilter, css) ->
+define ['../../visuals/filter', '../css', '../../utility/generals'], (CSSFilter, css) ->
 
 	class __Filters
 
@@ -20,10 +20,9 @@ define ['../../visuals/filter', '../css'], (CSSFilter, css) ->
 
 		do ->
 			_key = key
-			__Filters.prototype[_key] = ->
+			__Filters.prototype[_key] = acceptLazyArgs ->
 
 				@_cssFilter[_key].apply @_cssFilter, arguments
-
 
 				do @updateCssFilter
 

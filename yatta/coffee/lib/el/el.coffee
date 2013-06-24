@@ -46,6 +46,7 @@ define [
 					newEl[key] = object.clone @[key], yes
 
 			newNode = @node.cloneNode()
+			newNode.innerHTML = @node.innerHTML
 
 			parent = @node.parentElement
 
@@ -63,7 +64,7 @@ define [
 
 			newEl
 
-		enableAnimation: (duration = 500) ->
+		enableAnimation: acceptLazyArgs (duration = 500) ->
 
 			duration = parseInt(duration) / 1000
 
@@ -87,7 +88,7 @@ define [
 
 			@
 
-		ease: (func = 'ease-out') ->
+		ease: acceptLazyArgs (func = 'ease-out') ->
 
 			css.setTransitionTimingFunction @node, func
 

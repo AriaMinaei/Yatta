@@ -6,8 +6,11 @@ if (typeof define !== 'function') {
 }
 
 define(function() {
-  var global, implementing;
+  var acceptAndReturnLazily, acceptLazyArgs, getLazyValue, getLazyValues, global, implementing, returnLazily;
 
+  if (typeof window !== 'undefined') {
+    global = window;
+  }
   Function.prototype.define = function(prop, desc) {
     return Object.defineProperty(this.prototype, prop, desc);
   };
@@ -17,7 +20,7 @@ define(function() {
   Function.prototype.setter = function(prop, setter) {
     return this.prototype.__defineSetter__(prop, setter);
   };
-  implementing = function() {
+  global.implementing = implementing = function() {
     var classProto, classReference, desc, member, mixin, mixins, _i, _j, _len;
 
     mixins = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), classReference = arguments[_i++];
@@ -33,8 +36,46 @@ define(function() {
     }
     return classReference;
   };
-  if (typeof window !== 'undefined') {
-    global = window;
-  }
-  return global.implementing = implementing;
+  getLazyValue = function(val) {
+    if ((val._isLazy != null) && val._isLazy) {
+      return val();
+    } else {
+      return val;
+    }
+  };
+  getLazyValues = function(ar) {
+    var item, _i, _len, _results;
+
+    _results = [];
+    for (_i = 0, _len = ar.length; _i < _len; _i++) {
+      item = ar[_i];
+      _results.push(getLazyValue(item));
+    }
+    return _results;
+  };
+  global.returnLazily = returnLazily = function(fn) {
+    return function() {
+      var args, ret,
+        _this = this;
+
+      args = arguments;
+      ret = function() {
+        return fn.apply(_this, args);
+      };
+      ret._isLazy = true;
+      return ret;
+    };
+  };
+  global.acceptLazyArgs = acceptLazyArgs = function(fn) {
+    return function() {
+      var args;
+
+      args = getLazyValues(arguments);
+      return fn.apply(this, args);
+    };
+  };
+  global.acceptAndReturnLazily = acceptAndReturnLazily = function(fn) {
+    return returnLazily(acceptLazyArgs(fn));
+  };
+  return null;
 });

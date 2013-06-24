@@ -1,4 +1,4 @@
-define ['../../visuals/lightmatrix', '../css'], (LightMatrix, css) ->
+define ['../../visuals/lightmatrix', '../css', '../../utility/generals',], (LightMatrix, css) ->
 
 	class __Transforms
 
@@ -21,7 +21,7 @@ define ['../../visuals/lightmatrix', '../css'], (LightMatrix, css) ->
 
 		do ->
 			_key = key
-			__Transforms.prototype[_key] = ->
+			__Transforms.prototype[_key] = acceptLazyArgs ->
 
 				@_transform[_key].apply @_transform, arguments
 

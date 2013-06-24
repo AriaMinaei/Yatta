@@ -1,6 +1,6 @@
 var __slice = [].slice;
 
-define(['../../methodChain/methodChain'], function(MethodChain) {
+define(['../../methodChain/methodChain', '../../utility/generals'], function(MethodChain) {
   var __Interactions;
 
   return __Interactions = (function() {
@@ -41,7 +41,7 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
       });
     };
 
-    __Interactions.prototype.wait = function() {
+    __Interactions.prototype.wait = acceptLazyArgs(function() {
       var ms, rest,
         _this = this;
 
@@ -49,7 +49,7 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
       return this._eventEnabledMethod(rest, function(cb) {
         return setTimeout(cb.bind(_this), ms);
       });
-    };
+    });
 
     __Interactions.prototype.then = function() {
       var rest,
@@ -61,7 +61,7 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
       });
     };
 
-    __Interactions.prototype.every = function() {
+    __Interactions.prototype.every = acceptLazyArgs(function() {
       var ms, rest,
         _this = this;
 
@@ -69,7 +69,7 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
       return this._eventEnabledMethod(rest, function(cb) {
         return setInterval(cb.bind(_this), ms);
       });
-    };
+    });
 
     __Interactions.prototype._eventEnabledMethod = function(args, cb) {
       var fn, _interface, _ref,

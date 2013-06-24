@@ -1,11 +1,12 @@
 define [
 	'../css'
 	'../../tools'
+	'../../utility/generals'
 	], (css, tools) ->
 
 	class __General
 
-		setWidth: (d) ->
+		setWidth: acceptLazyArgs (d) ->
 
 			@_do =>
 
@@ -13,7 +14,7 @@ define [
 
 			@
 
-		setHeight: (d) ->
+		setHeight: acceptLazyArgs (d) ->
 
 			@_do =>
 
@@ -27,7 +28,7 @@ define [
 
 			@
 
-		setOrigin: (origin) ->
+		setOrigin: acceptLazyArgs (origin) ->
 
 			@_do =>
 
@@ -35,7 +36,7 @@ define [
 
 			@
 
-		fillWith: (r, g, b) ->
+		fillWith: acceptLazyArgs (r, g, b) ->
 
 			args = arguments
 
@@ -65,7 +66,7 @@ define [
 
 			@
 
-		setBorder: (thickness, r, g, b) ->
+		setBorder: acceptLazyArgs (thickness, r, g, b) ->
 
 			args = arguments
 

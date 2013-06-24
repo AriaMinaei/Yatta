@@ -27,7 +27,7 @@ define ->
 
 			# 	clearTimeout to
 
-			to = setTimeout doIt, 50
+			to = setTimeout doIt, 66
 
 			null
 
