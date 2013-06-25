@@ -20,6 +20,10 @@ define(['../../visuals/lightmatrix', '../css', '../../utility/generals'], functi
       return this;
     };
 
+    __Transforms.getter('transform', function() {
+      return this._transform._current;
+    });
+
     return __Transforms;
 
   })();

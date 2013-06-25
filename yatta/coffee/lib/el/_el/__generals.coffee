@@ -66,6 +66,12 @@ define [
 
 			@
 
+		z: acceptLazyArgs (i) ->
+
+			@node.style.zIndex = i
+
+			@
+
 		setBorder: acceptLazyArgs (thickness, r, g, b) ->
 
 			args = arguments

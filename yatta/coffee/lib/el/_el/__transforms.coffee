@@ -14,6 +14,8 @@ define ['../../visuals/lightmatrix', '../css', '../../utility/generals',], (Ligh
 
 			@
 
+		@getter 'transform', -> @_transform._current
+
 
 	for key, fn of LightMatrix.prototype
 
