@@ -1,5 +1,5 @@
 // Set background color in RGB
-display.enableAnimation(300).fillWith(100, 200, 200).go3d();
+display.fillWith(200, 195, 190).enableAnimation(500);
 
 // Number of circles
 var count = 20;
@@ -10,56 +10,58 @@ var cY = centerY();
 
 var radius = 250;
 
-var container = new Container
-
-// Makes pnme
 var makeCircle = function(i){
-	// Make a new Ellipse(width, height)
+
+	var animDuration = rand(400, 1200)
+
 	var c1 = new Ellipse(40, 40);
 
-	c1.putIn(container);
-
-	c1.setScaleAll(0.75);
-
-	// Fill it with a random RGB color
-	c1.fillWith(190, rand(100, 200), rand(90, 240));
-
-	// Put it around a circle
-	c1.setMovementX(radius * cos(PI * 2 / count * i) + cX);
-	c1.setMovementY(radius * sin(PI * 2 / count * i) + cY);
-
-	var animDuration = rand(300, 1000)
-
-	// Everything done to this element from now on, will be animated.
-	c1.enableAnimation(animDuration);
-
-	// var c2 = c1.clone();
-	// c2.setScaleAll(0.5)
-	// .setSaturation(90)
-	// .enableAnimation(animDuration);
-
-	var c3 = c1.clone();
-	c3.setScaleAll(0.35)
-	.setSaturation(80)
+	c1
+	.setScaleAll(0.75)
+	.fillWith(190, 120, 240)
+	// .fillWith(190, rand(100, 200), rand(90, 240))
+	.rotateHue(50 * i)
+	.setMovementX(radius * cos(PI * 2 / count * i) + cX)
+	.setMovementY(radius * sin(PI * 2 / count * i) + cY)
+	.z(10)
 	.enableAnimation(animDuration);
 
-	// Every 1000 milliseconds:
-	every(1000, function(){
+	var c2 = c1.clone();
 
-		i += 1 //floor(count / 4);
+	c2.setScaleAll(0.5)
+	.setSaturation(80)
+	.z(9)
+	.enableAnimation(animDuration + 200);
 
-		c1.setMovementX(radius * cos(PI * 2 / count * i) + cX);
-		c1.setMovementY(radius * sin(PI * 2 / count * i) + cY);
+	var c3 = c1.clone();
+
+	c3.setScaleAll(0.3)
+	.setSaturation(70)
+	.ease('ease-out')
+	.z(8)
+	.enableAnimation(animDuration + 400);
 
 
-		// c2
-		// .setMovementX((radius + 10) * cos(PI * 2 / count * i - 0.04) + cX)
-		// .setMovementY((radius + 10) * sin(PI * 2 / count * i - 0.04) + cY);
+	every(900, function(){
 
+		i += 1.5;
+
+
+		c1
+		.rotateHue(50 * i)
+		.setMovementX(radius * cos(PI * 2 / count * i) + cX)
+		.setMovementY(radius * sin(PI * 2 / count * i) + cY);
+
+
+		c2
+		.rotateHue(50 * i)
+		.setMovementX((radius + param('C2 Radius', 11)) * cos(PI * 2 / count * i - param('C2 i', 0.07)) + cX)
+		.setMovementY((radius + param('C2 Radius', 11)) * sin(PI * 2 / count * i - param('C2 i', 0.07)) + cY);
 
 		c3
-		.setMovementX((radius + param('C3 Radius', 15)) * cos(PI * 2 / count * i + param('C3 i', -0.09)) + cX)
-		.setMovementY((radius + param('C3 Radius', 15)) * sin(PI * 2 / count * i + param('C3 i', -0.09)) + cY);
+		.rotateHue(50 * i)
+		.setMovementX((radius + param('c3 Radius', 18)) * cos(PI * 2 / count * i - param('c3 i', 0.12)) + cX)
+		.setMovementY((radius + param('c3 Radius', 18)) * sin(PI * 2 / count * i - param('c3 i', 0.12)) + cY);
 
 
 	});
@@ -70,11 +72,6 @@ for (i = 0; i < count; i++) {
 	makeCircle(i);
 }
 
-// Change BG color in one second
-wait(2000, function(){
-	display
-	.fillWith(200, 195, 190)
-	// .enableAnimation(10000)
-	// .setPerspective(400)
-	// .rotateY(rad(170))
-});
+every(1000, function(){
+	radius += rand(-100, 100)
+})

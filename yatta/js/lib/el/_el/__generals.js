@@ -65,6 +65,11 @@ define(['../css', '../../tools', '../../utility/generals'], function(css, tools)
       return this;
     };
 
+    __General.prototype.z = acceptLazyArgs(function(i) {
+      this.node.style.zIndex = i;
+      return this;
+    });
+
     __General.prototype.setBorder = acceptLazyArgs(function(thickness, r, g, b) {
       var args,
         _this = this;
