@@ -1,16 +1,16 @@
 define [
+	'./mixin/generals_'
+	'./mixin/transforms_'
+	'./mixin/filters_'
+	'./mixin/interactions_'
 	'../utility/object'
 	'../utility/array'
-	'./css'
-	'../tools'
-	'./_el/__generals'
-	'./_el/__transforms'
-	'./_el/__filters'
-	'./_el/__interactions'
-	'../utility/generals'
-	], (object, array, css, tools, __Generals, __Transforms, __Filters, __Interactions) ->
+	'./tools/css'
+	], (Generals_, Transforms_, Filters_, Interactions_, object, array, css) ->
 
-	implementing __Generals, __Transforms, __Filters, __Interactions, class El
+	# Every Yatta-enabled node in the app is an instance of El, which adds
+	# Yatta-specific functionality to native elements.
+	implementing Generals_, Transforms_, Filters_, Interactions_, class El
 
 		constructor: (@node) ->
 
@@ -113,7 +113,7 @@ define [
 
 			else
 
-				tools.nextTick =>
+				nextPulse =>
 
 					fn.apply @
 

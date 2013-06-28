@@ -1,4 +1,9 @@
-define ['./el', './type/_letter', '../tools'], (El, _Letter, tools) ->
+define [
+	'./el'
+	'./type/_letter'
+	'./tools/css'
+	'./type/_tools'
+	], (El, _Letter, css, _tools) ->
 
 	class Type extends El
 
@@ -103,7 +108,7 @@ define ['./el', './type/_letter', '../tools'], (El, _Letter, tools) ->
 
 			else
 
-				@_color = tools.rgb(r, g, b)
+				@_color = css.rgb(r, g, b)
 
 			do @_applyColor
 
@@ -119,7 +124,7 @@ define ['./el', './type/_letter', '../tools'], (El, _Letter, tools) ->
 
 		_applyStroke: ->
 
-			if tools.needsTextStroke()
+			if _tools.needsTextStroke()
 
 				@node.style.webkitTextStroke = '1.5 ' + @_color
 
@@ -138,12 +143,12 @@ define ['./el', './type/_letter', '../tools'], (El, _Letter, tools) ->
 
 			@defaultSize = size
 
-		@defaultColor = tools.rgb(255, 255, 255)
+		@defaultColor = css.rgb(255, 255, 255)
 
 		@setDefaultColor: (r, g, b) ->
 
 			if arguments.length is 0
 
-				@defaultColor = tools.rgb(255, 255, 255)
+				@defaultColor = css.rgb(255, 255, 255)
 
-			@defaultColor = tools.rgb(r, g, b)
+			@defaultColor = css.rgb(r, g, b)

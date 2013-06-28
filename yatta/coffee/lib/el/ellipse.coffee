@@ -1,4 +1,4 @@
-define ['./el', '../tools'], (El, tools) ->
+define ['./el'], (El) ->
 
 	class Ellipse extends El
 

@@ -1,7 +1,7 @@
-define(['../utility/object', '../utility/array', './css', '../tools', './_el/__generals', './_el/__transforms', './_el/__filters', './_el/__interactions', '../utility/generals'], function(object, array, css, tools, __Generals, __Transforms, __Filters, __Interactions) {
+define(['./mixin/generals_', './mixin/transforms_', './mixin/filters_', './mixin/interactions_', '../utility/object', '../utility/array', './tools/css'], function(Generals_, Transforms_, Filters_, Interactions_, object, array, css) {
   var El;
 
-  implementing(__Generals, __Transforms, __Filters, __Interactions, El = (function() {
+  implementing(Generals_, Transforms_, Filters_, Interactions_, El = (function() {
     function El(node) {
       var _this = this;
 
@@ -97,7 +97,7 @@ define(['../utility/object', '../utility/array', './css', '../tools', './_el/__g
       if (!this._animationEnabled) {
         fn.apply(this);
       } else {
-        tools.nextTick(function() {
+        nextPulse(function() {
           return fn.apply(_this);
         });
       }

@@ -1,4 +1,4 @@
-define ['./_interface', '../utility/generals'], (_Interface) ->
+define ['./_interface'], (_Interface) ->
 
 	class MethodChain
 

@@ -1,7 +1,11 @@
 if typeof define isnt 'function' then define = require('amdefine')(module)
 
 define [
-	'./lightmatrix/base', './lightmatrix/translation', './lightmatrix/scale', './lightmatrix/perspective',  './lightmatrix/rotation'
+	'./lightmatrix/base'
+	'./lightmatrix/translation'
+	'./lightmatrix/scale'
+	'./lightmatrix/perspective'
+	'./lightmatrix/rotation'
 	], (Base, Translation, Scale, Perspective, Rotation) ->
 
 	emptyStack = ->
@@ -45,7 +49,7 @@ define [
 		to.tX = from.tX
 		to.tY = from.tY
 		to.tZ = from.tZ
-		
+
 
 	class LightMatrix
 
@@ -56,7 +60,7 @@ define [
 
 			@_current = @_main
 
-			@_has = 
+			@_has =
 
 				movement: no
 
@@ -70,7 +74,7 @@ define [
 
 
 			@_identityMatrix = Base.identity()
-			
+
 			@_tempMode = no
 
 		temporarily: ->
@@ -343,7 +347,7 @@ define [
 
 			if x is 1
 
-				@_has.s = no 
+				@_has.s = no
 
 			else
 
@@ -488,7 +492,7 @@ define [
 			@_current.rZ += z
 
 			@
-		
+
 		###
 		Translation
 		###

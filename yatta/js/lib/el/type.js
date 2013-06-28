@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['./el', './type/_letter', '../tools'], function(El, _Letter, tools) {
+define(['./el', './type/_letter', './tools/css', './type/_tools'], function(El, _Letter, css, _tools) {
   var Type;
 
   return Type = (function(_super) {
@@ -87,7 +87,7 @@ define(['./el', './type/_letter', '../tools'], function(El, _Letter, tools) {
       if (arguments.length === 0) {
         this._color = Type.defaultColor;
       } else {
-        this._color = tools.rgb(r, g, b);
+        this._color = css.rgb(r, g, b);
       }
       this._applyColor();
       return this;
@@ -100,7 +100,7 @@ define(['./el', './type/_letter', '../tools'], function(El, _Letter, tools) {
     };
 
     Type.prototype._applyStroke = function() {
-      if (tools.needsTextStroke()) {
+      if (_tools.needsTextStroke()) {
         this.node.style.webkitTextStroke = '1.5 ' + this._color;
       }
       return this;
@@ -124,13 +124,13 @@ define(['./el', './type/_letter', '../tools'], function(El, _Letter, tools) {
       return this.defaultSize = size;
     };
 
-    Type.defaultColor = tools.rgb(255, 255, 255);
+    Type.defaultColor = css.rgb(255, 255, 255);
 
     Type.setDefaultColor = function(r, g, b) {
       if (arguments.length === 0) {
-        this.defaultColor = tools.rgb(255, 255, 255);
+        this.defaultColor = css.rgb(255, 255, 255);
       }
-      return this.defaultColor = tools.rgb(r, g, b);
+      return this.defaultColor = css.rgb(r, g, b);
     };
 
     return Type;

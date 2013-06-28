@@ -2,7 +2,7 @@
 display.fillWith(200, 195, 190).enableAnimation(500);
 
 // Number of circles
-var count = 20;
+var count = 19;
 
 // Center of the screen
 var cX = centerX();

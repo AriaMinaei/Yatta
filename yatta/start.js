@@ -57,12 +57,18 @@
 		});
 
 		// requrie yatta's main lib file
-		require(['ready'], function(){
+		require(['prepare'], function(prepare){
 
-			yattaLoaded = true;
+			prepare(function(){
 
-			// Then load all the scripts requried from yatta() calls.
-			loadScripts();
+				yattaLoaded = true;
+
+				// Then load all the scripts requried from yatta() calls.
+				loadScripts();
+
+			});
+
+
 		});
 	};
 
