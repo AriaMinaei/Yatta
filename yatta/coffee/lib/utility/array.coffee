@@ -38,11 +38,63 @@ define ['./_common'], (common) -> {
 
 	pluckItem: (a, item) ->
 
-		i = a.indexOf item
+		removed = 0
 
-		if i isnt -1
+		for value, index in a
 
-			@pluck a, i
+			if value is item
+
+				removed++
+
+				continue
+
+			if removed isnt 0
+
+				a[index - removed] = a[index]
+
+		a.length = a.length - removed
+
+		a
+
+	pluckOneItem: (a, item) ->
+
+		reached = no
+
+		for value, index in a
+
+			if not reached
+
+				if value is item
+
+					reached = yes
+
+					continue
+
+			else
+
+				a[index - 1] = a[index]
+
+		a.length = a.length - 1
+
+		a
+
+	pluckByCallback: (a, cb) ->
+
+		removed = 0
+
+		for value, index in a
+
+			if cb value, index
+
+				removed++
+
+				continue
+
+			if removed isnt 0
+
+				a[index - removed] = a[index]
+
+		a.length = a.length - removed
 
 		a
 
@@ -59,5 +111,64 @@ define ['./_common'], (common) -> {
 			removedSoFar++
 
 		array
+
+	injectByCallback: (a, toInject, shouldInject) ->
+
+		valA = null
+
+		valB = null
+
+		len = a.length
+
+		if len < 1
+
+			a.push toInject
+
+			return a
+
+
+		for val, i in a
+
+			valA = valB
+
+			valB = val
+
+			if shouldInject valA, valB, toInject
+
+				return a.splice i, 0, toInject
+
+		a.push toInject
+
+		a
+
+	injectInIndex: (a, index, toInject) ->
+
+		len = a.length
+
+		i = index
+
+		if len < 1
+
+			a.push toInject
+
+			return a
+
+		toPut = toInject
+
+		toPutNext = null
+
+		`for(; i <= len; i++){
+
+			toPutNext = a[i];
+
+			a[i] = toPut;
+
+			toPut = toPutNext;
+
+		}`
+
+		# a[i] = toPut
+
+		null
 
 }

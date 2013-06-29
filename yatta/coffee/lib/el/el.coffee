@@ -1,16 +1,14 @@
 define [
-	'./mixin/generals_'
-	'./mixin/transforms_'
-	'./mixin/filters_'
 	'./mixin/interactions_'
 	'../utility/object'
 	'../utility/array'
 	'./tools/css'
-	], (Generals_, Transforms_, Filters_, Interactions_, object, array, css) ->
+	'./styleSetter/styleSetter'
+	], (Interactions_, object, array, css, StyleSetter) ->
 
 	# Every Yatta-enabled node in the app is an instance of El, which adds
 	# Yatta-specific functionality to native elements.
-	implementing Generals_, Transforms_, Filters_, Interactions_, class El
+	implementing Interactions_, class El
 
 		constructor: (@node) ->
 
@@ -18,15 +16,21 @@ define [
 
 				@_shouldCloneInnerHTML = no
 
-			do @_initTransforms
+			@_styleSetter = new StyleSetter @
 
-			do @_initFilters
+			# @_animator = new Animator @
+
+			@_styleInterface = @_styleSetter
+
+			# do @_initTransforms
+
+			# do @_initFilters
 
 			do @_initInteractions
 
 			@_beenAppended = no
 
-			setTimeout =>
+			frames.nextTick =>
 
 				if not @_beenAppended
 

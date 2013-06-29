@@ -1,7 +1,10 @@
-define ['./setup/timing', '../utility/generals'], (Timing) ->
+define [
+	'../visuals/animation/frames'
+	'../utility/generals'
+	], (frames) ->
 
-	for key, item of Timing
+	do frames.start
 
-		window[key] = item
+	window.frames = frames
 
 	null

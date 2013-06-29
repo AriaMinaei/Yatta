@@ -1,9 +1,5 @@
-define(['./setup/timing', '../utility/generals'], function(Timing) {
-  var item, key;
-
-  for (key in Timing) {
-    item = Timing[key];
-    window[key] = item;
-  }
+define(['../visuals/animation/frames', '../utility/generals'], function(frames) {
+  frames.start();
+  window.frames = frames;
   return null;
 });

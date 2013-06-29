@@ -1,7 +1,7 @@
-define(['./mixin/generals_', './mixin/transforms_', './mixin/filters_', './mixin/interactions_', '../utility/object', '../utility/array', './tools/css'], function(Generals_, Transforms_, Filters_, Interactions_, object, array, css) {
+define(['./mixin/interactions_', '../utility/object', '../utility/array', './tools/css', './styleSetter/styleSetter'], function(Interactions_, object, array, css, StyleSetter) {
   var El;
 
-  implementing(Generals_, Transforms_, Filters_, Interactions_, El = (function() {
+  implementing(Interactions_, El = (function() {
     function El(node) {
       var _this = this;
 
@@ -9,11 +9,11 @@ define(['./mixin/generals_', './mixin/transforms_', './mixin/filters_', './mixin
       if (this._shouldCloneInnerHTML == null) {
         this._shouldCloneInnerHTML = false;
       }
-      this._initTransforms();
-      this._initFilters();
+      this._styleSetter = new StyleSetter(this);
+      this._styleInterface = this._styleSetter;
       this._initInteractions();
       this._beenAppended = false;
-      setTimeout(function() {
+      frames.nextTick(function() {
         if (!_this._beenAppended) {
           if ((_this.node.parentElement == null) && _this.node.tagName !== 'BODY') {
             return _this.putIn(display);

@@ -78,6 +78,7 @@
 	// If requirejs hasn't loaded yet, we'll queue up all the scripts
 	// required from yatta() calls.
 	var scriptsToLoadAfterYatta = [];
+	var functionsToRunAfterYatta = []
 
 	// This will load scripts queued up by the yatta() calls.
 	var loadScripts = function(){
@@ -92,12 +93,27 @@
 
 				loadScript(src);
 			}
+			while (true) {
+
+				var fn = functionsToRunAfterYatta.shift();
+
+				if (typeof fn == 'undefined') {
+					break;
+				}
+
+				fn.apply(null);
+			}
 		}
 	};
 
 	// Use this to load scripts after yatta is fully loaded.
-	window.start = function(src){
-		scriptsToLoadAfterYatta.push(src);
+	window.start = function(what){
+		if (typeof what === 'string') {
+			scriptsToLoadAfterYatta.push(what);
+		} else if (what instanceof Function) {
+			functionsToRunAfterYatta.push(what);
+		}
+
 		loadScripts();
 	};
 
