@@ -2,9 +2,21 @@ define ['../../methodChain/methodChain'], (MethodChain) ->
 
 	class Interactions_
 
-		_initInteractions: ->
+		@_nextThenCallback: (cb) ->
+
+			frames.laterInThisFrame cb
+
+		__initMixinInteractions: ->
 
 			@_methodChain = null
+
+			do @_resetNextThenCallback
+
+			null
+
+		_resetNextThenCallback: ->
+
+			@_nextThenCallback = Interactions_._nextThenCallback
 
 		_getMethodChain: ->
 
@@ -32,23 +44,52 @@ define ['../../methodChain/methodChain'], (MethodChain) ->
 
 				@node.addEventListener 'click', cb
 
-		wait: acceptLazyArgs (ms, rest...) ->
+		wait: (ms, rest...) ->
 
 			@_eventEnabledMethod rest, (cb) =>
 
-				setTimeout cb.bind(@), ms
+				frames.wait ms, cb.bind(@)
+
+		eachFrame: ->
+
+			@_eventEnabledMethod arguments, (cb) =>
+
+				startTime = new Int32Array 1
+				startTime[0] = -1
+
+				cancel = =>
+
+					frames.cancelEachFrame frameCallback
+
+				frameCallback = (t) =>
+
+					if startTime[0] < 0
+
+						startTime[0] = t
+
+						elapsedTime = 0
+
+					else
+
+						elapsedTime = t - startTime[0]
+
+					cb @, elapsedTime, cancel
+
+					null
+
+				frames.onEachFrame frameCallback
 
 		then: (rest...) ->
 
 			@_eventEnabledMethod rest, (cb) =>
 
-				setTimeout cb.bind(@), 0
+				@_nextThenCallback cb.bind(@)
 
-		every: acceptLazyArgs (ms, rest...) ->
+		every: (ms, args...) ->
 
-			@_eventEnabledMethod rest, (cb) =>
+			@_eventEnabledMethod args, (cb) =>
 
-				setInterval cb.bind(@), ms
+				frames.every ms, cb.bind(@)
 
 		each: ->
 
@@ -58,7 +99,7 @@ define ['../../methodChain/methodChain'], (MethodChain) ->
 
 			if els.length isnt 0
 
-				setTimeout =>
+				frames.laterInThisFrame =>
 
 					for el in els
 
@@ -66,19 +107,17 @@ define ['../../methodChain/methodChain'], (MethodChain) ->
 
 					null
 
-				, 0
-
 			return _interface
 
-		_eventEnabledMethod: (args, cb) ->
+		_eventEnabledMethod: (args, runCallback) ->
 
 			fn = args[0] ? null
 
 			if fn
 
-				cb (e) =>
+				runCallback =>
 
-					fn.apply @, [e]
+					fn.apply @, arguments
 
 				return @
 
@@ -86,7 +125,7 @@ define ['../../methodChain/methodChain'], (MethodChain) ->
 
 				_interface = @_getNewInterface()
 
-				cb =>
+				runCallback =>
 
 					@_getMethodChain().run _interface, @
 

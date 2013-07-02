@@ -13,7 +13,7 @@ define(function() {
       var item;
 
       if (this._pool.length > 0) {
-        item = pool.pop();
+        item = this._pool.pop();
         item.time = time;
         item.fn = fn;
         return item;

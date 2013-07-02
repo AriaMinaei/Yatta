@@ -22,5 +22,7 @@ define(['../userTools/math', '../userTools/param'], function(math, Param) {
   window.centerY = function() {
     return window.innerHeight / 2;
   };
+  window.every = frames.every;
+  window.wait = frames.wait;
   return null;
 });

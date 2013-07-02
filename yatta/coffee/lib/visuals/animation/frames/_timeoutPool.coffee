@@ -15,7 +15,7 @@ define ->
 
 			if @_pool.length > 0
 
-				item = pool.pop()
+				item = @_pool.pop()
 
 				item.time = time
 

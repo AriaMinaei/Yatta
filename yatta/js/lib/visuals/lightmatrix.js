@@ -15,7 +15,7 @@ define(['./lightmatrix/base', './lightmatrix/translation', './lightmatrix/scale'
       sX: 1,
       sY: 1,
       sZ: 1,
-      p: 0,
+      p: 10000,
       rX: 0,
       rY: 0,
       rZ: 0,
@@ -40,6 +40,8 @@ define(['./lightmatrix/base', './lightmatrix/translation', './lightmatrix/scale'
     return to.tZ = from.tZ;
   };
   return LightMatrix = (function() {
+    LightMatrix._emptyStack = emptyStack;
+
     function LightMatrix() {
       this._main = emptyStack();
       this._temp = emptyStack();
@@ -104,6 +106,10 @@ define(['./lightmatrix/base', './lightmatrix/translation', './lightmatrix/scale'
         css += Translation.toPlainCss(this._current.tX, this._current.tY, this._current.tZ);
       }
       return css;
+    };
+
+    LightMatrix.prototype.toStupidCss = function() {
+      return "translate3d(" + this._current.mX + "px, " + this._current.mY + "px, " + this._current.mZ + "px) scale3d(" + this._current.sX + ", " + this._current.sY + ", " + this._current.sZ + ") perspective(" + this._current.p + ") rotateX(" + this._current.rX + ") rotateY(" + this._current.rY + ") rotateZ(" + this._current.rZ + ") translate3d(" + this._current.tX + "px, " + this._current.tY + "px, " + this._current.tZ + "px)";
     };
 
     LightMatrix.prototype.toArray = function() {

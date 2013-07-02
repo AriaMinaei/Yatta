@@ -29,6 +29,6 @@ define ['./_interface'], (_Interface) ->
 
 			for item in _interface._queue
 
-				context = context[item.method].apply context, item.args
+				context = context[item.method].apply context, getLazyValues(item.args)
 
 			context

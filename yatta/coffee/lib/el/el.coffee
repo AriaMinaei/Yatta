@@ -1,14 +1,13 @@
 define [
+	'./mixin/hasStyles_'
 	'./mixin/interactions_'
 	'../utility/object'
 	'../utility/array'
-	'./tools/css'
-	'./styleSetter/styleSetter'
-	], (Interactions_, object, array, css, StyleSetter) ->
+	], (HasStyles_, Interactions_, object, array) ->
 
 	# Every Yatta-enabled node in the app is an instance of El, which adds
 	# Yatta-specific functionality to native elements.
-	implementing Interactions_, class El
+	mixing HasStyles_, Interactions_, class El
 
 		constructor: (@node) ->
 
@@ -16,19 +15,13 @@ define [
 
 				@_shouldCloneInnerHTML = no
 
-			@_styleSetter = new StyleSetter @
-
-			# @_animator = new Animator @
-
-			@_styleInterface = @_styleSetter
-
-			# do @_initTransforms
-
-			# do @_initFilters
-
-			do @_initInteractions
+			do @__initMixins
 
 			@_beenAppended = no
+
+			@_parent = null
+
+			@_children = []
 
 			frames.nextTick =>
 
@@ -42,92 +35,53 @@ define [
 
 						@_beenAppended = yes
 
-			, 0
-
-			@_animationEnabled = no
-
-			@_parent = null
-
-			@_children = []
-
 		clone: ->
 
+			# The skeleton
 			newEl = Object.create @constructor::
 
-			do =>
-
-				for key of @
-
-					continue if key is 'el' or key is '_beenAppended' or key is '_children' or key is '_parent'
-
-					if @hasOwnProperty key
-
-						newEl[key] = object.clone @[key], yes
-
+			# Adding the node
 			newNode = @node.cloneNode()
 			newEl.node = newNode
-
 			newEl._children = []
 
-			do =>
+			# Cloning the children
+			if @_shouldCloneInnerHTML
 
-				if @_shouldCloneInnerHTML
-
-					newEl.node.innerHTML = @node.innerHTML
-
-				else
-
-					for child in @_children
-
-						child.clone().putIn newEl
-
-			do =>
-
-				newEl._parent = null
-
-				parent = @node._parent ? @node.parentElement ? null
-
-				newEl._beenAppended = no
-
-				setTimeout =>
-
-					if not newEl._beenAppended
-
-						newEl.putIn parent
-
-				, 0
-
-			newEl
-
-		enableAnimation: acceptLazyArgs (duration = 500) ->
-
-			duration = parseInt(duration) / 1000
-
-			css.setTransitionDuration @node, duration + 's'
-
-			@_animationEnabled = yes
-
-			@
-
-		_do: (fn) ->
-
-			unless @_animationEnabled
-
-				fn.apply @
+				newEl.node.innerHTML = @node.innerHTML
 
 			else
 
-				nextPulse =>
+				for child in @_children
 
-					fn.apply @
+					child.clone().putIn newEl
 
-			@
+			# Deciding on the parent
+			newEl._parent = null
 
-		ease: acceptLazyArgs (func = 'ease-out') ->
+			parent = @node._parent ? @node.parentElement ? null
 
-			css.setTransitionTimingFunction @node, func
+			newEl._beenAppended = no
 
-			@
+			frames.laterInThisFrame =>
+
+				if not newEl._beenAppended
+
+					newEl.putIn parent
+
+				return
+
+			@__applyCloners newEl
+
+			for key of @
+
+				continue if newEl[key]?
+
+				if @hasOwnProperty key
+
+					newEl[key] = object.clone @[key], yes
+
+			newEl
 
 		_notYourChildAnymore: (el) ->
 

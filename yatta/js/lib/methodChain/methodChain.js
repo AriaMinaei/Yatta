@@ -43,7 +43,7 @@ define(['./_interface'], function(_Interface) {
       _ref = _interface._queue;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
-        context = context[item.method].apply(context, item.args);
+        context = context[item.method].apply(context, getLazyValues(item.args));
       }
       return context;
     };

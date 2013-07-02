@@ -19,7 +19,7 @@ define [
 			sY: 1
 			sZ: 1
 
-			p: 0
+			p: 10000
 
 			rX: 0
 			rY: 0
@@ -50,8 +50,9 @@ define [
 		to.tY = from.tY
 		to.tZ = from.tZ
 
-
 	class LightMatrix
+
+		@_emptyStack: emptyStack
 
 		constructor: ->
 
@@ -113,6 +114,8 @@ define [
 
 		toPlainCss: ->
 
+			# Gotta figure out why this outperforms toCss() and toStupidCss()
+
 			# movement
 			if @_has.m
 
@@ -143,6 +146,10 @@ define [
 				css += Translation.toPlainCss @_current.tX, @_current.tY, @_current.tZ
 
 			css
+
+		toStupidCss: ->
+
+			"translate3d(#{@_current.mX}px, #{@_current.mY}px, #{@_current.mZ}px) scale3d(#{@_current.sX}, #{@_current.sY}, #{@_current.sZ}) perspective(#{@_current.p}) rotateX(#{@_current.rX}) rotateY(#{@_current.rY}) rotateZ(#{@_current.rZ}) translate3d(#{@_current.tX}px, #{@_current.tY}px, #{@_current.tZ}px)"
 
 		toArray: ->
 

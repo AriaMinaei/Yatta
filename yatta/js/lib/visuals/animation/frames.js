@@ -7,7 +7,7 @@ define(['../../utility/array', './frames/_timeoutPool', './frames/_intervalPool'
         return performance.now();
       };
     } else {
-      return Date.now;
+      return Date.now() - 1372763687107;
     }
   })();
   _nextFrame = (function() {
@@ -20,34 +20,34 @@ define(['../../utility/array', './frames/_timeoutPool', './frames/_intervalPool'
     if (window.webkitRequestAnimationFrame) {
       return window.webkitRequestAnimationFrame;
     }
-    return function(fn) {
-      return setTimeout(fn, 16);
-    };
   })();
   return frames = {
     getTime: getTime,
-    _currentT: 0,
-    _currentTInMs: 0,
+    time: new Float64Array(1),
+    timeInMs: new Int32Array(1),
     _toCallLaterInThisFrame: [],
     _toCallOnNextTick: [],
     _nextTickTimeout: null,
     nextTick: function(fn) {
       var _this = this;
 
-      this._toCallOnNextTick.push(fn);
-      if (!this._nextTickTimeout) {
-        this._nextTickTimeout = setTimeout(function() {
-          return _this._callTick();
+      frames._toCallOnNextTick.push(fn);
+      if (!frames._nextTickTimeout) {
+        frames._nextTickTimeout = setTimeout(function() {
+          return frames._callTick();
         }, 0);
       }
-      return this;
+      return null;
     },
     _callTick: function() {
       var fn, toCallNow, _i, _len;
 
-      this._nextTickTimeout = null;
-      toCallNow = this._toCallOnNextTick;
-      this._toCallOnNextTick = [];
+      if (frames._toCallOnNextTick.length < 1) {
+        return;
+      }
+      frames._nextTickTimeout = null;
+      toCallNow = frames._toCallOnNextTick;
+      frames._toCallOnNextTick = [];
       for (_i = 0, _len = toCallNow.length; _i < _len; _i++) {
         fn = toCallNow[_i];
         fn();
@@ -55,19 +55,21 @@ define(['../../utility/array', './frames/_timeoutPool', './frames/_intervalPool'
       return null;
     },
     laterInThisFrame: function(fn) {
-      this._toCallLaterInThisFrame.push(fn);
+      frames._toCallLaterInThisFrame.push(fn);
       return null;
     },
     _callFramesScheduledForLaterInThisFrame: function(t) {
-      var fn, len, toCall, _i, _len;
+      var fn, toCall, _i, _len;
 
+      if (frames._toCallLaterInThisFrame.length < 1) {
+        return;
+      }
       while (true) {
-        len = this._toCallLaterInThisFrame.length;
-        if (len < 1) {
-          break;
+        if (frames._toCallLaterInThisFrame.length < 1) {
+          return;
         }
-        toCall = this._toCallLaterInThisFrame;
-        this._toCallLaterInThisFrame = [];
+        toCall = frames._toCallLaterInThisFrame;
+        frames._toCallLaterInThisFrame = [];
         for (_i = 0, _len = toCall.length; _i < _len; _i++) {
           fn = toCall[_i];
           fn(t);
@@ -77,18 +79,21 @@ define(['../../utility/array', './frames/_timeoutPool', './frames/_intervalPool'
     },
     _toCallOnNextFrame: [],
     onNextFrame: function(fn) {
-      this._toCallOnNextFrame.push(fn);
+      frames._toCallOnNextFrame.push(fn);
       return null;
     },
     cancelOnNextFrame: function(fn) {
-      array.pluckOneItem(this._toCallOnNextFrame, fn);
+      array.pluckOneItem(frames._toCallOnNextFrame, fn);
       return null;
     },
     _callFramesScheduledForThisFrame: function(t) {
       var fn, toCallNow, _i, _len;
 
-      toCallNow = this._toCallOnNextFrame;
-      this._toCallOnNextFrame = [];
+      if (frames._toCallOnNextFrame.length < 1) {
+        return;
+      }
+      toCallNow = frames._toCallOnNextFrame;
+      frames._toCallOnNextFrame = [];
       for (_i = 0, _len = toCallNow.length; _i < _len; _i++) {
         fn = toCallNow[_i];
         fn(t);
@@ -98,23 +103,54 @@ define(['../../utility/array', './frames/_timeoutPool', './frames/_intervalPool'
     _toCallOnEachFrame: [],
     _toCancelFromCallingOnEachFrame: [],
     onEachFrame: function(fn) {
-      this._toCallOnEachFrame.push(fn);
+      frames._toCallOnEachFrame.push(fn);
       return null;
     },
     cancelEachFrame: function(fn) {
-      this._toCancelFromCallingOnEachFrame.push(fn);
+      frames._toCancelFromCallingOnEachFrame.push(fn);
       return null;
     },
     _callFramesScheduledForEachFrame: function(t) {
       var fn, toCancel, _i, _j, _len, _len1, _ref, _ref1;
 
-      _ref = this._toCancelFromCallingOnEachFrame;
+      if (frames._toCallOnEachFrame.length < 1) {
+        return;
+      }
+      _ref = frames._toCancelFromCallingOnEachFrame;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         toCancel = _ref[_i];
-        array.pluckOneItem(this._toCallOnEachFrame, toCancel);
+        array.pluckOneItem(frames._toCallOnEachFrame, toCancel);
       }
-      this._toCancelFromCallingOnEachFrame.length = 0;
-      _ref1 = this._toCallOnEachFrame;
+      frames._toCancelFromCallingOnEachFrame.length = 0;
+      _ref1 = frames._toCallOnEachFrame;
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        fn = _ref1[_j];
+        fn(t);
+      }
+    },
+    _toCallAfterEachFrame: [],
+    _toCancelFromCallingAfterEachFrame: [],
+    afterEachFrame: function(fn) {
+      frames._toCallAfterEachFrame.push(fn);
+      return null;
+    },
+    cancelAfterEachFrame: function(fn) {
+      frames._toCancelFromCallingAfterEachFrame.push(fn);
+      return null;
+    },
+    _callFramesScheduledForAfterEachFrame: function(t) {
+      var fn, toCancel, _i, _j, _len, _len1, _ref, _ref1;
+
+      if (frames._toCallAfterEachFrame.length < 1) {
+        return;
+      }
+      _ref = frames._toCancelFromCallingAfterEachFrame;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        toCancel = _ref[_i];
+        array.pluckOneItem(frames._toCallAfterEachFrame, toCancel);
+      }
+      frames._toCancelFromCallingAfterEachFrame.length = 0;
+      _ref1 = frames._toCallAfterEachFrame;
       for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
         fn = _ref1[_j];
         fn(t);
@@ -145,24 +181,27 @@ define(['../../utility/array', './frames/_timeoutPool', './frames/_intervalPool'
     wait: function(ms, fn) {
       var callTime, item;
 
-      callTime = this._currentTInMs + ms + 8;
+      callTime = frames.timeInMs[0] + ms + 8;
       item = _timeoutPool.give(callTime, fn);
-      array.injectByCallback(this._waitCallbacks, item, this.__shouldInjectCallItem);
+      array.injectByCallback(frames._waitCallbacks, item, frames.__shouldInjectCallItem);
       return null;
     },
     _callWaiters: function(t) {
       var item;
 
+      if (frames._waitCallbacks.length < 1) {
+        return;
+      }
       while (true) {
-        if (this._waitCallbacks.length < 1) {
+        if (frames._waitCallbacks.length < 1) {
           return;
         }
-        item = this._waitCallbacks[0];
-        if (item.time > this._currentTInMs) {
+        item = frames._waitCallbacks[0];
+        if (item.time > frames.timeInMs[0]) {
           return;
         }
         _timeoutPool.take(item);
-        this._waitCallbacks.shift();
+        frames._waitCallbacks.shift();
         item.fn(t);
       }
       return null;
@@ -170,28 +209,31 @@ define(['../../utility/array', './frames/_timeoutPool', './frames/_intervalPool'
     _intervals: [],
     _removeFromIntervals: [],
     every: function(ms, fn) {
-      this._intervals.push(_intervalPool.give(ms, this._currentTInMs, 0, fn));
+      frames._intervals.push(_intervalPool.give(ms, frames.timeInMs[0], 0, fn));
       return null;
     },
     cancelEvery: function(fn) {
-      this._removeFromIntervals.push(fn);
+      frames._removeFromIntervals.push(fn);
       return null;
     },
     _callIntervals: function() {
       var fnToRemove, item, properTimeToCall, t, _i, _j, _len, _len1, _ref, _ref1;
 
-      t = this._currentTInMs;
-      _ref = this._removeFromIntervals;
+      if (frames._intervals.length < 1) {
+        return;
+      }
+      t = frames.timeInMs[0];
+      _ref = frames._removeFromIntervals;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         fnToRemove = _ref[_i];
-        array.pluckByCallback(this._intervals, function(item) {
+        array.pluckByCallback(frames._intervals, function(item) {
           if (item.fn === fnToRemove) {
             return true;
           }
           return false;
         });
       }
-      _ref1 = this._intervals;
+      _ref1 = frames._intervals;
       for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
         item = _ref1[_j];
         properTimeToCall = item.from + (item.timesCalled * item.every) + item.every;
@@ -200,14 +242,15 @@ define(['../../utility/array', './frames/_timeoutPool', './frames/_intervalPool'
           item.timesCalled++;
         }
       }
-      return null;
     },
     _theLoop: function(t) {
       _nextFrame(frames._theLoop);
-      frames._currentT = t;
-      frames._currentTInMs = parseInt(t);
+      frames.time[0] = t;
+      t = parseInt(t);
+      frames.timeInMs[0] = t;
       frames._callFramesScheduledForThisFrame(t);
       frames._callFramesScheduledForEachFrame(t);
+      frames._callFramesScheduledForAfterEachFrame(t);
       frames._callFramesScheduledForLaterInThisFrame(t);
       frames._callWaiters(t);
       frames._callIntervals(t);

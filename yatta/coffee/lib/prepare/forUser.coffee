@@ -28,4 +28,8 @@ define [
 	# Center of the window in Y axis
 	window.centerY = -> window.innerHeight / 2
 
+	window.every = frames.every
+
+	window.wait = frames.wait
+
 	null

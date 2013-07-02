@@ -19,11 +19,11 @@ define ->
 
 	# Little helper for mixins from CoffeeScript FAQ,
 	# courtesy of Sethaurus (http://github.com/sethaurus)
-	global.implementing = implementing = (mixins..., classReference) ->
+	global.implementing = (mixins..., classReference) ->
+
+		classProto = classReference::
 
 		for mixin in mixins
-
-			classProto = classReference::
 
 			for member of mixin::
 
@@ -35,8 +35,59 @@ define ->
 
 		classReference
 
-	getLazyValue = (val) ->
+	global.mixing = (mixins..., classReference) ->
 
+		classProto = classReference::
+
+		unless classProto.__cloners?
+
+			classProto.__cloners = []
+
+		unless classProto.__applyCloners?
+
+			classProto.__applyCloners = ->
+
+				for cloner in @__cloners
+
+					@[cloner].apply @, arguments
+
+				return
+
+		unless classProto.__mixinInitializers?
+
+			classProto.__mixinInitializers = []
+
+		unless classProto.__initMixins?
+
+			classProto.__initMixins = ->
+
+				for initializer in @__mixinInitializers
+
+					do @[initializer]
+
+				return
+
+		for mixin in mixins
+
+			for member of mixin::
+
+				if member.substr(0, 11) is '__initMixin'
+
+					classProto.__mixinInitializers.push member
+
+				else if member.substr(0, 11) is '__clonerFor'
+
+					classProto.__cloners.push member
+
+				unless Object.getOwnPropertyDescriptor classProto, member
+
+					desc = Object.getOwnPropertyDescriptor mixin::, member
+
+					Object.defineProperty classProto, member, desc
+
+		classReference
+
+	global.getLazyValue = (val) ->
 
 		if val._isLazy? and val._isLazy
 
@@ -46,11 +97,11 @@ define ->
 
 			return val
 
-	getLazyValues = (ar) ->
+	global.getLazyValues = (ar) ->
 
 		getLazyValue item for item in ar
 
-	global.returnLazily = returnLazily = (fn) ->
+	global.returnLazily = (fn) ->
 
 		->
 
@@ -64,7 +115,7 @@ define ->
 
 			ret
 
-	global.acceptLazyArgs = acceptLazyArgs = (fn) ->
+	global.acceptLazyArgs = (fn) ->
 
 		->
 
@@ -72,7 +123,7 @@ define ->
 
 			fn.apply @, args
 
-	global.acceptAndReturnLazily = acceptAndReturnLazily = (fn) ->
+	global.acceptAndReturnLazily = (fn) ->
 
 		returnLazily acceptLazyArgs fn
 

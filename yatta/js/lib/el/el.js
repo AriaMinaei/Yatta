@@ -1,7 +1,7 @@
-define(['./mixin/interactions_', '../utility/object', '../utility/array', './tools/css', './styleSetter/styleSetter'], function(Interactions_, object, array, css, StyleSetter) {
+define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../utility/array'], function(HasStyles_, Interactions_, object, array) {
   var El;
 
-  implementing(Interactions_, El = (function() {
+  mixing(HasStyles_, Interactions_, El = (function() {
     function El(node) {
       var _this = this;
 
@@ -9,10 +9,10 @@ define(['./mixin/interactions_', '../utility/object', '../utility/array', './too
       if (this._shouldCloneInnerHTML == null) {
         this._shouldCloneInnerHTML = false;
       }
-      this._styleSetter = new StyleSetter(this);
-      this._styleInterface = this._styleSetter;
-      this._initInteractions();
+      this.__initMixins();
       this._beenAppended = false;
+      this._parent = null;
+      this._children = [];
       frames.nextTick(function() {
         if (!_this._beenAppended) {
           if ((_this.node.parentElement == null) && _this.node.tagName !== 'BODY') {
@@ -21,96 +21,45 @@ define(['./mixin/interactions_', '../utility/object', '../utility/array', './too
             return _this._beenAppended = true;
           }
         }
-      }, 0);
-      this._animationEnabled = false;
-      this._parent = null;
-      this._children = [];
+      });
     }
 
     El.prototype.clone = function() {
-      var newEl, newNode,
+      var child, key, newEl, newNode, parent, _i, _len, _ref, _ref1, _ref2,
         _this = this;
 
       newEl = Object.create(this.constructor.prototype);
-      (function() {
-        var key, _results;
-
-        _results = [];
-        for (key in _this) {
-          if (key === 'el' || key === '_beenAppended' || key === '_children' || key === '_parent') {
-            continue;
-          }
-          if (_this.hasOwnProperty(key)) {
-            _results.push(newEl[key] = object.clone(_this[key], true));
-          } else {
-            _results.push(void 0);
-          }
-        }
-        return _results;
-      })();
       newNode = this.node.cloneNode();
       newEl.node = newNode;
       newEl._children = [];
-      (function() {
-        var child, _i, _len, _ref, _results;
-
-        if (_this._shouldCloneInnerHTML) {
-          return newEl.node.innerHTML = _this.node.innerHTML;
-        } else {
-          _ref = _this._children;
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            child = _ref[_i];
-            _results.push(child.clone().putIn(newEl));
-          }
-          return _results;
+      if (this._shouldCloneInnerHTML) {
+        newEl.node.innerHTML = this.node.innerHTML;
+      } else {
+        _ref = this._children;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          child = _ref[_i];
+          child.clone().putIn(newEl);
         }
-      })();
-      (function() {
-        var parent, _ref, _ref1;
-
-        newEl._parent = null;
-        parent = (_ref = (_ref1 = _this.node._parent) != null ? _ref1 : _this.node.parentElement) != null ? _ref : null;
-        newEl._beenAppended = false;
-        return setTimeout(function() {
-          if (!newEl._beenAppended) {
-            return newEl.putIn(parent);
-          }
-        }, 0);
-      })();
+      }
+      newEl._parent = null;
+      parent = (_ref1 = (_ref2 = this.node._parent) != null ? _ref2 : this.node.parentElement) != null ? _ref1 : null;
+      newEl._beenAppended = false;
+      frames.laterInThisFrame(function() {
+        if (!newEl._beenAppended) {
+          newEl.putIn(parent);
+        }
+      });
+      this.__applyCloners(newEl);
+      for (key in this) {
+        if (newEl[key] != null) {
+          continue;
+        }
+        if (this.hasOwnProperty(key)) {
+          newEl[key] = object.clone(this[key], true);
+        }
+      }
       return newEl;
     };
-
-    El.prototype.enableAnimation = acceptLazyArgs(function(duration) {
-      if (duration == null) {
-        duration = 500;
-      }
-      duration = parseInt(duration) / 1000;
-      css.setTransitionDuration(this.node, duration + 's');
-      this._animationEnabled = true;
-      return this;
-    });
-
-    El.prototype._do = function(fn) {
-      var _this = this;
-
-      if (!this._animationEnabled) {
-        fn.apply(this);
-      } else {
-        nextPulse(function() {
-          return fn.apply(_this);
-        });
-      }
-      return this;
-    };
-
-    El.prototype.ease = acceptLazyArgs(function(func) {
-      if (func == null) {
-        func = 'ease-out';
-      }
-      css.setTransitionTimingFunction(this.node, func);
-      return this;
-    });
 
     El.prototype._notYourChildAnymore = function(el) {
       if (!(el instanceof El)) {

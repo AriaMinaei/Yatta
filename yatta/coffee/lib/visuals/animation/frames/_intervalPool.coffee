@@ -15,9 +15,9 @@ define ->
 
 		give: (every, from, timesCalled, fn) ->
 
-			if @_pool.length > 0
+			if _intervalPool._pool.length > 0
 
-				item = pool.pop()
+				item = _intervalPool._pool.pop()
 
 				item.every = every
 				item.from = from
@@ -28,10 +28,10 @@ define ->
 
 			else
 
-				return @_getNew every, from, timesCalled, fn
+				return _intervalPool._getNew every, from, timesCalled, fn
 
 		take: (item) ->
 
-			@_pool.push item
+			_intervalPool._pool.push item
 
 			null
