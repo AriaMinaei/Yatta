@@ -1,11 +1,11 @@
-define(['../../../../visuals/lightmatrix', '../../../tools/css'], function(LightMatrix, css) {
+define(['../../../../visuals/typedMatrix', '../../../tools/css'], function(TypedMatrix, css) {
   var ClassPrototype, Transforms_, method, methodName, _fn, _ref;
 
   Transforms_ = (function() {
     function Transforms_() {}
 
     Transforms_.prototype.__initMixinTransforms = function() {
-      this._transformer = new LightMatrix;
+      this._transformer = new TypedMatrix;
       this._shouldUpdateTransforms = false;
       this._lastTimeUpdatedTransforms = 0;
       this._transformUpdateCallbackAttached = false;
@@ -62,7 +62,7 @@ define(['../../../../visuals/lightmatrix', '../../../tools/css'], function(Light
 
   })();
   ClassPrototype = Transforms_.prototype;
-  _ref = LightMatrix.prototype;
+  _ref = TypedMatrix.prototype;
   _fn = function() {
     var _methodName;
 

@@ -1,5 +1,5 @@
 // Set background color in RGB
-display.fillWith(200, 195, 190).enableAnimation(500);
+display.fillWithColor(200, 195, 190).enableTransition(500);
 
 // Number of circles
 var count = 19;
@@ -18,27 +18,27 @@ var makeCircle = function(i){
 
 	c1
 	.setScaleAll(0.75)
-	.fillWith(190, 120, 240)
-	.rotateHue(50 * i)
+	.fillWithColor(190, 120, 240)
+	// .rotateHue(50 * i)
 	.setMovementX(radius * cos(PI * 2 / count * i) + cX)
 	.setMovementY(radius * sin(PI * 2 / count * i) + cY)
 	.z(10)
-	.enableAnimation(animDuration);
+	.enableTransition(animDuration);
 
 	var c2 = c1.clone();
 
 	c2.setScaleAll(0.5)
-	.setSaturation(80)
+	// .setSaturation(80)
 	.z(9)
-	.enableAnimation(animDuration + 200);
+	.enableTransition(animDuration + 200);
 
 	var c3 = c1.clone();
 
 	c3.setScaleAll(0.3)
-	.setSaturation(70)
+	// .setSaturation(70)
 	.ease('ease-out')
 	.z(8)
-	.enableAnimation(animDuration + 400);
+	.enableTransition(animDuration + 400);
 
 
 	every(900, function(){
@@ -47,18 +47,18 @@ var makeCircle = function(i){
 
 
 		c1
-		.rotateHue(50 * i)
+		// .rotateHue(50 * i)
 		.setMovementX(radius * cos(PI * 2 / count * i) + cX)
 		.setMovementY(radius * sin(PI * 2 / count * i) + cY);
 
 
 		c2
-		.rotateHue(50 * i)
+		// .rotateHue(50 * i)
 		.setMovementX((radius + param('C2 Radius', 11)) * cos(PI * 2 / count * i - param('C2 i', 0.07)) + cX)
 		.setMovementY((radius + param('C2 Radius', 11)) * sin(PI * 2 / count * i - param('C2 i', 0.07)) + cY);
 
 		c3
-		.rotateHue(50 * i)
+		// .rotateHue(50 * i)
 		.setMovementX((radius + param('c3 Radius', 18)) * cos(PI * 2 / count * i - param('c3 i', 0.12)) + cX)
 		.setMovementY((radius + param('c3 Radius', 18)) * sin(PI * 2 / count * i - param('c3 i', 0.12)) + cY);
 	});

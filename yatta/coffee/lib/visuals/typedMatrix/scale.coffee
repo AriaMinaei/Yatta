@@ -1,0 +1,28 @@
+if typeof define isnt 'function' then define = require('amdefine')(module)
+
+define ->
+
+	Scale =
+
+		toPlainCss: (x, y, z) ->
+
+			"scale3d(#{x}, #{y}, #{z}) "
+
+		applyTo: (b, x, y, z) ->
+
+			b[0] *= x
+			b[1] *= x
+			b[2] *= x
+			b[3] *= x
+
+			b[4] *= y
+			b[5] *= y
+			b[6] *= y
+			b[7] *= y
+
+			b[9]  *= z
+			b[10] *= z
+			b[11] *= z
+			b[12] *= z
+
+			b

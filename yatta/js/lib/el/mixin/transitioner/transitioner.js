@@ -1,7 +1,7 @@
-define(['./mixin/layout_', './mixin/transforms_', '../../../utility/object', '../../../visuals/animation/easing'], function(Layout_, Transforms_, object, easing) {
+define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../../../visuals/animation/easing'], function(Fill_, Transforms_, object, easing) {
   var Transitioner;
 
-  return mixing(Layout_, Transforms_, Transitioner = (function() {
+  return mixing(Fill_, Transforms_, Transitioner = (function() {
     function Transitioner(el) {
       this.el = el;
       this._styleSetter = this.el._styleSetter;
@@ -18,7 +18,8 @@ define(['./mixin/layout_', './mixin/transforms_', '../../../utility/object', '..
         transformRotation: false,
         transformScale: false,
         transformPerspective: false,
-        transformTranslation: false
+        transformTranslation: false,
+        opacity: false
       };
       this.ease('cubic.easeIn');
     }
@@ -67,7 +68,8 @@ define(['./mixin/layout_', './mixin/transforms_', '../../../utility/object', '..
         transformRotation: false,
         transformScale: false,
         transformPerspective: false,
-        transformTranslation: false
+        transformTranslation: false,
+        opacity: false
       };
       this.__applyCloners(newObj);
       for (key in this) {
@@ -89,6 +91,7 @@ define(['./mixin/layout_', './mixin/transforms_', '../../../utility/object', '..
 
     Transitioner.prototype.disable = function() {
       this._enabled = false;
+      this._stop();
       return this;
     };
 
@@ -103,14 +106,15 @@ define(['./mixin/layout_', './mixin/transforms_', '../../../utility/object', '..
       this._startOver();
     };
 
-    Transitioner.prototype._adjustForTimeJump = function() {
-      this._adjustTransformsForTimeJump();
+    Transitioner.prototype._adjustFromValues = function() {
+      this._adjustFromValuesForTransforms();
+      this._adjustFromValuesForFill();
       return this;
     };
 
     Transitioner.prototype._startOver = function() {
       this._startTime[0] = frames.time[0];
-      this._adjustForTimeJump();
+      this._adjustFromValues();
       this._shouldFinish = false;
       return this._startFrames();
     };
@@ -122,11 +126,14 @@ define(['./mixin/layout_', './mixin/transforms_', '../../../utility/object', '..
       }
     };
 
-    Transitioner.prototype._stopFrames = function() {
+    Transitioner.prototype._stop = function() {
       if (this._framesEnabled) {
         frames.cancelEachFrame(this._eachFrameCallback);
-        return this._framesEnabled = false;
+        this._framesEnabled = false;
       }
+      this._shouldFinish = false;
+      this._disableTransitionForTransforms();
+      this._disableTransitionForFill();
     };
 
     Transitioner.prototype._updateForTime = function(t) {
@@ -134,15 +141,14 @@ define(['./mixin/layout_', './mixin/transforms_', '../../../utility/object', '..
 
       ellapsed = t - this._startTime[0];
       if (this._shouldFinish && ellapsed - this._duration > 1000) {
-        this._stopFrames();
-        this._shouldFinish = false;
+        this._stop();
         return;
       }
       if (this._shouldFinish) {
         return;
       }
       progress = ellapsed / this._duration;
-      if (progress > 1) {
+      if (progress >= 1) {
         progress = 1;
         this._shouldFinish = true;
       }
@@ -151,21 +157,8 @@ define(['./mixin/layout_', './mixin/transforms_', '../../../utility/object', '..
     };
 
     Transitioner.prototype._updateByProgress = function(progress) {
-      if (this._needsUpdate.transformMovement) {
-        this._updateMovement(progress);
-      }
-      if (this._needsUpdate.transformRotation) {
-        this._updateRotation(progress);
-      }
-      if (this._needsUpdate.transformScale) {
-        this._updateScale(progress);
-      }
-      if (this._needsUpdate.transformPerspective) {
-        this._updatePerspective(progress);
-      }
-      if (this._needsUpdate.transformTranslation) {
-        this._updateTranslation(progress);
-      }
+      this._updateTransitionForTransforms(progress);
+      this._updateTransitionForFill(progress);
       return null;
     };
 

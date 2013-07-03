@@ -1,13 +1,13 @@
 define [
-	'../../../../visuals/lightmatrix'
+	'../../../../visuals/typedMatrix'
 	'../../../tools/css'
-], (LightMatrix, css) ->
+], (TypedMatrix, css) ->
 
 	class Transforms_
 
 		__initMixinTransforms: ->
 
-			@_transformer = new LightMatrix
+			@_transformer = new TypedMatrix
 
 			@_shouldUpdateTransforms = no
 
@@ -81,7 +81,7 @@ define [
 
 	ClassPrototype = Transforms_.prototype
 
-	for methodName, method of LightMatrix.prototype
+	for methodName, method of TypedMatrix.prototype
 
 		continue unless method instanceof Function
 

@@ -1,14 +1,14 @@
 define [
-	'../../../../visuals/lightmatrix'
-], (LightMatrix) ->
+	'../../../../visuals/typedMatrix'
+], (TypedMatrix) ->
 
 	class Transforms_
 
 		__initMixinTransforms: ->
 
-			@_toMatrix = LightMatrix._emptyStack()
+			@_toMatrix = TypedMatrix._emptyStack()
 
-			@_fromMatrix = LightMatrix._emptyStack()
+			@_fromMatrix = TypedMatrix._emptyStack()
 
 			@_currentMatrix = @el._styleSetter._transformer._current
 
@@ -18,202 +18,189 @@ define [
 
 			return
 
-		_adjustTransformsForTimeJump: ->
+		_adjustFromValuesForTransforms: ->
 
-			@_fromMatrix.mX = @_currentMatrix.mX
-			@_fromMatrix.mY = @_currentMatrix.mY
-			@_fromMatrix.mZ = @_currentMatrix.mZ
+			@_fromMatrix[0] = @_currentMatrix[0]
+			@_fromMatrix[1] = @_currentMatrix[1]
+			@_fromMatrix[2] = @_currentMatrix[2]
 
-			@_fromMatrix.sX = @_currentMatrix.sX
-			@_fromMatrix.sY = @_currentMatrix.sY
-			@_fromMatrix.sZ = @_currentMatrix.sZ
+			@_fromMatrix[3] = @_currentMatrix[3]
+			@_fromMatrix[4] = @_currentMatrix[4]
+			@_fromMatrix[5] = @_currentMatrix[5]
 
-			@_fromMatrix.rX = @_currentMatrix.rX
-			@_fromMatrix.rY = @_currentMatrix.rY
-			@_fromMatrix.rZ = @_currentMatrix.rZ
+			@_fromMatrix[6] = @_currentMatrix[6]
 
-			@_fromMatrix.tX = @_currentMatrix.tX
-			@_fromMatrix.tY = @_currentMatrix.tY
-			@_fromMatrix.tZ = @_currentMatrix.tZ
+			@_fromMatrix[7] = @_currentMatrix[7]
+			@_fromMatrix[8] = @_currentMatrix[8]
+			@_fromMatrix[9] = @_currentMatrix[9]
 
-			@_fromMatrix.p = @_currentMatrix.p
+			@_fromMatrix[10] = @_currentMatrix[10]
+			@_fromMatrix[11] = @_currentMatrix[11]
+			@_fromMatrix[12] = @_currentMatrix[12]
 
 			@
 
+		_disableTransitionForTransforms: ->
+
+			@_needsUpdate.transformMovement = no
+			@_toMatrix[0] = @_currentMatrix[0]
+			@_toMatrix[1] = @_currentMatrix[1]
+			@_toMatrix[2] = @_currentMatrix[2]
+
+			@_needsUpdate.transformScale = no
+			@_toMatrix[3] = @_currentMatrix[3]
+			@_toMatrix[4] = @_currentMatrix[4]
+			@_toMatrix[5] = @_currentMatrix[5]
+
+			@_needsUpdate.transformPerspective = no
+			@_toMatrix[6] = @_currentMatrix[6]
+
+			@_needsUpdate.transformRotation = no
+			@_toMatrix[7] = @_currentMatrix[7]
+			@_toMatrix[8] = @_currentMatrix[8]
+			@_toMatrix[9] = @_currentMatrix[9]
+
+			@_needsUpdate.transformTranslation = no
+			@_toMatrix[10] = @_currentMatrix[10]
+			@_toMatrix[11] = @_currentMatrix[11]
+			@_toMatrix[12] = @_currentMatrix[12]
+
+
+			@
+
+		_updateTransitionForTransforms: (progress) ->
+
+			if @_needsUpdate.transformMovement
+
+				@_updateMovement progress
+
+			if @_needsUpdate.transformRotation
+
+				@_updateRotation progress
+
+			if @_needsUpdate.transformScale
+
+				@_updateScale progress
+
+			if @_needsUpdate.transformPerspective
+
+				@_updatePerspective progress
+
+			if @_needsUpdate.transformTranslation
+
+				@_updateTranslation progress
+
+			return
+
 		_updateMovement: (progress) ->
 
-			if progress is 1
-
-				@_needsUpdate.transformMovement = no
-
 			@_styleSetter.setMovement (
-					@_fromMatrix.mX +
-					((@_toMatrix.mX - @_fromMatrix.mX) * progress)
+					@_fromMatrix[0] +
+					((@_toMatrix[0] - @_fromMatrix[0]) * progress)
 				),
 				(
-					@_fromMatrix.mY +
-					((@_toMatrix.mY - @_fromMatrix.mY) * progress)
+					@_fromMatrix[1] +
+					((@_toMatrix[1] - @_fromMatrix[1]) * progress)
 				),
 				(
-					@_fromMatrix.mZ +
-					((@_toMatrix.mZ - @_fromMatrix.mZ) * progress)
+					@_fromMatrix[2] +
+					((@_toMatrix[2] - @_fromMatrix[2]) * progress)
 				)
 
 			null
 
-		# _updateMovementX: (progress) ->
-
-		# 	return @_updateMovement progress
-
-		# 	@_styleSetter.setMovementX (
-		# 			@_fromMatrix.mX +
-		# 			((@_toMatrix.mX - @_fromMatrix.mX) * progress)
-		# 		)
-
-		# 	null
-
-		# _updateMovementY: (progress) ->
-
-		# 	return @_updateMovement progress
-
-		# 	@_styleSetter.setMovementY (
-		# 			@_fromMatrix.mY +
-		# 			((@_toMatrix.mY - @_fromMatrix.mY) * progress)
-		# 		)
-
-		# 	null
-
-		# _updateMovementZ: (progress) ->
-
-		# 	return @_updateMovement progress
-
-		# 	@_styleSetter.setMovementZ (
-		# 			@_fromMatrix.mZ +
-		# 			((@_toMatrix.mZ - @_fromMatrix.mZ) * progress)
-		# 		)
-
-		# 	null
-
 		resetMovement: ->
 
-			@_fromMatrix.mX = @_currentMatrix.mX
-			@_fromMatrix.mY = @_currentMatrix.mY
-			@_fromMatrix.mZ = @_currentMatrix.mZ
-
-
-			@_toMatrix.mX = 0
-			@_toMatrix.mY = 0
-			@_toMatrix.mZ = 0
+			@_toMatrix[0] = 0
+			@_toMatrix[1] = 0
+			@_toMatrix[2] = 0
 
 			@_needsUpdate.transformMovement = yes
+
 			do @_update
 
 			@
 
 		setMovement: (x, y, z) ->
 
-			@_fromMatrix.mX = @_currentMatrix.mX
-			@_fromMatrix.mY = @_currentMatrix.mY
-			@_fromMatrix.mZ = @_currentMatrix.mZ
-
-			@_toMatrix.mX = x
-			@_toMatrix.mY = y
-			@_toMatrix.mZ = z
+			@_toMatrix[0] = x
+			@_toMatrix[1] = y
+			@_toMatrix[2] = z
 
 			@_needsUpdate.transformMovement = yes
+
 			do @_update
 
 			@
 
 		setMovementX: (x) ->
 
-			@_fromMatrix.mX = @_currentMatrix.mX
-			@_fromMatrix.mY = @_currentMatrix.mY
-			@_fromMatrix.mZ = @_currentMatrix.mZ
-
-			@_toMatrix.mX = x
+			@_toMatrix[0] = x
 
 			@_needsUpdate.transformMovement = yes
+
 			do @_update
 
 			@
 
 		setMovementY: (y) ->
 
-			@_fromMatrix.mX = @_currentMatrix.mX
-			@_fromMatrix.mY = @_currentMatrix.mY
-			@_fromMatrix.mZ = @_currentMatrix.mZ
-
-			@_toMatrix.mY = y
+			@_toMatrix[1] = y
 
 			@_needsUpdate.transformMovement = yes
+
 			do @_update
 
 			@
 
 		setMovementZ: (z) ->
 
-			@_fromMatrix.mX = @_currentMatrix.mX
-			@_fromMatrix.mY = @_currentMatrix.mY
-			@_fromMatrix.mZ = @_currentMatrix.mZ
-
-			@_toMatrix.mZ = z
+			@_toMatrix[2] = z
 
 			@_needsUpdate.transformMovement = yes
+
 			do @_update
 
 			@
 
 		move: (x, y, z) ->
 
-			@_fromMatrix.mX = @_currentMatrix.mX
-			@_fromMatrix.mY = @_currentMatrix.mY
-			@_fromMatrix.mZ = @_currentMatrix.mZ
-
-			@_toMatrix.mX = @_currentMatrix.mX + x
-			@_toMatrix.mY = @_currentMatrix.mY + y
-			@_toMatrix.mZ = @_currentMatrix.mZ + z
+			@_toMatrix[0] = @_currentMatrix[0] + x
+			@_toMatrix[1] = @_currentMatrix[1] + y
+			@_toMatrix[2] = @_currentMatrix[2] + z
 
 			@_needsUpdate.transformMovement = yes
+
 			do @_update
 
 			@
 
 		moveX: (x) ->
 
-			@_fromMatrix.mX = @_currentMatrix.mX
-			@_fromMatrix.mY = @_currentMatrix.mY
-			@_fromMatrix.mZ = @_currentMatrix.mZ
-
-			@_toMatrix.mX = @_currentMatrix.mX + x
+			@_toMatrix[0] = @_currentMatrix[0] + x
 
 			@_needsUpdate.transformMovement = yes
+
 			do @_update
 
 			@
 
 		moveY: (y) ->
 
-			@_fromMatrix.mX = @_currentMatrix.mX
-			@_fromMatrix.mY = @_currentMatrix.mY
-			@_fromMatrix.mZ = @_currentMatrix.mZ
-
-			@_toMatrix.mY = @_currentMatrix.mY + y
+			@_toMatrix[1] = @_currentMatrix[1] + y
 
 			@_needsUpdate.transformMovement = yes
+
 			do @_update
 
 			@
 
 		moveZ: (z) ->
 
-			@_fromMatrix.mX = @_currentMatrix.mX
-			@_fromMatrix.mY = @_currentMatrix.mY
-			@_fromMatrix.mZ = @_currentMatrix.mZ
-
-			@_toMatrix.mZ = @_currentMatrix.mZ + z
+			@_toMatrix[2] = @_currentMatrix[2] + z
 
 			@_needsUpdate.transformMovement = yes
+
 			do @_update
 
 			@
@@ -224,185 +211,124 @@ define [
 
 		_updateScale: (progress) ->
 
-			if progress is 1
-
-				@_needsUpdate.transformScale = no
-
 			@_styleSetter.setScale (
-					@_fromMatrix.sX +
-					((@_toMatrix.sX - @_fromMatrix.sX) * progress)
+					@_fromMatrix[3] +
+					((@_toMatrix[3] - @_fromMatrix[3]) * progress)
 				),
 				(
-					@_fromMatrix.sY +
-					((@_toMatrix.sY - @_fromMatrix.sY) * progress)
+					@_fromMatrix[4] +
+					((@_toMatrix[4] - @_fromMatrix[4]) * progress)
 				),
 				(
-					@_fromMatrix.sZ +
-					((@_toMatrix.sZ - @_fromMatrix.sZ) * progress)
-				)
-
-			null
-
-		# _updateScaleX: (progress) ->
-
-		# 	@_styleSetter.setScaleX (
-		# 			@_fromMatrix.sX +
-		# 			((@_toMatrix.sX - @_fromMatrix.sX) * progress)
-		# 		)
-
-		# 	null
-
-		# _updateScaleY: (progress) ->
-
-		# 	@_styleSetter.setScaleY (
-		# 			@_fromMatrix.sY +
-		# 			((@_toMatrix.sY - @_fromMatrix.sY) * progress)
-		# 		)
-
-		# 	null
-
-		# _updateScaleZ: (progress) ->
-
-			@_styleSetter.setScaleZ (
-					@_fromMatrix.sZ +
-					((@_toMatrix.sZ - @_fromMatrix.sZ) * progress)
+					@_fromMatrix[5] +
+					((@_toMatrix[5] - @_fromMatrix[5]) * progress)
 				)
 
 			null
 
 		resetScale: ->
 
-			@_fromMatrix.sX = @_currentMatrix.sX
-			@_fromMatrix.sY = @_currentMatrix.sY
-			@_fromMatrix.sZ = @_currentMatrix.sZ
-
 			@_needsUpdate.transformScale = yes
+
 			do @_update
 
-			@_toMatrix.sX = 1
-			@_toMatrix.sY = 1
-			@_toMatrix.sZ = 1
+			@_toMatrix[3] = 1
+			@_toMatrix[4] = 1
+			@_toMatrix[5] = 1
 
 			@
 
 		setScale: (x, y, z) ->
 
-			@_fromMatrix.sX = @_currentMatrix.sX
-			@_fromMatrix.sY = @_currentMatrix.sY
-			@_fromMatrix.sZ = @_currentMatrix.sZ
-
 			@_needsUpdate.transformScale = yes
+
 			do @_update
 
-			@_toMatrix.sX = x
-			@_toMatrix.sY = y
-			@_toMatrix.sZ = z
+			@_toMatrix[3] = x
+			@_toMatrix[4] = y
+			@_toMatrix[5] = z
 
 			@
 
 		setScaleX: (x) ->
 
-			@_fromMatrix.sX = @_currentMatrix.sX
-			@_fromMatrix.sY = @_currentMatrix.sY
-			@_fromMatrix.sZ = @_currentMatrix.sZ
-
 			@_needsUpdate.transformScale = yes
+
 			do @_update
 
-			@_toMatrix.sX = x
+			@_toMatrix[3] = x
 
 			@
 
 		setScaleY: (y) ->
 
-			@_fromMatrix.sX = @_currentMatrix.sX
-			@_fromMatrix.sY = @_currentMatrix.sY
-			@_fromMatrix.sZ = @_currentMatrix.sZ
-
 			@_needsUpdate.transformScale = yes
+
 			do @_update
 
-			@_toMatrix.sY = y
+			@_toMatrix[4] = y
 
 			@
 
 		setScaleZ: (z) ->
 
-			@_fromMatrix.sX = @_currentMatrix.sX
-			@_fromMatrix.sY = @_currentMatrix.sY
-			@_fromMatrix.sZ = @_currentMatrix.sZ
-
 			@_needsUpdate.transformScale = yes
+
 			do @_update
 
-			@_toMatrix.sZ = z
+			@_toMatrix[5] = z
 
 			@
 
 		scale: (x, y, z) ->
 
-			@_fromMatrix.sX = @_currentMatrix.sX
-			@_fromMatrix.sY = @_currentMatrix.sY
-			@_fromMatrix.sZ = @_currentMatrix.sZ
-
 			@_needsUpdate.transformScale = yes
+
 			do @_update
 
-			@_toMatrix.sX = @_currentMatrix.sX * x
-			@_toMatrix.sY = @_currentMatrix.sY * y
-			@_toMatrix.sZ = @_currentMatrix.sZ * z
+			@_toMatrix[3] = @_currentMatrix[3] * x
+			@_toMatrix[4] = @_currentMatrix[4] * y
+			@_toMatrix[5] = @_currentMatrix[5] * z
 
 			@
 
 		setScaleAll: (x) ->
 
-			@_fromMatrix.sX = @_currentMatrix.sX
-			@_fromMatrix.sY = @_currentMatrix.sY
-			@_fromMatrix.sZ = @_currentMatrix.sZ
-
 			@_needsUpdate.transformScale = yes
+
 			do @_update
 
-			@_toMatrix.sX = @_toMatrix.sY = @_toMatrix.sZ = x
+			@_toMatrix[3] = @_toMatrix[4] = @_toMatrix[5] = x
 
 			@
 
 		scaleX: (x) ->
 
-			@_fromMatrix.sX = @_currentMatrix.sX
-			@_fromMatrix.sY = @_currentMatrix.sY
-			@_fromMatrix.sZ = @_currentMatrix.sZ
-
 			@_needsUpdate.transformScale = yes
+
 			do @_update
 
-			@_toMatrix.sX = @_currentMatrix.sX * x
+			@_toMatrix[3] = @_currentMatrix[3] * x
 
 			@
 
 		scaleY: (y) ->
 
-			@_fromMatrix.sX = @_currentMatrix.sX
-			@_fromMatrix.sY = @_currentMatrix.sY
-			@_fromMatrix.sZ = @_currentMatrix.sZ
-
 			@_needsUpdate.transformScale = yes
+
 			do @_update
 
-			@_toMatrix.sY = @_currentMatrix.sY * y
+			@_toMatrix[4] = @_currentMatrix[4] * y
 
 			@
 
 		scaleZ: (z) ->
 
-			@_fromMatrix.sX = @_currentMatrix.sX
-			@_fromMatrix.sY = @_currentMatrix.sY
-			@_fromMatrix.sZ = @_currentMatrix.sZ
-
 			@_needsUpdate.transformScale = yes
+
 			do @_update
 
-			@_toMatrix.sZ = @_currentMatrix.sZ * z
+			@_toMatrix[5] = @_currentMatrix[5] * z
 
 			@
 
@@ -412,37 +338,31 @@ define [
 
 		_updatePerspective: (progress) ->
 
-			if progress is 1
-
-				@_needsUpdate.transformPerspective = no
-
 			@_styleSetter.setPerspective (
-					@_fromMatrix.p +
-					((@_toMatrix.p - @_fromMatrix.p) * progress)
+					@_fromMatrix[6] +
+					((@_toMatrix[6] - @_fromMatrix[6]) * progress)
 				)
 
 			null
 
 		resetPerspective: ->
 
-			@_fromMatrix.p = @_currentMatrix.p
-
 			@_needsUpdate.transformPerspective = yes
+
 			do @_update
 
-			@_toMatrix.p = 0
+			@_toMatrix[6] = 0
 
 
 			@
 
 		setPerspective: (d) ->
 
-			@_fromMatrix.p = @_currentMatrix.p
-
 			@_needsUpdate.transformPerspective = yes
+
 			do @_update
 
-			@_toMatrix.p = d
+			@_toMatrix[6] = d
 
 			@
 
@@ -452,173 +372,115 @@ define [
 
 		_updateRotation: (progress) ->
 
-			if progress is 1
-
-				@_needsUpdate.transformRotation = no
-
 			@_styleSetter.setRotation (
-					@_fromMatrix.rX +
-					((@_toMatrix.rX - @_fromMatrix.rX) * progress)
+					@_fromMatrix[7] +
+					((@_toMatrix[7] - @_fromMatrix[7]) * progress)
 				),
 				(
-					@_fromMatrix.rY +
-					((@_toMatrix.rY - @_fromMatrix.rY) * progress)
+					@_fromMatrix[8] +
+					((@_toMatrix[8] - @_fromMatrix[8]) * progress)
 				),
 				(
-					@_fromMatrix.rZ +
-					((@_toMatrix.rZ - @_fromMatrix.rZ) * progress)
-				)
-
-			null
-
-		# _updateRotationX: (progress) ->
-
-		# 	@_styleSetter.setRotationX (
-		# 			@_fromMatrix.rX +
-		# 			((@_toMatrix.rX - @_fromMatrix.rX) * progress)
-		# 		)
-
-		# 	null
-
-		# _updateRotationY: (progress) ->
-
-		# 	@_styleSetter.setRotationY (
-		# 			@_fromMatrix.rY +
-		# 			((@_toMatrix.rY - @_fromMatrix.rY) * progress)
-		# 		)
-
-		# 	null
-
-		# _updateRotationZ: (progress) ->
-
-			@_styleSetter.setRotationZ (
-					@_fromMatrix.rZ +
-					((@_toMatrix.rZ - @_fromMatrix.rZ) * progress)
+					@_fromMatrix[9] +
+					((@_toMatrix[9] - @_fromMatrix[9]) * progress)
 				)
 
 			null
 
 		resetRotation: ->
 
-			@_fromMatrix.rX = @_currentMatrix.rX
-			@_fromMatrix.rY = @_currentMatrix.rY
-			@_fromMatrix.rZ = @_currentMatrix.rZ
-
 			@_needsUpdate.transformRotation = yes
+
 			do @_update
 
-			@_toMatrix.rX = 0
-			@_toMatrix.rY = 0
-			@_toMatrix.rZ = 0
+			@_toMatrix[7] = 0
+			@_toMatrix[8] = 0
+			@_toMatrix[9] = 0
 
 			@
 
 		setRotation: (x, y, z) ->
 
-			@_fromMatrix.rX = @_currentMatrix.rX
-			@_fromMatrix.rY = @_currentMatrix.rY
-			@_fromMatrix.rZ = @_currentMatrix.rZ
-
 			@_needsUpdate.transformRotation = yes
+
 			do @_update
 
-			@_toMatrix.rX = x
-			@_toMatrix.rY = y
-			@_toMatrix.rZ = z
+			@_toMatrix[7] = x
+			@_toMatrix[8] = y
+			@_toMatrix[9] = z
 
 			@
 
 		setRotationX: (x) ->
 
-			@_fromMatrix.rX = @_currentMatrix.rX
-			@_fromMatrix.rY = @_currentMatrix.rY
-			@_fromMatrix.rZ = @_currentMatrix.rZ
-
 			@_needsUpdate.transformRotation = yes
+
 			do @_update
 
-			@_toMatrix.rX = x
+			@_toMatrix[7] = x
 
 			@
 
 		setRotationY: (y) ->
 
-			@_fromMatrix.rX = @_currentMatrix.rX
-			@_fromMatrix.rY = @_currentMatrix.rY
-			@_fromMatrix.rZ = @_currentMatrix.rZ
-
 			@_needsUpdate.transformRotation = yes
+
 			do @_update
 
-			@_toMatrix.rY = y
+			@_toMatrix[8] = y
 
 			@
 
 		setRotationZ: (z) ->
 
-			@_fromMatrix.rX = @_currentMatrix.rX
-			@_fromMatrix.rY = @_currentMatrix.rY
-			@_fromMatrix.rZ = @_currentMatrix.rZ
-
 			@_needsUpdate.transformRotation = yes
+
 			do @_update
 
-			@_toMatrix.rZ = z
+			@_toMatrix[9] = z
 
 			@
 
 		rotate: (x, y, z) ->
 
-			@_fromMatrix.rX = @_currentMatrix.rX
-			@_fromMatrix.rY = @_currentMatrix.rY
-			@_fromMatrix.rZ = @_currentMatrix.rZ
-
 			@_needsUpdate.transformRotation = yes
+
 			do @_update
 
-			@_toMatrix.rX = @_currentMatrix.rX + x
-			@_toMatrix.rY = @_currentMatrix.rY + y
-			@_toMatrix.rZ = @_currentMatrix.rZ + z
+			@_toMatrix[7] = @_currentMatrix[7] + x
+			@_toMatrix[8] = @_currentMatrix[8] + y
+			@_toMatrix[9] = @_currentMatrix[9] + z
 
 			@
 
 		rotateX: (x) ->
 
-			@_fromMatrix.rX = @_currentMatrix.rX
-			@_fromMatrix.rY = @_currentMatrix.rY
-			@_fromMatrix.rZ = @_currentMatrix.rZ
-
 			@_needsUpdate.transformRotation = yes
+
 			do @_update
 
-			@_toMatrix.rX = @_currentMatrix.rX + x
+			@_toMatrix[7] = @_currentMatrix[7] + x
 
 			@
 
 		rotateY: (y) ->
 
-			@_fromMatrix.rX = @_currentMatrix.rX
-			@_fromMatrix.rY = @_currentMatrix.rY
-			@_fromMatrix.rZ = @_currentMatrix.rZ
-
 			@_needsUpdate.transformRotation = yes
+
 			do @_update
 
-			@_toMatrix.rY = @_currentMatrix.rY + y
+			@_toMatrix[8] = @_currentMatrix[8] + y
 
 			@
 
 		rotateZ: (z) ->
 
-			@_fromMatrix.rX = @_currentMatrix.rX
-			@_fromMatrix.rY = @_currentMatrix.rY
-			@_fromMatrix.rZ = @_currentMatrix.rZ
-
 			@_needsUpdate.transformRotation = yes
+
 			do @_update
 
 
-			@_toMatrix.rZ = @_currentMatrix.rZ + z
+			@_toMatrix[9] = @_currentMatrix[9] + z
 
 			@
 
@@ -628,171 +490,113 @@ define [
 
 		_updateTranslation: (progress) ->
 
-			if progress is 1
-
-				@_needsUpdate.transformTranslation = no
-
-			@_styleSetter.setRotation (
-					@_fromMatrix.tX +
-					((@_toMatrix.tX - @_fromMatrix.tX) * progress)
+			@_styleSetter.setTranslation (
+					@_fromMatrix[10] +
+					((@_toMatrix[10] - @_fromMatrix[10]) * progress)
 				),
 				(
-					@_fromMatrix.tY +
-					((@_toMatrix.tY - @_fromMatrix.tY) * progress)
+					@_fromMatrix[11] +
+					((@_toMatrix[11] - @_fromMatrix[11]) * progress)
 				),
 				(
-					@_fromMatrix.tZ +
-					((@_toMatrix.tZ - @_fromMatrix.tZ) * progress)
-				)
-
-			null
-
-		# _updateTranslationX: (progress) ->
-
-		# 	@_styleSetter.setTranslationX (
-		# 			@_fromMatrix.tX +
-		# 			((@_toMatrix.tX - @_fromMatrix.tX) * progress)
-		# 		)
-
-		# 	null
-
-		# _updateTranslationY: (progress) ->
-
-		# 	@_styleSetter.setTranslationY (
-		# 			@_fromMatrix.tY +
-		# 			((@_toMatrix.tY - @_fromMatrix.tY) * progress)
-		# 		)
-
-		# 	null
-
-		# _updateTranslationZ: (progress) ->
-
-			@_styleSetter.setTranslationZ (
-					@_fromMatrix.tZ +
-					((@_toMatrix.tZ - @_fromMatrix.tZ) * progress)
+					@_fromMatrix[12] +
+					((@_toMatrix[12] - @_fromMatrix[12]) * progress)
 				)
 
 			null
 
 		resetTranslation: ->
 
-			@_fromMatrix.tX = @_currentMatrix.tX
-			@_fromMatrix.tY = @_currentMatrix.tY
-			@_fromMatrix.tZ = @_currentMatrix.tZ
-
 			@_needsUpdate.transformTranslation = yes
+
 			do @_update
 
-			@_toMatrix.tX = 0
-			@_toMatrix.tY = 0
-			@_toMatrix.tZ = 0
+			@_toMatrix[10] = 0
+			@_toMatrix[11] = 0
+			@_toMatrix[12] = 0
 
 			@
 
 		setTranslation: (x, y, z) ->
 
-			@_fromMatrix.tX = @_currentMatrix.tX
-			@_fromMatrix.tY = @_currentMatrix.tY
-			@_fromMatrix.tZ = @_currentMatrix.tZ
-
 			@_needsUpdate.transformTranslation = yes
+
 			do @_update
 
-			@_toMatrix.tX = x
-			@_toMatrix.tY = y
-			@_toMatrix.tZ = z
+			@_toMatrix[10] = x
+			@_toMatrix[11] = y
+			@_toMatrix[12] = z
 
 			@
 
 		setTranslationX: (x) ->
 
-			@_fromMatrix.tX = @_currentMatrix.tX
-			@_fromMatrix.tY = @_currentMatrix.tY
-			@_fromMatrix.tZ = @_currentMatrix.tZ
-
 			@_needsUpdate.transformTranslation = yes
+
 			do @_update
 
-			@_toMatrix.tX = x
+			@_toMatrix[10] = x
 
 			@
 
 		setTranslationY: (y) ->
 
-			@_fromMatrix.tX = @_currentMatrix.tX
-			@_fromMatrix.tY = @_currentMatrix.tY
-			@_fromMatrix.tZ = @_currentMatrix.tZ
-
 			@_needsUpdate.transformTranslation = yes
+
 			do @_update
 
-			@_toMatrix.tY = y
+			@_toMatrix[11] = y
 
 			@
 
 		setTranslationZ: (z) ->
 
-			@_fromMatrix.tX = @_currentMatrix.tX
-			@_fromMatrix.tY = @_currentMatrix.tY
-			@_fromMatrix.tZ = @_currentMatrix.tZ
-
 			@_needsUpdate.transformTranslation = yes
+
 			do @_update
 
-			@_toMatrix.tZ = z
+			@_toMatrix[12] = z
 
 			@
 
 		translate: (x, y, z) ->
 
-			@_fromMatrix.tX = @_currentMatrix.tX
-			@_fromMatrix.tY = @_currentMatrix.tY
-			@_fromMatrix.tZ = @_currentMatrix.tZ
-
 			@_needsUpdate.transformTranslation = yes
+
 			do @_update
 
-			@_toMatrix.tX = @_currentMatrix.tX + x
-			@_toMatrix.tY = @_currentMatrix.tY + y
-			@_toMatrix.tZ = @_currentMatrix.tZ + z
+			@_toMatrix[10] = @_currentMatrix[10] + x
+			@_toMatrix[11] = @_currentMatrix[11] + y
+			@_toMatrix[12] = @_currentMatrix[12] + z
 
 			@
 
 		translateX: (x) ->
 
-			@_fromMatrix.tX = @_currentMatrix.tX
-			@_fromMatrix.tY = @_currentMatrix.tY
-			@_fromMatrix.tZ = @_currentMatrix.tZ
-
 			@_needsUpdate.transformTranslation = yes
+
 			do @_update
 
-			@_toMatrix.tX = @_currentMatrix.tX + x
+			@_toMatrix[10] = @_currentMatrix[10] + x
 
 			@
 
 		translateY: (y) ->
 
-			@_fromMatrix.tX = @_currentMatrix.tX
-			@_fromMatrix.tY = @_currentMatrix.tY
-			@_fromMatrix.tZ = @_currentMatrix.tZ
-
 			@_needsUpdate.transformTranslation = yes
+
 			do @_update
 
-			@_toMatrix.tY = @_currentMatrix.tY + y
+			@_toMatrix[11] = @_currentMatrix[11] + y
 
 			@
 
 		translateZ: (z) ->
 
-			@_fromMatrix.tX = @_currentMatrix.tX
-			@_fromMatrix.tY = @_currentMatrix.tY
-			@_fromMatrix.tZ = @_currentMatrix.tZ
-
 			@_needsUpdate.transformTranslation = yes
+
 			do @_update
 
-			@_toMatrix.tZ = @_currentMatrix.tZ + z
+			@_toMatrix[12] = @_currentMatrix[12] + z
 
 			@

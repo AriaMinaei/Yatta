@@ -1,11 +1,11 @@
 define [
-	'./mixin/layout_'
+	'./mixin/fill_'
 	'./mixin/transforms_'
 	'../../../utility/object'
 	'../../../visuals/animation/easing'
-], (Layout_, Transforms_, object, easing) ->
+], (Fill_, Transforms_, object, easing) ->
 
-	mixing Layout_, Transforms_, class Transitioner
+	mixing Fill_, Transforms_, class Transitioner
 
 		constructor: (@el) ->
 
@@ -33,6 +33,7 @@ define [
 				transformScale: no
 				transformPerspective: no
 				transformTranslation: no
+				opacity: no
 
 			@ease 'cubic.easeIn'
 
@@ -92,6 +93,7 @@ define [
 				transformScale: no
 				transformPerspective: no
 				transformTranslation: no
+				opacity: no
 
 			@__applyCloners newObj
 
@@ -117,6 +119,8 @@ define [
 
 			@_enabled = no
 
+			do @_stop
+
 			@
 
 		_ease: (progress) ->
@@ -131,9 +135,11 @@ define [
 
 			return
 
-		_adjustForTimeJump: ->
+		_adjustFromValues: ->
 
-			do @_adjustTransformsForTimeJump
+			do @_adjustFromValuesForTransforms
+
+			do @_adjustFromValuesForFill
 
 			@
 
@@ -141,7 +147,7 @@ define [
 
 			@_startTime[0] = frames.time[0]
 
-			do @_adjustForTimeJump
+			do @_adjustFromValues
 
 			@_shouldFinish = no
 
@@ -157,7 +163,7 @@ define [
 
 			return
 
-		_stopFrames: ->
+		_stop: ->
 
 			if @_framesEnabled
 
@@ -165,15 +171,20 @@ define [
 
 				@_framesEnabled = no
 
+			@_shouldFinish = no
+
+			do @_disableTransitionForTransforms
+			do @_disableTransitionForFill
+
+			return
+
 		_updateForTime: (t) ->
 
 			ellapsed = (t - @_startTime[0])
 
 			if @_shouldFinish and ellapsed - @_duration > 1000
 
-				do @_stopFrames
-
-				@_shouldFinish = no
+				do @_stop
 
 				return
 
@@ -181,7 +192,7 @@ define [
 
 			progress = ellapsed / @_duration
 
-			if progress > 1
+			if progress >= 1
 
 				progress = 1
 
@@ -195,24 +206,8 @@ define [
 
 		_updateByProgress: (progress) ->
 
-			if @_needsUpdate.transformMovement
+			@_updateTransitionForTransforms progress
 
-				@_updateMovement progress
-
-			if @_needsUpdate.transformRotation
-
-				@_updateRotation progress
-
-			if @_needsUpdate.transformScale
-
-				@_updateScale progress
-
-			if @_needsUpdate.transformPerspective
-
-				@_updatePerspective progress
-
-			if @_needsUpdate.transformTranslation
-
-				@_updateTranslation progress
+			@_updateTransitionForFill progress
 
 			null
