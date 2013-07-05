@@ -6,8 +6,12 @@ define(['./mixin/generals_', './mixin/layout_', './mixin/fill_', './mixin/transf
       this.el = el;
       this.node = this.el.node;
       this._styles = this.node.style;
-      this.__initMixins();
+      StyleSetter.__initMixinsFor(this);
     }
+
+    StyleSetter.prototype._scheduleUpdate = function() {
+      return this.el._scheduleUpdate();
+    };
 
     StyleSetter.prototype.clone = function(el) {
       var key, newObj;

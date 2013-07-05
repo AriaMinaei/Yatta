@@ -13,12 +13,78 @@ define [
 
 			@_styleInterface = @_styleSetter
 
+			@_updaterDeployed = no
+
+			@_shouldUpdate = no
+
+			@_updaterCallback = @_getNewUpdaterCallback()
+
+			@_lastTimeUpdated = 0
+
+			return
+
+		_getNewUpdaterCallback: ->
+
+			(t) => @_doUpdate t
+
+		_scheduleUpdate: ->
+
+			@_shouldUpdate = yes
+
+			do @_deployUpdater
+
+			return
+
+		_deployUpdater: ->
+
+			return if @_updaterDeployed
+
+			@_updaterDeployed = yes
+
+			frames.afterEachFrame @_updaterCallback
+
+		_undeployUpdater: ->
+
+			return unless @_updaterDeployed
+
+			@_updaterDeployed = no
+
+			frames.cancelAfterEachFrame @_updaterCallback
+
+		_doUpdate: (t) ->
+
+			unless @_shouldUpdate
+
+				if t - @_lastTimeUpdated > 2000
+
+					do @_undeployUpdater
+
+				return
+
+			@_lastTimeUpdated = t
+
+			@_shouldUpdate = no
+
+			do @_transitioner._updateTransition
+
+			do @_styleSetter._updateTransforms
+
+			do @_styleSetter._updateFilters
+
 			return
 
 		__clonerForHasStyles: (newEl) ->
 
 			newEl._styleSetter = @_styleSetter.clone newEl
 			newEl._transitioner = @_transitioner.clone newEl
+
+			newEl._updaterDeployed = no
+
+			newEl._shouldUpdate = no
+
+			newEl._updaterCallback = newEl._getNewUpdaterCallback()
+
+			newEl._lastTimeUpdated
 
 			if @_styleInterface is @_styleSetter
 
@@ -45,6 +111,8 @@ define [
 			do @_transitioner.disable
 
 			@
+
+
 
 	ClassPrototype = HasStyles_.prototype
 

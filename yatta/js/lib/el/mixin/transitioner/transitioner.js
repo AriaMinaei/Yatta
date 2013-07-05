@@ -9,10 +9,7 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
       this._duration = 1000;
       this._startTime = new Int32Array(1);
       this._startTime[0] = 0;
-      this.__initMixins();
-      this._eachFrameCallback = this._getEachFrameCallback();
-      this._framesEnabled = false;
-      this._shouldFinish = false;
+      Transitioner.__initMixinsFor(this);
       this._needsUpdate = {
         transformMovement: false,
         transformRotation: false,
@@ -21,7 +18,8 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
         transformTranslation: false,
         opacity: false
       };
-      this.ease('cubic.easeIn');
+      this._shouldUpdate = false;
+      this.ease('cubic.easeOut');
     }
 
     Transitioner.prototype.ease = function(func) {
@@ -40,16 +38,11 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
         part = parts[_i];
         f = f[part];
       }
+      if (typeof f === 'undefined') {
+        throw Error("Cannot find easing function `" + func + "`");
+      }
       this._easing = f;
       return this;
-    };
-
-    Transitioner.prototype._getEachFrameCallback = function() {
-      var _this = this;
-
-      return function(t) {
-        _this._updateForTime(t);
-      };
     };
 
     Transitioner.prototype.clone = function(el) {
@@ -60,9 +53,6 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
       newObj._startTime = new Int32Array(1);
       newObj._startTime[0] = 0;
       newObj._styleSetter = el._styleSetter;
-      newObj._framesEnabled = false;
-      newObj._shouldFinish = false;
-      newObj._eachFrameCallback = newObj._getEachFrameCallback();
       newObj._needsUpdate = {
         transformMovement: false,
         transformRotation: false,
@@ -78,6 +68,7 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
         }
         if (this.hasOwnProperty(key)) {
           newObj[key] = object.clone(this[key], true);
+          console.log;
         }
       }
       return newObj;
@@ -95,12 +86,14 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
       return this;
     };
 
-    Transitioner.prototype._ease = function(progress) {
-      return Math.sin(progress * Math.PI / 2);
+    Transitioner.prototype._stop = function() {
+      this._shouldUpdate = false;
+      this._disableTransitionForTransforms();
+      this._disableTransitionForFill();
     };
 
     Transitioner.prototype._update = function() {
-      if (this._startTime[0] === frames.time[0]) {
+      if (this._startTime[0] === frames.timeInMs[0]) {
         return;
       }
       this._startOver();
@@ -113,44 +106,33 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
     };
 
     Transitioner.prototype._startOver = function() {
-      this._startTime[0] = frames.time[0];
+      this._startTime[0] = frames.timeInMs[0];
       this._adjustFromValues();
-      this._shouldFinish = false;
-      return this._startFrames();
+      this._shouldUpdate = true;
+      return this._scheduleUpdate();
     };
 
-    Transitioner.prototype._startFrames = function() {
-      if (!this._framesEnabled) {
-        frames.onEachFrame(this._eachFrameCallback);
-        this._framesEnabled = true;
-      }
+    Transitioner.prototype._scheduleUpdate = function() {
+      return this.el._scheduleUpdate();
     };
 
-    Transitioner.prototype._stop = function() {
-      if (this._framesEnabled) {
-        frames.cancelEachFrame(this._eachFrameCallback);
-        this._framesEnabled = false;
+    Transitioner.prototype._updateTransition = function() {
+      if (!this._enabled || !this._shouldUpdate) {
+        return;
       }
-      this._shouldFinish = false;
-      this._disableTransitionForTransforms();
-      this._disableTransitionForFill();
+      return this._updateForTime(frames.timeInMs[0]);
     };
 
     Transitioner.prototype._updateForTime = function(t) {
       var ellapsed, progress;
 
       ellapsed = t - this._startTime[0];
-      if (this._shouldFinish && ellapsed - this._duration > 1000) {
-        this._stop();
-        return;
-      }
-      if (this._shouldFinish) {
-        return;
-      }
       progress = ellapsed / this._duration;
       if (progress >= 1) {
         progress = 1;
-        this._shouldFinish = true;
+        this._stop();
+      } else {
+        this._scheduleUpdate();
       }
       progress = this._ease(progress);
       this._updateByProgress(progress);
@@ -160,6 +142,10 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
       this._updateTransitionForTransforms(progress);
       this._updateTransitionForFill(progress);
       return null;
+    };
+
+    Transitioner.prototype._ease = function(progress) {
+      return this._easing(progress);
     };
 
     return Transitioner;

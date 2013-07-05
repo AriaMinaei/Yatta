@@ -53,19 +53,17 @@ define ->
 
 				return
 
-		unless classProto.__mixinInitializers?
+		# unless classProto.__mixinInitializers?
 
-			classProto.__mixinInitializers = []
+		classReference.__mixinInitializers = []
 
-		unless classProto.__initMixins?
+		classReference.__initMixinsFor = (obj) ->
 
-			classProto.__initMixins = ->
+			for initializer in classReference.__mixinInitializers
 
-				for initializer in @__mixinInitializers
+				classReference[initializer].call obj
 
-					do @[initializer]
-
-				return
+			return
 
 		for mixin in mixins
 
@@ -73,7 +71,11 @@ define ->
 
 				if member.substr(0, 11) is '__initMixin'
 
-					classProto.__mixinInitializers.push member
+					classReference.__mixinInitializers.push member
+
+					classReference[member] = mixin::[member]
+
+					continue
 
 				else if member.substr(0, 11) is '__clonerFor'
 

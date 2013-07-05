@@ -37,7 +37,7 @@ var makeCircle = function(i){
 
 	c3.setScaleAll(0.3)
 	// .setSaturation(70)
-	.ease('ease-out')
+	.ease('quad.easeOut')
 	.z(8)
 	.enableTransition(animDuration + 400);
 

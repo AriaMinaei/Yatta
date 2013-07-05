@@ -1,6 +1,6 @@
-define ['../el'], (El) ->
+define ['../el', './typography_'], (El, Typography_) ->
 
-	class _Letter extends El
+	mixing Typography_, class _Letter extends El
 
 		constructor: (letter = '') ->
 
@@ -12,6 +12,8 @@ define ['../el'], (El) ->
 			super node
 
 			@setLetter letter
+
+			_Letter.__initMixinsFor @
 
 		setLetter: (letter) ->
 

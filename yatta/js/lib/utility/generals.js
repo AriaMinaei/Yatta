@@ -55,25 +55,23 @@ define(function() {
         }
       };
     }
-    if (classProto.__mixinInitializers == null) {
-      classProto.__mixinInitializers = [];
-    }
-    if (classProto.__initMixins == null) {
-      classProto.__initMixins = function() {
-        var initializer, _j, _len, _ref;
+    classReference.__mixinInitializers = [];
+    classReference.__initMixinsFor = function(obj) {
+      var initializer, _j, _len, _ref;
 
-        _ref = this.__mixinInitializers;
-        for (_j = 0, _len = _ref.length; _j < _len; _j++) {
-          initializer = _ref[_j];
-          this[initializer]();
-        }
-      };
-    }
+      _ref = classReference.__mixinInitializers;
+      for (_j = 0, _len = _ref.length; _j < _len; _j++) {
+        initializer = _ref[_j];
+        classReference[initializer].call(obj);
+      }
+    };
     for (_j = 0, _len = mixins.length; _j < _len; _j++) {
       mixin = mixins[_j];
       for (member in mixin.prototype) {
         if (member.substr(0, 11) === '__initMixin') {
-          classProto.__mixinInitializers.push(member);
+          classReference.__mixinInitializers.push(member);
+          classReference[member] = mixin.prototype[member];
+          continue;
         } else if (member.substr(0, 11) === '__clonerFor') {
           classProto.__cloners.push(member);
         }

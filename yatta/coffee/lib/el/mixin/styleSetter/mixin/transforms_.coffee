@@ -11,61 +11,27 @@ define [
 
 			@_shouldUpdateTransforms = no
 
-			@_lastTimeUpdatedTransforms = 0
-
-			@_transformUpdateCallbackAttached = no
-
-			@_updateTransformCallback = @_getTransformCallback()
-
 			return
-
-		_getTransformCallback: ->
-
-			(t) =>
-
-				unless @_shouldUpdateTransforms
-
-					if t - @_lastTimeUpdatedTransforms > 2000
-
-						frames.cancelAfterEachFrame @_updateTransformCallback
-
-						@_transformUpdateCallbackAttached = no
-
-					return
-
-				do @_actuallyUpdateTransforms
-
-				@_lastTimeUpdatedTransforms = t
-
-				@_shouldUpdateTransforms = no
-
-				return
 
 		__clonerForTransforms: (newStyleSetter) ->
 
 			newStyleSetter._shouldUpdateTransforms = no
 
-			newStyleSetter._lastTimeUpdatedTransforms = 0
-
-			newStyleSetter._transformUpdateCallbackAttached = no
-
-			newStyleSetter._updateTransformCallback = newStyleSetter._getTransformCallback()
-
 			return
 
 		_updateTransforms: ->
 
-			return @ if @_shouldUpdateTransforms
+			return unless @_shouldUpdateTransforms
 
-			unless @_transformUpdateCallbackAttached
+			@_shouldUpdateTransforms = no
 
-				frames.afterEachFrame @_updateTransformCallback
+			do @_actuallyUpdateTransforms
 
-				@_transformUpdateCallbackAttached = yes
+		_scheduleTransformsUpdate: ->
 
 			@_shouldUpdateTransforms = yes
 
-			@
+			do @_scheduleUpdate
 
 		_actuallyUpdateTransforms: ->
 
@@ -107,7 +73,7 @@ define [
 					# Argument splats won't work here though.
 					@_transformer[_methodName]()
 
-					do @_updateTransforms
+					do @_scheduleTransformsUpdate
 
 					@
 
@@ -117,7 +83,7 @@ define [
 
 					@_transformer[_methodName] arg0
 
-					do @_updateTransforms
+					do @_scheduleTransformsUpdate
 
 					@
 
@@ -127,7 +93,7 @@ define [
 
 					@_transformer[_methodName] arg0, arg1
 
-					do @_updateTransforms
+					do @_scheduleTransformsUpdate
 
 					@
 
@@ -137,7 +103,7 @@ define [
 
 					@_transformer[_methodName] arg0, arg1, arg2
 
-					do @_updateTransforms
+					do @_scheduleTransformsUpdate
 
 					@
 
@@ -147,7 +113,7 @@ define [
 
 					@_transformer[_methodName] arg0, arg1, arg2, arg3
 
-					do @_updateTransforms
+					do @_scheduleTransformsUpdate
 
 					@
 
@@ -157,7 +123,7 @@ define [
 
 					@_transformer[_methodName] arg0, arg1, arg2, arg3, arg4
 
-					do @_updateTransforms
+					do @_scheduleTransformsUpdate
 
 					@
 

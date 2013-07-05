@@ -18,13 +18,7 @@ define [
 			@_startTime = new Int32Array 1
 			@_startTime[0] = 0
 
-			do @__initMixins
-
-			@_eachFrameCallback = @_getEachFrameCallback()
-
-			@_framesEnabled = no
-
-			@_shouldFinish = no
+			Transitioner.__initMixinsFor @
 
 			@_needsUpdate =
 
@@ -35,7 +29,9 @@ define [
 				transformTranslation: no
 				opacity: no
 
-			@ease 'cubic.easeIn'
+			@_shouldUpdate = no
+
+			@ease 'cubic.easeOut'
 
 		ease: (func) ->
 
@@ -57,17 +53,13 @@ define [
 
 				f = f[part]
 
+			if typeof f is 'undefined'
+
+				throw Error "Cannot find easing function `#{func}`"
+
 			@_easing = f
 
 			@
-
-		_getEachFrameCallback: ->
-
-			(t) =>
-
-				@_updateForTime t
-
-				return
 
 		clone: (el) ->
 
@@ -79,12 +71,6 @@ define [
 			newObj._startTime[0] = 0
 
 			newObj._styleSetter = el._styleSetter
-
-			newObj._framesEnabled = no
-
-			newObj._shouldFinish = no
-
-			newObj._eachFrameCallback = newObj._getEachFrameCallback()
 
 			newObj._needsUpdate =
 
@@ -105,6 +91,8 @@ define [
 
 					newObj[key] = object.clone @[key], yes
 
+					console.log
+
 			newObj
 
 		enable: (duration) ->
@@ -123,13 +111,18 @@ define [
 
 			@
 
-		_ease: (progress) ->
+		_stop: ->
 
-			Math.sin progress * Math.PI / 2
+			@_shouldUpdate = no
+
+			do @_disableTransitionForTransforms
+			do @_disableTransitionForFill
+
+			return
 
 		_update: ->
 
-			return if @_startTime[0] is frames.time[0]
+			return if @_startTime[0] is frames.timeInMs[0]
 
 			do @_startOver
 
@@ -145,50 +138,27 @@ define [
 
 		_startOver: ->
 
-			@_startTime[0] = frames.time[0]
+			@_startTime[0] = frames.timeInMs[0]
 
 			do @_adjustFromValues
 
-			@_shouldFinish = no
+			@_shouldUpdate = yes
 
-			do @_startFrames
+			do @_scheduleUpdate
 
-		_startFrames: ->
+		_scheduleUpdate: ->
 
-			unless @_framesEnabled
+			do @el._scheduleUpdate
 
-				frames.onEachFrame @_eachFrameCallback
+		_updateTransition: ->
 
-				@_framesEnabled = yes
+			return if not @_enabled or not @_shouldUpdate
 
-			return
-
-		_stop: ->
-
-			if @_framesEnabled
-
-				frames.cancelEachFrame @_eachFrameCallback
-
-				@_framesEnabled = no
-
-			@_shouldFinish = no
-
-			do @_disableTransitionForTransforms
-			do @_disableTransitionForFill
-
-			return
+			@_updateForTime frames.timeInMs[0]
 
 		_updateForTime: (t) ->
 
 			ellapsed = (t - @_startTime[0])
-
-			if @_shouldFinish and ellapsed - @_duration > 1000
-
-				do @_stop
-
-				return
-
-			return if @_shouldFinish
 
 			progress = ellapsed / @_duration
 
@@ -196,7 +166,11 @@ define [
 
 				progress = 1
 
-				@_shouldFinish = yes
+				do @_stop
+
+			else
+
+				do @_scheduleUpdate
 
 			progress = @_ease progress
 
@@ -211,3 +185,7 @@ define [
 			@_updateTransitionForFill progress
 
 			null
+
+		_ease: (progress) ->
+
+			@_easing progress

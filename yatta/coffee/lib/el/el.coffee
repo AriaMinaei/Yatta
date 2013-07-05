@@ -15,7 +15,7 @@ define [
 
 				@_shouldCloneInnerHTML = no
 
-			do @__initMixins
+			El.__initMixinsFor @
 
 			@_beenAppended = no
 
@@ -36,6 +36,8 @@ define [
 						@_beenAppended = yes
 
 		clone: ->
+
+			@_doUpdate()
 
 			# The skeleton
 			newEl = Object.create @constructor::

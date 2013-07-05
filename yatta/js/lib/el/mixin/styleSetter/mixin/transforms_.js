@@ -7,45 +7,23 @@ define(['../../../../visuals/typedMatrix', '../../../tools/css'], function(Typed
     Transforms_.prototype.__initMixinTransforms = function() {
       this._transformer = new TypedMatrix;
       this._shouldUpdateTransforms = false;
-      this._lastTimeUpdatedTransforms = 0;
-      this._transformUpdateCallbackAttached = false;
-      this._updateTransformCallback = this._getTransformCallback();
-    };
-
-    Transforms_.prototype._getTransformCallback = function() {
-      var _this = this;
-
-      return function(t) {
-        if (!_this._shouldUpdateTransforms) {
-          if (t - _this._lastTimeUpdatedTransforms > 2000) {
-            frames.cancelAfterEachFrame(_this._updateTransformCallback);
-            _this._transformUpdateCallbackAttached = false;
-          }
-          return;
-        }
-        _this._actuallyUpdateTransforms();
-        _this._lastTimeUpdatedTransforms = t;
-        _this._shouldUpdateTransforms = false;
-      };
     };
 
     Transforms_.prototype.__clonerForTransforms = function(newStyleSetter) {
       newStyleSetter._shouldUpdateTransforms = false;
-      newStyleSetter._lastTimeUpdatedTransforms = 0;
-      newStyleSetter._transformUpdateCallbackAttached = false;
-      newStyleSetter._updateTransformCallback = newStyleSetter._getTransformCallback();
     };
 
     Transforms_.prototype._updateTransforms = function() {
-      if (this._shouldUpdateTransforms) {
-        return this;
+      if (!this._shouldUpdateTransforms) {
+        return;
       }
-      if (!this._transformUpdateCallbackAttached) {
-        frames.afterEachFrame(this._updateTransformCallback);
-        this._transformUpdateCallbackAttached = true;
-      }
+      this._shouldUpdateTransforms = false;
+      return this._actuallyUpdateTransforms();
+    };
+
+    Transforms_.prototype._scheduleTransformsUpdate = function() {
       this._shouldUpdateTransforms = true;
-      return this;
+      return this._scheduleUpdate();
     };
 
     Transforms_.prototype._actuallyUpdateTransforms = function() {
@@ -70,37 +48,37 @@ define(['../../../../visuals/typedMatrix', '../../../tools/css'], function(Typed
     if (method.length === 0) {
       return ClassPrototype[_methodName] = function() {
         this._transformer[_methodName]();
-        this._updateTransforms();
+        this._scheduleTransformsUpdate();
         return this;
       };
     } else if (method.length === 1) {
       return ClassPrototype[_methodName] = function(arg0) {
         this._transformer[_methodName](arg0);
-        this._updateTransforms();
+        this._scheduleTransformsUpdate();
         return this;
       };
     } else if (method.length === 2) {
       return ClassPrototype[_methodName] = function(arg0, arg1) {
         this._transformer[_methodName](arg0, arg1);
-        this._updateTransforms();
+        this._scheduleTransformsUpdate();
         return this;
       };
     } else if (method.length === 3) {
       return ClassPrototype[_methodName] = function(arg0, arg1, arg2) {
         this._transformer[_methodName](arg0, arg1, arg2);
-        this._updateTransforms();
+        this._scheduleTransformsUpdate();
         return this;
       };
     } else if (method.length === 4) {
       return ClassPrototype[_methodName] = function(arg0, arg1, arg2, arg3) {
         this._transformer[_methodName](arg0, arg1, arg2, arg3);
-        this._updateTransforms();
+        this._scheduleTransformsUpdate();
         return this;
       };
     } else if (method.length === 5) {
       return ClassPrototype[_methodName] = function(arg0, arg1, arg2, arg3, arg4) {
         this._transformer[_methodName](arg0, arg1, arg2, arg3, arg4);
-        this._updateTransforms();
+        this._scheduleTransformsUpdate();
         return this;
       };
     } else {

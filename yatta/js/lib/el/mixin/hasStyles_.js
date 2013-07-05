@@ -8,11 +8,62 @@ define(['./styleSetter/styleSetter', './transitioner/transitioner'], function(St
       this._styleSetter = new StyleSetter(this);
       this._transitioner = new Transitioner(this);
       this._styleInterface = this._styleSetter;
+      this._updaterDeployed = false;
+      this._shouldUpdate = false;
+      this._updaterCallback = this._getNewUpdaterCallback();
+      this._lastTimeUpdated = 0;
+    };
+
+    HasStyles_.prototype._getNewUpdaterCallback = function() {
+      var _this = this;
+
+      return function(t) {
+        return _this._doUpdate(t);
+      };
+    };
+
+    HasStyles_.prototype._scheduleUpdate = function() {
+      this._shouldUpdate = true;
+      this._deployUpdater();
+    };
+
+    HasStyles_.prototype._deployUpdater = function() {
+      if (this._updaterDeployed) {
+        return;
+      }
+      this._updaterDeployed = true;
+      return frames.afterEachFrame(this._updaterCallback);
+    };
+
+    HasStyles_.prototype._undeployUpdater = function() {
+      if (!this._updaterDeployed) {
+        return;
+      }
+      this._updaterDeployed = false;
+      return frames.cancelAfterEachFrame(this._updaterCallback);
+    };
+
+    HasStyles_.prototype._doUpdate = function(t) {
+      if (!this._shouldUpdate) {
+        if (t - this._lastTimeUpdated > 2000) {
+          this._undeployUpdater();
+        }
+        return;
+      }
+      this._lastTimeUpdated = t;
+      this._shouldUpdate = false;
+      this._transitioner._updateTransition();
+      this._styleSetter._updateTransforms();
+      this._styleSetter._updateFilters();
     };
 
     HasStyles_.prototype.__clonerForHasStyles = function(newEl) {
       newEl._styleSetter = this._styleSetter.clone(newEl);
       newEl._transitioner = this._transitioner.clone(newEl);
+      newEl._updaterDeployed = false;
+      newEl._shouldUpdate = false;
+      newEl._updaterCallback = newEl._getNewUpdaterCallback();
+      newEl._lastTimeUpdated;
       if (this._styleInterface === this._styleSetter) {
         newEl._styleInterface = newEl._styleSetter;
       } else {

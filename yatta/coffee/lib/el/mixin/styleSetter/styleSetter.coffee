@@ -15,7 +15,11 @@ define [
 
 			@_styles = @node.style
 
-			do @__initMixins
+			StyleSetter.__initMixinsFor @
+
+		_scheduleUpdate: ->
+
+			do @el._scheduleUpdate
 
 		clone: (el) ->
 

@@ -11,59 +11,25 @@ define [
 
 			@_shouldUpdateFilters = no
 
-			@_lastTimeUpdatedFilters = 0
-
-			@_filtersUpdateCallbackAttached = no
-
-			@_updateFiltersCallback = @_getFiltersCallback()
-
-		_getFiltersCallback: ->
-
-			(t) =>
-
-				unless @_shouldUpdateFilters
-
-					if t - @_lastTimeUpdatedFilters > 2000
-
-						frames.cancelAfterEachFrame @_updateFiltersCallback
-
-						@_filtersUpdateCallbackAttached = no
-
-					return
-
-				do @_actuallyUpdateFilters
-
-				@_lastTimeUpdatedFilters = t
-
-				@_shouldUpdateFilters = no
-
-				return
-
 		__clonerForFilters: (newStyleSetter) ->
 
 			newStyleSetter._shouldUpdateFilters = no
-
-			newStyleSetter._lastTimeUpdatedFilters = 0
-
-			newStyleSetter._filtersUpdateCallbackAttached = no
-
-			newStyleSetter._updateFiltersCallback = newStyleSetter._getFiltersCallback()
 
 			return
 
 		_updateFilters: ->
 
-			return @ if @_shouldUpdateFilters
+			return unless @_shouldUpdateFilters
 
-			unless @_filtersUpdateCallbackAttached
+			@_shouldUpdateFilters = no
 
-				frames.afterEachFrame @_updateFiltersCallback
+			do @_actuallyUpdateFilters
 
-				@_filtersUpdateCallbackAttached = yes
+		_scheduleFiltersUpdate: ->
 
 			@_shouldUpdateFilters = yes
 
-			@
+			do @_scheduleUpdate
 
 		_actuallyUpdateFilters: ->
 
@@ -96,7 +62,7 @@ define [
 					# Argument splats won't work here though.
 					@_cssFilter[_methodName]()
 
-					do @_updateFilters
+					do @_scheduleFiltersUpdate
 
 					@
 
@@ -106,7 +72,7 @@ define [
 
 					@_cssFilter[_methodName] arg0
 
-					do @_updateFilters
+					do @_scheduleFiltersUpdate
 
 					@
 
@@ -116,7 +82,7 @@ define [
 
 					@_cssFilter[_methodName] arg0, arg1
 
-					do @_updateFilters
+					do @_scheduleFiltersUpdate
 
 					@
 
@@ -126,7 +92,7 @@ define [
 
 					@_cssFilter[_methodName] arg0, arg1, arg2
 
-					do @_updateFilters
+					do @_scheduleFiltersUpdate
 
 					@
 
@@ -136,7 +102,7 @@ define [
 
 					@_cssFilter[_methodName] arg0, arg1, arg2, arg3
 
-					do @_updateFilters
+					do @_scheduleFiltersUpdate
 
 					@
 
@@ -146,7 +112,7 @@ define [
 
 					@_cssFilter[_methodName] arg0, arg1, arg2, arg3, arg4
 
-					do @_updateFilters
+					do @_scheduleFiltersUpdate
 
 					@
 

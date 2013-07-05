@@ -9,7 +9,7 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
       if (this._shouldCloneInnerHTML == null) {
         this._shouldCloneInnerHTML = false;
       }
-      this.__initMixins();
+      El.__initMixinsFor(this);
       this._beenAppended = false;
       this._parent = null;
       this._children = [];
@@ -28,6 +28,7 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
       var child, key, newEl, newNode, parent, _i, _len, _ref, _ref1, _ref2,
         _this = this;
 
+      this._doUpdate();
       newEl = Object.create(this.constructor.prototype);
       newNode = this.node.cloneNode();
       newEl.node = newNode;

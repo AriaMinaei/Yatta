@@ -1,11 +1,10 @@
 define [
 	'./el'
+	'./type/typography_'
 	'./type/_letter'
-	'./tools/css'
-	'./type/_tools'
-	], (El, _Letter, css, _tools) ->
+	], (El, Typography_, _Letter) ->
 
-	class Type extends El
+	mixing Typography_, class Type extends El
 
 		constructor: (text = '') ->
 
@@ -18,13 +17,10 @@ define [
 
 			@setText text
 
-			do @setSize
+			Type.__initMixinsFor @
+			do @_initTypography
 
-			do @setColor
-
-			do @setFace
-
-		setText: acceptLazyArgs (text) ->
+		setText: (text) ->
 
 			@_text = text
 
@@ -59,96 +55,3 @@ define [
 				letter.remove()
 
 			@
-
-		setFace: acceptLazyArgs (face) ->
-
-			unless face
-
-				@_face = Type.defaultFace
-
-			else
-
-				@_face = face
-
-			do @_applyFace
-
-			@
-
-		_applyFace: ->
-
-			@node.style.fontFamily = @_face
-
-			@
-
-		setSize: acceptLazyArgs (size) ->
-
-			unless size
-
-				@_size = Type.defaultSize
-
-			else
-
-				@_size = size
-
-			do @_applySize
-
-			@
-
-		_applySize: ->
-
-			@node.style.fontSize = @_size + 'px'
-
-			@
-
-		setColor: acceptLazyArgs (r, g, b) ->
-
-			if arguments.length is 0
-
-				@_color = Type.defaultColor
-
-			else
-
-				@_color = css.rgb(r, g, b)
-
-			do @_applyColor
-
-			@
-
-		_applyColor: ->
-
-			@node.style.color = @_color
-
-			do @_applyStroke
-
-			@
-
-		_applyStroke: ->
-
-			if _tools.needsTextStroke()
-
-				@node.style.webkitTextStroke = '1.5 ' + @_color
-
-			@
-
-
-		@defaultFace = '"HelveticaNeueLT Std Thin"'
-
-		@setDefaultFace: (face = "HelveticaNeueLT Std Thin") ->
-
-			@defaultFace = face
-
-		@defaultSize = 36
-
-		@setDefaultSize: (size = 36) ->
-
-			@defaultSize = size
-
-		@defaultColor = css.rgb(255, 255, 255)
-
-		@setDefaultColor: (r, g, b) ->
-
-			if arguments.length is 0
-
-				@defaultColor = css.rgb(255, 255, 255)
-
-			@defaultColor = css.rgb(r, g, b)
