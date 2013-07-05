@@ -1,24 +1,60 @@
-define ['../../../tools/css'], (css) ->
+define ['../../../tools/css', '../tools/colorHolder'], (css, ColorHolder) ->
 
 	class Fill_
 
 		__initMixinFill: ->
 
+			@fill = new ColorHolder @_getFillUpdater()
+
 			@_fill =
 
-				bgColor: null
+				bgColor: 'none'
 
-				color: null
+				color: 'inherit'
 
 				border: 'none'
 
 				opacity: 1
 
+		__clonerForFill: (newStyleSetter) ->
+
+			newStyleSetter.fill = @fill.clone newStyleSetter._getFillUpdater()
+
+			return
+
+		_getFillUpdater: ->
+
+			=>
+
+				do @_updateFill
+
+				return
+
+		_updateFill: ->
+
+			@_styles.backgroundColor = @_fill.bgColor = @fill._color.toCss()
+
+			@
+
 		fillWithColor: (r, g, b) ->
 
-			@_styles.backgroundColor = @_fill.bgColor = css.rgb r, g, b
+			@_fill.bgColor.fromRgb r, g, b
+
+			@_styles.backgroundColor = @_fill.bgColor.toCss()
 
 			null
+
+		fillWithHslColor: (h, s, l) ->
+
+			@_fill.bgColor.fromHsl h, s, l
+
+			@_styles.backgroundColor = @_fill.bgColor.toCss()
+
+		rotateFillHue: (amount) ->
+
+			@_fill.bgColor.rotateHue amount
+
+			@_styles.backgroundColor = @_fill.bgColor.toCss()
 
 		setTextColor: (r, g, b) ->
 
@@ -53,3 +89,4 @@ define ['../../../tools/css'], (css) ->
 			@_styles.opacity = @_fill.opacity = d
 
 			@
+

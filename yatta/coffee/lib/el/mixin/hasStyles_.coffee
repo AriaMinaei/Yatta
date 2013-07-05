@@ -11,6 +11,8 @@ define [
 
 			@_transitioner = new Transitioner @
 
+			@fill = @_styleSetter.fill
+
 			@_styleInterface = @_styleSetter
 
 			@_updaterDeployed = no
@@ -76,6 +78,7 @@ define [
 		__clonerForHasStyles: (newEl) ->
 
 			newEl._styleSetter = @_styleSetter.clone newEl
+			newEl.fill = newEl._styleSetter.fill
 			newEl._transitioner = @_transitioner.clone newEl
 
 			newEl._updaterDeployed = no
@@ -109,6 +112,12 @@ define [
 			@_styleInterface = @_styleSetter
 
 			do @_transitioner.disable
+
+			@
+
+		ease: (fn) ->
+
+			@_transitioner.ease fn
 
 			@
 

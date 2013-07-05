@@ -1,5 +1,6 @@
 // Set background color in RGB
-display.fillWithColor(200, 195, 190).enableTransition(500);
+display.fill.withRgb(200, 195, 190)
+display.enableTransition(500);
 
 // Number of circles
 var count = 19;
@@ -12,37 +13,37 @@ var radius = 250;
 
 var makeCircle = function(i){
 
-	var animDuration = rand(400, 1200)
+	var animDuration = rand(400, 800)
 
 	var c1 = new Ellipse(40, 40);
 
+	c1.fill.withRgb(220, 190, 120).rotateHue(5 * i)
+
 	c1
 	.setScaleAll(0.75)
-	.fillWithColor(190, 120, 240)
-	// Let's not use css filters, as they slow everything down for now
-	// .rotateHue(50 * i)
 	.setMovementX(radius * cos(PI * 2 / count * i) + cX)
 	.setMovementY(radius * sin(PI * 2 / count * i) + cY)
 	.z(10)
+	.ease('cubic.easeOut')
 	.enableTransition(animDuration);
 
 	var c2 = c1.clone();
+	c2.fill.lighten(10);
 
 	c2.setScaleAll(0.5)
-	// .setSaturation(80)
 	.z(9)
 	.enableTransition(animDuration + 200);
 
 	var c3 = c1.clone();
 
+	c3.fill.lighten(20);
+
 	c3.setScaleAll(0.3)
-	// .setSaturation(70)
-	.ease('ease-out')
 	.z(8)
 	.enableTransition(animDuration + 400);
 
 
-	every(900, function(){
+	every(1000, function(){
 
 		i += 1.5;
 

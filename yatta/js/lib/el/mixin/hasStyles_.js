@@ -7,6 +7,7 @@ define(['./styleSetter/styleSetter', './transitioner/transitioner'], function(St
     HasStyles_.prototype.__initMixinHasStyles = function() {
       this._styleSetter = new StyleSetter(this);
       this._transitioner = new Transitioner(this);
+      this.fill = this._styleSetter.fill;
       this._styleInterface = this._styleSetter;
       this._updaterDeployed = false;
       this._shouldUpdate = false;
@@ -59,6 +60,7 @@ define(['./styleSetter/styleSetter', './transitioner/transitioner'], function(St
 
     HasStyles_.prototype.__clonerForHasStyles = function(newEl) {
       newEl._styleSetter = this._styleSetter.clone(newEl);
+      newEl.fill = newEl._styleSetter.fill;
       newEl._transitioner = this._transitioner.clone(newEl);
       newEl._updaterDeployed = false;
       newEl._shouldUpdate = false;
@@ -80,6 +82,11 @@ define(['./styleSetter/styleSetter', './transitioner/transitioner'], function(St
     HasStyles_.prototype.disableTransition = function() {
       this._styleInterface = this._styleSetter;
       this._transitioner.disable();
+      return this;
+    };
+
+    HasStyles_.prototype.ease = function(fn) {
+      this._transitioner.ease(fn);
       return this;
     };
 
