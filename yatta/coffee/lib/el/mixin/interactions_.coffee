@@ -91,7 +91,15 @@ define ['../../methodChain/methodChain'], (MethodChain) ->
 
 				frames.every ms, cb.bind(@)
 
-		each: ->
+		each: (cb = null) ->
+
+			if cb instanceof Function
+
+				for el, i in @_children
+
+					cb el, i, @
+
+				@
 
 			_interface = @_getNewInterface()
 

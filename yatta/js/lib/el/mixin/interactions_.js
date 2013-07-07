@@ -108,18 +108,29 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
       });
     };
 
-    Interactions_.prototype.each = function() {
-      var els, _interface,
+    Interactions_.prototype.each = function(cb) {
+      var el, els, i, _i, _interface, _len, _ref,
         _this = this;
 
+      if (cb == null) {
+        cb = null;
+      }
+      if (cb instanceof Function) {
+        _ref = this._children;
+        for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+          el = _ref[i];
+          cb(el, i, this);
+        }
+        this;
+      }
       _interface = this._getNewInterface();
       els = this._children;
       if (els.length !== 0) {
         frames.laterInThisFrame(function() {
-          var el, _i, _len;
+          var _j, _len1;
 
-          for (_i = 0, _len = els.length; _i < _len; _i++) {
-            el = els[_i];
+          for (_j = 0, _len1 = els.length; _j < _len1; _j++) {
+            el = els[_j];
             _this._getMethodChain().run(_interface, el);
           }
           return null;
