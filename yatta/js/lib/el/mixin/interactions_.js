@@ -145,7 +145,7 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
     };
 
     Interactions_.prototype.each = function(cb) {
-      var child, els, i, _interface,
+      var child, counter, els, i, _interface,
         _this = this;
 
       if (cb == null) {
@@ -154,7 +154,9 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
       if (cb instanceof Function) {
         i = 0;
         child = null;
+        counter = -1;
         while (true) {
+          counter++;
           if (child === this._children[i]) {
             i++;
           }
@@ -162,7 +164,7 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
           if (child == null) {
             break;
           }
-          cb.call(this, child, i);
+          cb.call(this, child, counter);
         }
         return this;
       }

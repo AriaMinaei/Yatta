@@ -148,8 +148,11 @@ define [
 				# might be put in another container
 				i = 0
 				child = null
+				counter = -1
 
 				loop
+
+					counter++
 
 					if child is @_children[i]
 
@@ -159,7 +162,7 @@ define [
 
 					break unless child?
 
-					cb.call @, child, i
+					cb.call @, child, counter
 
 				return @
 
