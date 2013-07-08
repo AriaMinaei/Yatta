@@ -1,6 +1,6 @@
 var __slice = [].slice;
 
-define(['../../methodChain/methodChain'], function(MethodChain) {
+define(['../../methodChain/methodChain', '../../utility/array'], function(MethodChain, array) {
   var Interactions_;
 
   return Interactions_ = (function() {
@@ -13,7 +13,17 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
     Interactions_.prototype.__initMixinInteractions = function() {
       this._methodChain = null;
       this._resetNextThenCallback();
+      this._quittersForInteractions = [];
       return null;
+    };
+
+    Interactions_.prototype.__quitterForInteractions = function() {
+      while (true) {
+        if (this._quittersForInteractions.length < 1) {
+          return;
+        }
+        this._quittersForInteractions.pop()();
+      }
     };
 
     Interactions_.prototype._resetNextThenCallback = function() {
@@ -47,7 +57,9 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
       var _this = this;
 
       return this._eventEnabledMethod(arguments, function(cb) {
-        return _this.node.addEventListener('click', cb);
+        return _this.node.addEventListener('click', function() {
+          return cb.call(_this);
+        });
       });
     };
 
@@ -57,7 +69,9 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
 
       ms = arguments[0], rest = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       return this._eventEnabledMethod(rest, function(cb) {
-        return frames.wait(ms, cb.bind(_this));
+        return frames.wait(ms, function() {
+          return cb.call(_this);
+        });
       });
     };
 
@@ -65,14 +79,21 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
       var _this = this;
 
       return this._eventEnabledMethod(arguments, function(cb) {
-        var cancel, frameCallback, startTime;
+        var canceled, canceler, startTime, theCallback;
 
         startTime = new Int32Array(1);
         startTime[0] = -1;
-        cancel = function() {
-          return frames.cancelEachFrame(frameCallback);
+        canceled = false;
+        canceler = function() {
+          if (canceled) {
+            return;
+          }
+          frames.cancelEachFrame(theCallback);
+          array.pluckOneItem(_this._quittersForInteractions, canceler);
+          return canceled = true;
         };
-        frameCallback = function(t) {
+        _this._quittersForInteractions.push(canceler);
+        theCallback = function(t) {
           var elapsedTime;
 
           if (startTime[0] < 0) {
@@ -81,20 +102,20 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
           } else {
             elapsedTime = t - startTime[0];
           }
-          cb(_this, elapsedTime, cancel);
+          cb.call(_this, elapsedTime, canceler);
           return null;
         };
-        return frames.onEachFrame(frameCallback);
+        return frames.onEachFrame(theCallback);
       });
     };
 
     Interactions_.prototype.then = function() {
-      var rest,
-        _this = this;
+      var _this = this;
 
-      rest = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return this._eventEnabledMethod(rest, function(cb) {
-        return _this._nextThenCallback(cb.bind(_this));
+      return this._eventEnabledMethod(arguments, function(cb) {
+        return _this._nextThenCallback = function() {
+          return cb.call(_this);
+        };
       });
     };
 
@@ -104,33 +125,55 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
 
       ms = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       return this._eventEnabledMethod(args, function(cb) {
-        return frames.every(ms, cb.bind(_this));
+        var canceled, canceler, theCallback;
+
+        canceled = false;
+        canceler = function() {
+          if (canceled) {
+            return;
+          }
+          frames.cancelEvery(theCallback);
+          array.pluckOneItem(_this._quittersForInteractions, canceler);
+          return canceled = true;
+        };
+        _this._quittersForInteractions.push(canceler);
+        theCallback = function() {
+          return cb.call(_this, canceler);
+        };
+        return frames.every(ms, theCallback);
       });
     };
 
     Interactions_.prototype.each = function(cb) {
-      var el, els, i, _i, _interface, _len, _ref,
+      var child, els, i, _interface,
         _this = this;
 
       if (cb == null) {
         cb = null;
       }
       if (cb instanceof Function) {
-        _ref = this._children;
-        for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-          el = _ref[i];
-          cb(el, i, this);
+        i = 0;
+        child = null;
+        while (true) {
+          if (child === this._children[i]) {
+            i++;
+          }
+          child = this._children[i];
+          if (child == null) {
+            break;
+          }
+          cb.call(this, child, i);
         }
-        this;
+        return this;
       }
       _interface = this._getNewInterface();
       els = this._children;
       if (els.length !== 0) {
         frames.laterInThisFrame(function() {
-          var _j, _len1;
+          var el, _i, _len;
 
-          for (_j = 0, _len1 = els.length; _j < _len1; _j++) {
-            el = els[_j];
+          for (_i = 0, _len = els.length; _i < _len; _i++) {
+            el = els[_i];
             _this._getMethodChain().run(_interface, el);
           }
           return null;

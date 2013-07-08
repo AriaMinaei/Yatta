@@ -12,9 +12,9 @@ define [
 
 			@_currentMatrix = @el._styleSetter._transformer._current
 
-		__clonerForTransforms: (newObj) ->
+		__clonerForTransforms: (newTransitioner) ->
 
-			newObj._currentMatrix = newObj.el._styleSetter._transformer._current
+			newTransitioner._currentMatrix = newTransitioner.el._styleSetter._transformer._current
 
 			return
 

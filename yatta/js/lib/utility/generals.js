@@ -41,39 +41,57 @@ define(function() {
 
     mixins = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), classReference = arguments[_i++];
     classProto = classReference.prototype;
-    if (classProto.__cloners == null) {
-      classProto.__cloners = [];
-    }
-    if (classProto.__applyCloners == null) {
-      classProto.__applyCloners = function() {
-        var cloner, _j, _len, _ref;
+    classReference.__mixinCloners = [];
+    classReference.__applyClonersFor = function(instance, args) {
+      var cloner, _j, _len, _ref;
 
-        _ref = this.__cloners;
-        for (_j = 0, _len = _ref.length; _j < _len; _j++) {
-          cloner = _ref[_j];
-          this[cloner].apply(this, arguments);
-        }
-      };
-    }
+      if (args == null) {
+        args = null;
+      }
+      _ref = classReference.__mixinCloners;
+      for (_j = 0, _len = _ref.length; _j < _len; _j++) {
+        cloner = _ref[_j];
+        cloner.apply(instance, args);
+      }
+    };
     classReference.__mixinInitializers = [];
-    classReference.__initMixinsFor = function(obj) {
+    classReference.__initMixinsFor = function(instance, args) {
       var initializer, _j, _len, _ref;
 
+      if (args == null) {
+        args = null;
+      }
       _ref = classReference.__mixinInitializers;
       for (_j = 0, _len = _ref.length; _j < _len; _j++) {
         initializer = _ref[_j];
-        classReference[initializer].call(obj);
+        initializer.apply(instance, args);
+      }
+    };
+    classReference.__mixinQuitters = [];
+    classReference.__applyQuittersFor = function(instance, args) {
+      var quitter, _j, _len, _ref;
+
+      if (args == null) {
+        args = null;
+      }
+      _ref = classReference.__mixinQuitters;
+      for (_j = 0, _len = _ref.length; _j < _len; _j++) {
+        quitter = _ref[_j];
+        quitter.apply(instance, args);
       }
     };
     for (_j = 0, _len = mixins.length; _j < _len; _j++) {
       mixin = mixins[_j];
       for (member in mixin.prototype) {
         if (member.substr(0, 11) === '__initMixin') {
-          classReference.__mixinInitializers.push(member);
-          classReference[member] = mixin.prototype[member];
+          classReference.__mixinInitializers.push(mixin.prototype[member]);
           continue;
         } else if (member.substr(0, 11) === '__clonerFor') {
-          classProto.__cloners.push(member);
+          classReference.__mixinCloners.push(mixin.prototype[member]);
+          continue;
+        } else if (member.substr(0, 12) === '__quitterFor') {
+          classReference.__mixinQuitters.push(mixin.prototype[member]);
+          continue;
         }
         if (!Object.getOwnPropertyDescriptor(classProto, member)) {
           desc = Object.getOwnPropertyDescriptor(mixin.prototype, member);

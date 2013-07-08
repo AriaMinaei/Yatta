@@ -1,10 +1,10 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['../el', './typography_'], function(El, Typography_) {
+define(['../el'], function(El) {
   var _Letter;
 
-  return mixing(Typography_, _Letter = (function(_super) {
+  return mixing(_Letter = (function(_super) {
     __extends(_Letter, _super);
 
     function _Letter(letter) {
@@ -27,7 +27,11 @@ define(['../el', './typography_'], function(El, Typography_) {
     };
 
     _Letter.prototype._applyLetter = function() {
-      return this.node.innerHTML = this._letter;
+      if (this._letter === ' ') {
+        return this.node.innerHTML = '&nbsp';
+      } else {
+        return this.node.innerHTML = this._letter;
+      }
     };
 
     return _Letter;

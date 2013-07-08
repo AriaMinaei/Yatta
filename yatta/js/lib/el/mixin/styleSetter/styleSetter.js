@@ -1,7 +1,7 @@
-define(['./mixin/generals_', './mixin/layout_', './mixin/fill_', './mixin/transforms_', './mixin/filters_', '../../../utility/object'], function(Generals_, Layout_, Fill_, Transforms_, Filters_, object) {
+define(['./mixin/generals_', './mixin/layout_', './mixin/fill_', './mixin/typography_', './mixin/transforms_', './mixin/filters_', '../../../utility/object'], function(Generals_, Layout_, Fill_, Typography_, Transforms_, Filters_, object) {
   var StyleSetter;
 
-  return mixing(Generals_, Layout_, Fill_, Transforms_, Filters_, StyleSetter = (function() {
+  return mixing(Generals_, Layout_, Fill_, Typography_, Transforms_, Filters_, StyleSetter = (function() {
     function StyleSetter(el) {
       this.el = el;
       this.node = this.el.node;
@@ -20,9 +20,9 @@ define(['./mixin/generals_', './mixin/layout_', './mixin/fill_', './mixin/transf
       newObj.el = el;
       newObj.node = el.node;
       newObj._styles = el.node.style;
-      this.__applyCloners(newObj);
+      StyleSetter.__applyClonersFor(this, [newObj]);
       for (key in this) {
-        if (newObj[key] != null) {
+        if (newObj[key] !== void 0) {
           continue;
         }
         if (this.hasOwnProperty(key)) {

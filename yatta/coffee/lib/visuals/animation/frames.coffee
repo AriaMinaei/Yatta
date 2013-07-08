@@ -234,7 +234,7 @@ define [
 
 		_intervals: []
 
-		_removeFromIntervals: []
+		_toRemoveFromIntervals: []
 
 		every: (ms, fn) ->
 
@@ -244,7 +244,7 @@ define [
 
 		cancelEvery: (fn) ->
 
-			frames._removeFromIntervals.push fn
+			frames._toRemoveFromIntervals.push fn
 
 			null
 
@@ -254,7 +254,7 @@ define [
 
 			t = frames.timeInMs[0]
 
-			for fnToRemove in frames._removeFromIntervals
+			for fnToRemove in frames._toRemoveFromIntervals
 
 				array.pluckByCallback frames._intervals, (item) ->
 

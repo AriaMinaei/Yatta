@@ -39,6 +39,8 @@ define [
 
 			@_doUpdate()
 
+			# debugger
+
 			# The skeleton
 			newEl = Object.create @constructor::
 
@@ -73,11 +75,11 @@ define [
 
 				return
 
-			@__applyCloners newEl
+			El.__applyClonersFor @, [newEl]
 
 			for key of @
 
-				continue if newEl[key]?
+				continue if newEl[key] isnt undefined
 
 				if @hasOwnProperty key
 
@@ -141,5 +143,23 @@ define [
 				@node.parentNode.removeChild @node
 
 			null
+
+		quit: ->
+
+			p = @node.parentNode
+
+			if p?
+
+				p.removeChild @node
+
+			for child in @_children
+
+				child.quit()
+
+			El.__applyQuittersFor @
+
+			return
+
+
 
 	El

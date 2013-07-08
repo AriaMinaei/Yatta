@@ -75,6 +75,12 @@ define(['../../../tools/css', '../tools/colorHolder'], function(css, ColorHolder
       return this;
     };
 
+    Fill_.prototype.adjustOpacity = function(d) {
+      this._fill.opacity += d;
+      this._styles.opacity = this._fill.opacity;
+      return this;
+    };
+
     return Fill_;
 
   })();

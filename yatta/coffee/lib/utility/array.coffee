@@ -26,6 +26,9 @@ define ['./_common'], (common) -> {
 
 	pluck: (a, i) ->
 
+		return a if a.length < 1
+
+
 		for value, index in a
 
 			if index > i
@@ -37,6 +40,9 @@ define ['./_common'], (common) -> {
 		a
 
 	pluckItem: (a, item) ->
+
+		return a if a.length < 1
+
 
 		removed = 0
 
@@ -52,11 +58,13 @@ define ['./_common'], (common) -> {
 
 				a[index - removed] = a[index]
 
-		a.length = a.length - removed
+		a.length = a.length - removed if removed > 0
 
 		a
 
 	pluckOneItem: (a, item) ->
+
+		return a if a.length < 1
 
 		reached = no
 
@@ -74,11 +82,13 @@ define ['./_common'], (common) -> {
 
 				a[index - 1] = a[index]
 
-		a.length = a.length - 1
+		a.length = a.length - 1 if reached
 
 		a
 
 	pluckByCallback: (a, cb) ->
+
+		return a if a.length < 1
 
 		removed = 0
 
@@ -94,11 +104,15 @@ define ['./_common'], (common) -> {
 
 				a[index - removed] = a[index]
 
-		a.length = a.length - removed
+		if removed > 0
+
+			a.length = a.length - removed
 
 		a
 
 	pluckMultiple: (array, indexesToRemove) ->
+
+		return array if array.length < 1
 
 		removedSoFar = 0
 

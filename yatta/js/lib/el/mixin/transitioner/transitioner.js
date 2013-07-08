@@ -61,9 +61,9 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
         transformTranslation: false,
         opacity: false
       };
-      this.__applyCloners(newObj);
+      Transitioner.__applyClonersFor(this, [newObj]);
       for (key in this) {
-        if (newObj[key] != null) {
+        if (newObj[key] !== void 0) {
           continue;
         }
         if (this.hasOwnProperty(key)) {
@@ -99,17 +99,17 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
       this._startOver();
     };
 
-    Transitioner.prototype._adjustFromValues = function() {
-      this._adjustFromValuesForTransforms();
-      this._adjustFromValuesForFill();
-      return this;
-    };
-
     Transitioner.prototype._startOver = function() {
       this._startTime[0] = frames.timeInMs[0];
       this._adjustFromValues();
       this._shouldUpdate = true;
       return this._scheduleUpdate();
+    };
+
+    Transitioner.prototype._adjustFromValues = function() {
+      this._adjustFromValuesForTransforms();
+      this._adjustFromValuesForFill();
+      return this;
     };
 
     Transitioner.prototype._scheduleUpdate = function() {

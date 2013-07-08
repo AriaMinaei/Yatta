@@ -1,10 +1,9 @@
 define [
 	'./el'
-	'./type/typography_'
 	'./type/_letter'
-	], (El, Typography_, _Letter) ->
+	], (El, _Letter) ->
 
-	mixing Typography_, class Type extends El
+	mixing class Type extends El
 
 		constructor: (text = '') ->
 
@@ -18,7 +17,8 @@ define [
 			@setText text
 
 			Type.__initMixinsFor @
-			do @_initTypography
+
+			do @_styleSetter._initTypography
 
 		setText: (text) ->
 

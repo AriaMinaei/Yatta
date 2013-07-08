@@ -1,70 +1,81 @@
-define(['../tools/css', './_tools'], function(css, _tools) {
+define(['../../../tools/css'], function(css) {
   var Typography_;
 
   return Typography_ = (function() {
     function Typography_() {}
 
     Typography_.prototype.__initMixinTypography = function() {
-      this._face = Typography_.defaultFace;
-      this._size = Typography_.defaultSize;
-      return this._color = Typography_.defaultColor;
+      this._type = {
+        face: Typography_.defaultFace,
+        size: Typography_.defaultSize,
+        color: Typography_.defaultColor
+      };
+      this._sizeSet = false;
+    };
+
+    Typography_.prototype._getSize = function() {
+      if (!this._sizeSet) {
+        this._type.size = parseFloat(getComputedStyle(this.node).fontSize);
+        this._sizeSet = true;
+      }
+      return this._type.size;
     };
 
     Typography_.prototype._initTypography = function() {
       this.setSize();
-      this.setColor();
-      return this.setFace();
+      this.setFace();
+      return this.setColor();
     };
 
     Typography_.prototype.setFace = function(face) {
       if (!face) {
-        this._face = Typography_.defaultFace;
+        this._type.face = Typography_.defaultFace;
       } else {
-        this._face = face;
+        this._type.face = face;
       }
       this._applyFace();
       return this;
     };
 
     Typography_.prototype._applyFace = function() {
-      this.node.style.fontFamily = this._face;
+      this._styles.fontFamily = this._type.face;
       return this;
     };
 
     Typography_.prototype.setSize = function(size) {
       if (!size) {
-        this._size = Typography_.defaultSize;
+        this._type.size = Typography_.defaultSize;
       } else {
-        this._size = size;
+        this._type.size = size;
       }
       this._applySize();
       return this;
     };
 
     Typography_.prototype._applySize = function() {
-      this.node.style.fontSize = this._size + 'px';
+      this._styles.fontSize = this._type.size + 'px';
       return this;
     };
 
     Typography_.prototype.setColor = function(r, g, b) {
       if (arguments.length === 0) {
-        this._color = Typography_.defaultColor;
+        this._type.color = Typography_.defaultColor;
       } else {
-        this._color = css.rgb(r, g, b);
+        this._type.color = css.rgb(r, g, b);
       }
       this._applyColor();
       return this;
     };
 
     Typography_.prototype._applyColor = function() {
-      this.node.style.color = this._color;
+      this._styles.color = this._type.color;
       this._applyStroke();
       return this;
     };
 
     Typography_.prototype._applyStroke = function() {
-      if (_tools.needsTextStroke()) {
-        this.node.style.webkitTextStroke = '1.5 ' + this._color;
+      if (Typography_.needsTextStroke() && this._getSize() < 50) {
+        this._styles.webkitTextStroke = '1.5 ' + this._type.color;
       }
       return this;
     };
@@ -95,6 +106,22 @@ define(['../tools/css', './_tools'], function(css, _tools) {
       }
       return this.defaultColor = css.rgb(r, g, b);
     };
+
+    Typography_.needsTextStroke = (function() {
+      var _needsTextStroke;
+
+      _needsTextStroke = null;
+      return function() {
+        if (_needsTextStroke === null) {
+          if (navigator.appVersion.indexOf('Chrome') !== -1 && navigator.appVersion.indexOf('Windows') !== -1) {
+            _needsTextStroke = true;
+          } else {
+            _needsTextStroke = false;
+          }
+        }
+        return _needsTextStroke;
+      };
+    })();
 
     return Typography_;
 

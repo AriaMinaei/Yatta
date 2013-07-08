@@ -99,6 +99,10 @@ define [
 
 			return
 
+		__quitterForHasStyles: ->
+
+			do @_undeployUpdater
+
 		enableTransition: (duration) ->
 
 			@_styleInterface = @_transitioner

@@ -30,6 +30,9 @@ define(['./_common'], function(common) {
     pluck: function(a, i) {
       var index, value, _i, _len;
 
+      if (a.length < 1) {
+        return a;
+      }
       for (index = _i = 0, _len = a.length; _i < _len; index = ++_i) {
         value = a[index];
         if (index > i) {
@@ -42,6 +45,9 @@ define(['./_common'], function(common) {
     pluckItem: function(a, item) {
       var index, removed, value, _i, _len;
 
+      if (a.length < 1) {
+        return a;
+      }
       removed = 0;
       for (index = _i = 0, _len = a.length; _i < _len; index = ++_i) {
         value = a[index];
@@ -53,12 +59,17 @@ define(['./_common'], function(common) {
           a[index - removed] = a[index];
         }
       }
-      a.length = a.length - removed;
+      if (removed > 0) {
+        a.length = a.length - removed;
+      }
       return a;
     },
     pluckOneItem: function(a, item) {
       var index, reached, value, _i, _len;
 
+      if (a.length < 1) {
+        return a;
+      }
       reached = false;
       for (index = _i = 0, _len = a.length; _i < _len; index = ++_i) {
         value = a[index];
@@ -71,12 +82,17 @@ define(['./_common'], function(common) {
           a[index - 1] = a[index];
         }
       }
-      a.length = a.length - 1;
+      if (reached) {
+        a.length = a.length - 1;
+      }
       return a;
     },
     pluckByCallback: function(a, cb) {
       var index, removed, value, _i, _len;
 
+      if (a.length < 1) {
+        return a;
+      }
       removed = 0;
       for (index = _i = 0, _len = a.length; _i < _len; index = ++_i) {
         value = a[index];
@@ -88,12 +104,17 @@ define(['./_common'], function(common) {
           a[index - removed] = a[index];
         }
       }
-      a.length = a.length - removed;
+      if (removed > 0) {
+        a.length = a.length - removed;
+      }
       return a;
     },
     pluckMultiple: function(array, indexesToRemove) {
       var i, removedSoFar, _i, _len;
 
+      if (array.length < 1) {
+        return array;
+      }
       removedSoFar = 0;
       indexesToRemove.sort();
       for (_i = 0, _len = indexesToRemove.length; _i < _len; _i++) {

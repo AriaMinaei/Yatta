@@ -1,4 +1,7 @@
-define ['../../../tools/css', '../tools/colorHolder'], (css, ColorHolder) ->
+define [
+	'../../../tools/css'
+	'../tools/colorHolder'
+], (css, ColorHolder) ->
 
 	class Fill_
 
@@ -90,3 +93,10 @@ define ['../../../tools/css', '../tools/colorHolder'], (css, ColorHolder) ->
 
 			@
 
+		adjustOpacity: (d) ->
+
+			@_fill.opacity += d;
+
+			@_styles.opacity = @_fill.opacity
+
+			@

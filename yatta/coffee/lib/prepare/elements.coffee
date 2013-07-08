@@ -5,9 +5,10 @@ define [
 	'../el/type'
 	'../el/image'
 	'../el/container'
-	], (El, Rectangle, Ellipse, Type, Image, Container) ->
+	'../el/display'
+	], (El, Rectangle, Ellipse, Type, Image, Container, Display) ->
 
-	window.display = new El document.body
+	display = new Display document.body
 
 	window.Rectangle = Rectangle
 	window.Ellipse = Ellipse

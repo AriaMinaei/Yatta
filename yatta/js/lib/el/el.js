@@ -50,9 +50,9 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
           newEl.putIn(parent);
         }
       });
-      this.__applyCloners(newEl);
+      El.__applyClonersFor(this, [newEl]);
       for (key in this) {
-        if (newEl[key] != null) {
+        if (newEl[key] !== void 0) {
           continue;
         }
         if (this.hasOwnProperty(key)) {
@@ -109,6 +109,21 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
         this.node.parentNode.removeChild(this.node);
       }
       return null;
+    };
+
+    El.prototype.quit = function() {
+      var child, p, _i, _len, _ref;
+
+      p = this.node.parentNode;
+      if (p != null) {
+        p.removeChild(this.node);
+      }
+      _ref = this._children;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        child = _ref[_i];
+        child.quit();
+      }
+      El.__applyQuittersFor(this);
     };
 
     return El;

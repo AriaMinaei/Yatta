@@ -73,6 +73,10 @@ define(['./styleSetter/styleSetter', './transitioner/transitioner'], function(St
       }
     };
 
+    HasStyles_.prototype.__quitterForHasStyles = function() {
+      return this._undeployUpdater();
+    };
+
     HasStyles_.prototype.enableTransition = function(duration) {
       this._styleInterface = this._transitioner;
       this._transitioner.enable(duration);
