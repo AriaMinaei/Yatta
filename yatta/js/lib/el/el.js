@@ -24,12 +24,14 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
       });
     }
 
-    El.prototype.clone = function() {
-      var child, key, newEl, newNode, parent, _i, _len, _ref, _ref1, _ref2,
+    El.prototype.clone = function(newEl) {
+      var child, key, newNode, parent, val, _i, _len, _ref, _ref1, _ref2,
         _this = this;
 
+      if (newEl == null) {
+        newEl = Object.create(this.constructor.prototype);
+      }
       this._doUpdate();
-      newEl = Object.create(this.constructor.prototype);
       newNode = this.node.cloneNode();
       newEl.node = newNode;
       newEl._children = [];
@@ -52,11 +54,12 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
       });
       El.__applyClonersFor(this, [newEl]);
       for (key in this) {
+        val = this[key];
         if (newEl[key] !== void 0) {
           continue;
         }
         if (this.hasOwnProperty(key)) {
-          newEl[key] = object.clone(this[key], true);
+          newEl[key] = object.clone(val, true);
         }
       }
       return newEl;

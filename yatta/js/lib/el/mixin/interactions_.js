@@ -6,15 +6,15 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
   return Interactions_ = (function() {
     function Interactions_() {}
 
-    Interactions_._nextThenCallback = function(cb) {
-      return frames.laterInThisFrame(cb);
-    };
+    Interactions_.__methodChain = null;
 
     Interactions_.prototype.__initMixinInteractions = function() {
-      this._methodChain = null;
-      this._resetNextThenCallback();
       this._quittersForInteractions = [];
       return null;
+    };
+
+    Interactions_.prototype.__clonerForInteractions = function(newEl) {
+      return newEl._quittersForInteractions = [];
     };
 
     Interactions_.prototype.__quitterForInteractions = function() {
@@ -26,15 +26,11 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
       }
     };
 
-    Interactions_.prototype._resetNextThenCallback = function() {
-      return this._nextThenCallback = Interactions_._nextThenCallback;
-    };
-
     Interactions_.prototype._getMethodChain = function() {
       var fn, key;
 
-      if (this._methodChain == null) {
-        this._methodChain = new MethodChain;
+      if (Interactions_.__methodChain == null) {
+        Interactions_.__methodChain = new MethodChain;
         for (key in this) {
           fn = this[key];
           if (key[0] === '_' || key === 'constructor') {
@@ -43,10 +39,10 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
           if (!(fn instanceof Function)) {
             continue;
           }
-          this._methodChain.addMethod(key);
+          Interactions_.__methodChain.addMethod(key);
         }
       }
-      return this._methodChain;
+      return Interactions_.__methodChain;
     };
 
     Interactions_.prototype._getNewInterface = function() {
@@ -109,14 +105,13 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
       });
     };
 
-    Interactions_.prototype.then = function() {
+    Interactions_.prototype.run = function() {
       var _this = this;
 
-      return this._eventEnabledMethod(arguments, function(cb) {
-        return _this._nextThenCallback = function() {
-          return cb.call(_this);
-        };
+      this._eventEnabledMethod(arguments, function(cb) {
+        return cb.call(_this);
       });
+      return this;
     };
 
     Interactions_.prototype.every = function() {

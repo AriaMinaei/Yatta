@@ -48,6 +48,13 @@ define(function() {
       return "hsl(" + h + ", " + s + "%, " + l + "%)";
     };
 
+    CSSColor.prototype.fromHsl = function(h, s, l) {
+      this.h = h / 360;
+      this.s = s / 100;
+      this.l = l / 100;
+      return this;
+    };
+
     CSSColor.prototype.toRgb = function() {
       var b, g, p, q, r;
 

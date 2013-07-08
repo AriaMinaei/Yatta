@@ -35,14 +35,11 @@ define [
 
 						@_beenAppended = yes
 
-		clone: ->
+		clone: (newEl = Object.create @constructor::) ->
 
 			@_doUpdate()
 
 			# debugger
-
-			# The skeleton
-			newEl = Object.create @constructor::
 
 			# Adding the node
 			newNode = @node.cloneNode()
@@ -77,13 +74,13 @@ define [
 
 			El.__applyClonersFor @, [newEl]
 
-			for key of @
+			for key, val of @
 
 				continue if newEl[key] isnt undefined
 
 				if @hasOwnProperty key
 
-					newEl[key] = object.clone @[key], yes
+					newEl[key] = object.clone val, yes
 
 			newEl
 

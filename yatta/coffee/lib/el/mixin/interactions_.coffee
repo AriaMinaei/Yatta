@@ -5,19 +5,17 @@ define [
 
 	class Interactions_
 
-		@_nextThenCallback: (cb) ->
-
-			frames.laterInThisFrame cb
+		@__methodChain: null
 
 		__initMixinInteractions: ->
-
-			@_methodChain = null
-
-			do @_resetNextThenCallback
 
 			@_quittersForInteractions = []
 
 			null
+
+		__clonerForInteractions: (newEl) ->
+
+			newEl._quittersForInteractions = []
 
 		__quitterForInteractions: ->
 
@@ -29,15 +27,11 @@ define [
 
 			return
 
-		_resetNextThenCallback: ->
-
-			@_nextThenCallback = Interactions_._nextThenCallback
-
 		_getMethodChain: ->
 
-			unless @_methodChain?
+			unless Interactions_.__methodChain?
 
-				@_methodChain = new MethodChain
+				Interactions_.__methodChain = new MethodChain
 
 				for key, fn of @
 
@@ -45,9 +39,9 @@ define [
 
 					continue unless fn instanceof Function
 
-					@_methodChain.addMethod key
+					Interactions_.__methodChain.addMethod key
 
-			@_methodChain
+			Interactions_.__methodChain
 
 		_getNewInterface: ->
 
@@ -108,13 +102,13 @@ define [
 
 				frames.onEachFrame theCallback
 
-		then: ->
+		run: ->
 
 			@_eventEnabledMethod arguments, (cb) =>
 
-				@_nextThenCallback = =>
+				cb.call @
 
-					cb.call @
+			@
 
 		every: (ms, args...) ->
 

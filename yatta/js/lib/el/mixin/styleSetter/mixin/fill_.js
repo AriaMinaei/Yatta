@@ -31,17 +31,6 @@ define(['../../../tools/css', '../tools/colorHolder'], function(css, ColorHolder
       return this;
     };
 
-    Fill_.prototype.fillWithColor = function(r, g, b) {
-      this._fill.bgColor.fromRgb(r, g, b);
-      this._styles.backgroundColor = this._fill.bgColor.toCss();
-      return null;
-    };
-
-    Fill_.prototype.fillWithHslColor = function(h, s, l) {
-      this._fill.bgColor.fromHsl(h, s, l);
-      return this._styles.backgroundColor = this._fill.bgColor.toCss();
-    };
-
     Fill_.prototype.rotateFillHue = function(amount) {
       this._fill.bgColor.rotateHue(amount);
       return this._styles.backgroundColor = this._fill.bgColor.toCss();

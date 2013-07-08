@@ -39,20 +39,6 @@ define [
 
 			@
 
-		fillWithColor: (r, g, b) ->
-
-			@_fill.bgColor.fromRgb r, g, b
-
-			@_styles.backgroundColor = @_fill.bgColor.toCss()
-
-			null
-
-		fillWithHslColor: (h, s, l) ->
-
-			@_fill.bgColor.fromHsl h, s, l
-
-			@_styles.backgroundColor = @_fill.bgColor.toCss()
-
 		rotateFillHue: (amount) ->
 
 			@_fill.bgColor.rotateHue amount
