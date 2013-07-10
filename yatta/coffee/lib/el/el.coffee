@@ -3,6 +3,8 @@ define [
 	'./mixin/interactions_'
 	'../utility/object'
 	'../utility/array'
+	# No dependency for _Axis, 'cause of the circular dependency, and the
+	# fact that its only used by the user; I'll do something cleaner later.
 	], (HasStyles_, Interactions_, object, array) ->
 
 	# Every Yatta-enabled node in the app is an instance of El, which adds
@@ -23,6 +25,10 @@ define [
 
 			@_children = []
 
+			@_group = null
+
+			@_axis = null
+
 			frames.nextTick =>
 
 				if not @_beenAppended
@@ -39,12 +45,14 @@ define [
 
 			@_doUpdate()
 
-			# debugger
-
 			# Adding the node
 			newNode = @node.cloneNode()
 			newEl.node = newNode
 			newEl._children = []
+
+			if @_axis?
+
+				newEl.enableAxis()
 
 			# Cloning the children
 			if @_shouldCloneInnerHTML
@@ -54,6 +62,8 @@ define [
 			else
 
 				for child in @_children
+
+					continue if child is @_axis
 
 					child.clone().putIn newEl
 
@@ -114,6 +124,18 @@ define [
 
 			@
 
+		takeOutOfParent: ->
+
+			if @_parent?
+
+				@_parent._notYourChildAnymore @
+
+			@_parent = null
+
+			@_beenAppended = no
+
+			@
+
 		_append: (el) ->
 
 			if el instanceof El
@@ -149,14 +171,56 @@ define [
 
 				p.removeChild @node
 
+			@disableAxis()
+
 			for child in @_children
 
 				child.quit()
+
 
 			El.__applyQuittersFor @
 
 			return
 
+		enableAxis: ->
 
+			@_axis = _Axis.give()
 
-	El
+			@_axis.putIn @
+
+			do @_updateAxis
+
+			@
+
+		disableAxis: ->
+
+			return @ unless @_axis?
+
+			@_axis.takeOutOfParent()
+
+			_Axis.take @_axis
+
+			@_axis = null
+
+			@
+
+		_updateAxis: ->
+
+			return unless @_axis?
+
+			origin = @_styleSetter._origin
+			dims = @_styleSetter._dims
+
+			if origin.x?
+
+				@_axis.setMovement origin.x, origin.y, origin.z
+
+			else if dims.width?
+
+				@_axis.setMovement dims.width / 2, dims.height / 2, 0
+
+			else
+
+				@_axis.setMovement 0, 0, 0
+
+			@

@@ -2,7 +2,7 @@ define ['./el', './rectangle'], (El, Rectangle) ->
 
 	class Cube extends El
 
-		constructor: (width, height, depth) ->
+		constructor: (width, height, depth, @_initialHue = 0, @_initialSaturation = 0) ->
 
 			node = document.createElement 'div'
 
@@ -50,15 +50,13 @@ define ['./el', './rectangle'], (El, Rectangle) ->
 			.setMovementX(width)
 			.putIn @
 
-			@setOrigin("#{depth / 2}px #{height / 2}px #{width / 2}px ");
+			@setOrigin(width / 2, height / 2, depth / 2);
 
 			for child in @_children
 
-				child.fill.withHsl(120, 0, rand(50, 90))
+				child.fill.withHsl(@_initialHue,  @_initialSaturation, rand(50, 90))
 
-				child.setOrigin('0 0 0')
-
-				# child.css('-webkit-backface-visibility', 'hidden');
+				child.setOrigin(0, 0, 0)
 
 			@
 

@@ -7,9 +7,11 @@ define(['./el', './rectangle'], function(El, Rectangle) {
   return Cube = (function(_super) {
     __extends(Cube, _super);
 
-    function Cube(width, height, depth) {
+    function Cube(width, height, depth, _initialHue, _initialSaturation) {
       var node;
 
+      this._initialHue = _initialHue != null ? _initialHue : 0;
+      this._initialSaturation = _initialSaturation != null ? _initialSaturation : 0;
       node = document.createElement('div');
       node.classList.add('cube');
       Cube.__super__.constructor.call(this, node);
@@ -32,12 +34,12 @@ define(['./el', './rectangle'], function(El, Rectangle) {
       this.leftSurface.rotateY(PI / 2).setMovementZ(depth).putIn(this);
       this.rightSurface = new Rectangle(depth, height);
       this.rightSurface.rotateY(PI / 2).setMovementZ(depth).setMovementX(width).putIn(this);
-      this.setOrigin("" + (depth / 2) + "px " + (height / 2) + "px " + (width / 2) + "px ");
+      this.setOrigin(width / 2, height / 2, depth / 2);
       _ref = this._children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
-        child.fill.withHsl(120, 0, rand(50, 90));
-        child.setOrigin('0 0 0');
+        child.fill.withHsl(this._initialHue, this._initialSaturation, rand(50, 90));
+        child.setOrigin(0, 0, 0);
       }
       return this;
     };

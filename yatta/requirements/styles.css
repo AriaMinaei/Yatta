@@ -45,6 +45,8 @@ div, img {
 	bottom: 0;
 	left: -200;
 
+	z-index: 1000;
+
 	background: #322;
 	/*opacity: 0.7;*/
 
@@ -122,6 +124,11 @@ div, img {
 	-ms-transition: 0.2s all;
 	-o-transition: 0.2s all;
 	transition: 0.2s all;
+
+	-webkit-user-select: text !important;
+	-moz-user-select: text !important;
+	-ms-user-select: text !important;
+	user-select: text !important;
 }
 
 input:focus {
@@ -132,4 +139,27 @@ input:focus {
 
 input:hover {
 	opacity: 0.7;
+}
+
+.camera {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-ms-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+
+.display {
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-ms-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+
+.container {
+	/*width: 100%;
+	height: 100%;*/
 }

@@ -1,7 +1,7 @@
 define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../utility/array'], function(HasStyles_, Interactions_, object, array) {
   var El;
 
-  mixing(HasStyles_, Interactions_, El = (function() {
+  return mixing(HasStyles_, Interactions_, El = (function() {
     function El(node) {
       var _this = this;
 
@@ -13,6 +13,8 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
       this._beenAppended = false;
       this._parent = null;
       this._children = [];
+      this._group = null;
+      this._axis = null;
       frames.nextTick(function() {
         if (!_this._beenAppended) {
           if ((_this.node.parentElement == null) && _this.node.tagName !== 'BODY') {
@@ -35,12 +37,18 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
       newNode = this.node.cloneNode();
       newEl.node = newNode;
       newEl._children = [];
+      if (this._axis != null) {
+        newEl.enableAxis();
+      }
       if (this._shouldCloneInnerHTML) {
         newEl.node.innerHTML = this.node.innerHTML;
       } else {
         _ref = this._children;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           child = _ref[_i];
+          if (child === this._axis) {
+            continue;
+          }
           child.clone().putIn(newEl);
         }
       }
@@ -91,6 +99,15 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
       return this;
     };
 
+    El.prototype.takeOutOfParent = function() {
+      if (this._parent != null) {
+        this._parent._notYourChildAnymore(this);
+      }
+      this._parent = null;
+      this._beenAppended = false;
+      return this;
+    };
+
     El.prototype._append = function(el) {
       var node;
 
@@ -121,6 +138,7 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
       if (p != null) {
         p.removeChild(this.node);
       }
+      this.disableAxis();
       _ref = this._children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
@@ -129,8 +147,42 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
       El.__applyQuittersFor(this);
     };
 
+    El.prototype.enableAxis = function() {
+      this._axis = _Axis.give();
+      this._axis.putIn(this);
+      this._updateAxis();
+      return this;
+    };
+
+    El.prototype.disableAxis = function() {
+      if (this._axis == null) {
+        return this;
+      }
+      this._axis.takeOutOfParent();
+      _Axis.take(this._axis);
+      this._axis = null;
+      return this;
+    };
+
+    El.prototype._updateAxis = function() {
+      var dims, origin;
+
+      if (this._axis == null) {
+        return;
+      }
+      origin = this._styleSetter._origin;
+      dims = this._styleSetter._dims;
+      if (origin.x != null) {
+        this._axis.setMovement(origin.x, origin.y, origin.z);
+      } else if (dims.width != null) {
+        this._axis.setMovement(dims.width / 2, dims.height / 2, 0);
+      } else {
+        this._axis.setMovement(0, 0, 0);
+      }
+      return this;
+    };
+
     return El;
 
   })());
-  return El;
 });

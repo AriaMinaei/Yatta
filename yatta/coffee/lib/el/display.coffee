@@ -6,6 +6,8 @@ define ['./el'], (El) ->
 
 			super node
 
+			node.classList.add 'display'
+
 			@_displayCoords =
 
 				centerX: 0
@@ -28,6 +30,16 @@ define ['./el'], (El) ->
 				@_displayCoordsInitialized = yes
 
 			@_displayCoords
+
+		enableAxis: ->
+
+			coords = @_getDisplayCoords()
+
+			@setWidth coords.width
+
+			@setHeight coords.height
+
+			super
 
 		@getter 'centerX', -> @_getDisplayCoords().centerX
 

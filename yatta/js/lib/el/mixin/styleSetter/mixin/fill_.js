@@ -42,7 +42,20 @@ define(['../../../tools/css', '../tools/colorHolder'], function(css, ColorHolder
     };
 
     Fill_.prototype.makeHollow = function() {
-      return this._styles.color = this._fill.color = 'transparent';
+      return this._styles.bgColor = this._fill.bgColor = 'transparent';
+    };
+
+    Fill_.prototype.texturize = function(filename) {
+      var addr;
+
+      addr = "./images/" + filename;
+      this._styles.background = 'url(' + addr + ')';
+      return this;
+    };
+
+    Fill_.prototype.setTexturePosition = function(x, y) {
+      this._styles.backgroundPosition = "" + x + "px " + y + "px";
+      return this;
     };
 
     Fill_.prototype.setBorder = function(thickness, r, g, b) {

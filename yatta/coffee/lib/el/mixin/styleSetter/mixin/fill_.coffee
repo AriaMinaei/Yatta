@@ -53,7 +53,21 @@ define [
 
 		makeHollow: ->
 
-			@_styles.color = @_fill.color = 'transparent'
+			@_styles.bgColor = @_fill.bgColor = 'transparent'
+
+		texturize: (filename) ->
+
+			addr = "./images/#{filename}"
+
+			@_styles.background = 'url(' + addr + ')'
+
+			@
+
+		setTexturePosition: (x, y) ->
+
+			@_styles.backgroundPosition = "#{x}px #{y}px"
+
+			@
 
 		setBorder: (thickness, r, g, b) ->
 

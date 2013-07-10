@@ -7,7 +7,8 @@ define [
 	'../el/container'
 	'../el/cube'
 	'../el/display'
-	], (El, Rectangle, Ellipse, Type, Image, Container, Cube, Display) ->
+	'../el/_axis'
+	], (El, Rectangle, Ellipse, Type, Image, Container, Cube, Display, _Axis) ->
 
 	display = new Display document.body
 
@@ -17,4 +18,5 @@ define [
 	window.Image = Image
 	window.Container = Container
 	window.Cube = Cube
+	window._Axis = _Axis
 	window.display = display

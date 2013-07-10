@@ -9,6 +9,15 @@ define(function() {
 
   return Translation = {
     toPlainCss: function(x, y, z) {
+      if ((-0.00001 < x && x < 0.00001)) {
+        x = 0;
+      }
+      if ((-0.00001 < y && y < 0.00001)) {
+        y = 0;
+      }
+      if ((-0.00001 < z && z < 0.00001)) {
+        z = 0;
+      }
       return "translate3d(" + x + "px, " + y + "px, " + z + "px) ";
     },
     setTo: function(b, x, y, z) {

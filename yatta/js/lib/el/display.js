@@ -12,6 +12,7 @@ define(['./el'], function(El) {
         node = document.body;
       }
       Display.__super__.constructor.call(this, node);
+      node.classList.add('display');
       this._displayCoords = {
         centerX: 0,
         centerY: 0,
@@ -30,6 +31,15 @@ define(['./el'], function(El) {
         this._displayCoordsInitialized = true;
       }
       return this._displayCoords;
+    };
+
+    Display.prototype.enableAxis = function() {
+      var coords;
+
+      coords = this._getDisplayCoords();
+      this.setWidth(coords.width);
+      this.setHeight(coords.height);
+      return Display.__super__.enableAxis.apply(this, arguments);
     };
 
     Display.getter('centerX', function() {
