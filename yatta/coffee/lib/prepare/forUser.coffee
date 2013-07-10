@@ -1,7 +1,8 @@
 define [
 	'../userTools/math'
 	'../userTools/param'
-	], (math, Param) ->
+	'../userTools/loading'
+	], (math, Param, loading) ->
 
 	for key of math
 
@@ -24,5 +25,8 @@ define [
 	window.every = frames.every
 
 	window.wait = frames.wait
+
+	window.load = loading.load
+	window.loadWithIndicator = loading.loadWithIndicator
 
 	null
