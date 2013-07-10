@@ -21,7 +21,6 @@ makePanorama = (fullWidth, fullHeight, texture, fullCircle = no, sides = 50) ->
 		c.rotateY PI * sM * index / sides
 		c.moveX r * sin(PI * sM * index / sides)
 		c.moveZ r * cos(PI * sM * index / sides)
-		# c.css 'border', '10px solid red'
 
 		c.putIn walls
 
@@ -53,9 +52,6 @@ makePanorama = (fullWidth, fullHeight, texture, fullCircle = no, sides = 50) ->
 
 	walls
 
-# walls = makePanorama 23478, 2278, 'london.jpg', no
-walls = makePanorama 7131, 2009, 'img.jpg', no
-
 do ->
 
 	maxWidth = 1700
@@ -82,3 +78,7 @@ do ->
 		r.clone().moveY(display.height - dif / 2)
 
 console.log 'Image from: http://erikcollinder.deviantart.com/art/Panorama-73725587'
+
+loadWithIndicator ['./images/img.jpg'], ->
+
+	window.walls = makePanorama 7131, 2009, 'img.jpg', no

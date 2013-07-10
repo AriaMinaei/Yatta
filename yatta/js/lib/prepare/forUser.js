@@ -1,4 +1,4 @@
-define(['../userTools/math', '../userTools/param'], function(math, Param) {
+define(['../userTools/math', '../userTools/param', '../userTools/loading'], function(math, Param, loading) {
   var key;
 
   for (key in math) {
@@ -18,5 +18,7 @@ define(['../userTools/math', '../userTools/param'], function(math, Param) {
   })();
   window.every = frames.every;
   window.wait = frames.wait;
+  window.load = loading.load;
+  window.loadWithIndicator = loading.loadWithIndicator;
   return null;
 });

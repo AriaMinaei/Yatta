@@ -3,7 +3,7 @@
 Don't take this too seriously ;)
 */
 
-var makePanorama, walls;
+var makePanorama;
 
 makePanorama = function(fullWidth, fullHeight, texture, fullCircle, sides) {
   var c, height, i, index, r, sM, walls, width, _i;
@@ -46,8 +46,6 @@ makePanorama = function(fullWidth, fullHeight, texture, fullCircle, sides) {
   return walls;
 };
 
-walls = makePanorama(7131, 2009, 'img.jpg', false);
-
 (function() {
   var dif, maxHeight, maxWidth, r;
 
@@ -70,3 +68,7 @@ walls = makePanorama(7131, 2009, 'img.jpg', false);
 })();
 
 console.log('Image from: http://erikcollinder.deviantart.com/art/Panorama-73725587');
+
+loadWithIndicator(['./images/img.jpg'], function() {
+  return window.walls = makePanorama(7131, 2009, 'img.jpg', false);
+});
