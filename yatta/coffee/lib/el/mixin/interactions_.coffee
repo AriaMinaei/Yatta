@@ -1,28 +1,37 @@
-define ['../../methodChain/methodChain'], (MethodChain) ->
+define [
+	'../../methodChain/methodChain'
+	'../../utility/array'
+], (MethodChain, array) ->
 
 	class Interactions_
 
-		@_nextThenCallback: (cb) ->
-
-			frames.laterInThisFrame cb
+		@__methodChain: null
 
 		__initMixinInteractions: ->
 
-			@_methodChain = null
-
-			do @_resetNextThenCallback
+			@_quittersForInteractions = []
 
 			null
 
-		_resetNextThenCallback: ->
+		__clonerForInteractions: (newEl) ->
 
-			@_nextThenCallback = Interactions_._nextThenCallback
+			newEl._quittersForInteractions = []
+
+		__quitterForInteractions: ->
+
+			loop
+
+				return if @_quittersForInteractions.length < 1
+
+				@_quittersForInteractions.pop()()
+
+			return
 
 		_getMethodChain: ->
 
-			unless @_methodChain?
+			unless Interactions_.__methodChain?
 
-				@_methodChain = new MethodChain
+				Interactions_.__methodChain = new MethodChain
 
 				for key, fn of @
 
@@ -30,9 +39,9 @@ define ['../../methodChain/methodChain'], (MethodChain) ->
 
 					continue unless fn instanceof Function
 
-					@_methodChain.addMethod key
+					Interactions_.__methodChain.addMethod key
 
-			@_methodChain
+			Interactions_.__methodChain
 
 		_getNewInterface: ->
 
@@ -42,13 +51,17 @@ define ['../../methodChain/methodChain'], (MethodChain) ->
 
 			@_eventEnabledMethod arguments, (cb) =>
 
-				@node.addEventListener 'click', cb
+				@node.addEventListener 'click', =>
+
+					cb.call @
 
 		wait: (ms, rest...) ->
 
 			@_eventEnabledMethod rest, (cb) =>
 
-				frames.wait ms, cb.bind(@)
+				frames.wait ms, =>
+
+					cb.call @
 
 		eachFrame: ->
 
@@ -57,11 +70,21 @@ define ['../../methodChain/methodChain'], (MethodChain) ->
 				startTime = new Int32Array 1
 				startTime[0] = -1
 
-				cancel = =>
+				canceled = no
 
-					frames.cancelEachFrame frameCallback
+				canceler = =>
 
-				frameCallback = (t) =>
+					return if canceled
+
+					frames.cancelEachFrame theCallback
+
+					array.pluckOneItem @_quittersForInteractions, canceler
+
+					canceled = yes
+
+				@_quittersForInteractions.push canceler
+
+				theCallback = (t) =>
 
 					if startTime[0] < 0
 
@@ -73,25 +96,69 @@ define ['../../methodChain/methodChain'], (MethodChain) ->
 
 						elapsedTime = t - startTime[0]
 
-					cb @, elapsedTime, cancel
+					cb.call @, elapsedTime, canceler
 
 					null
 
-				frames.onEachFrame frameCallback
+				frames.onEachFrame theCallback
 
-		then: (rest...) ->
+		run: ->
 
-			@_eventEnabledMethod rest, (cb) =>
+			@_eventEnabledMethod arguments, (cb) =>
 
-				@_nextThenCallback cb.bind(@)
+				cb.call @
+
+			@
 
 		every: (ms, args...) ->
 
 			@_eventEnabledMethod args, (cb) =>
 
-				frames.every ms, cb.bind(@)
+				canceled = no
 
-		each: ->
+				canceler = =>
+
+					return if canceled
+
+					frames.cancelEvery theCallback
+
+					array.pluckOneItem @_quittersForInteractions, canceler
+
+					canceled = yes
+
+				@_quittersForInteractions.push canceler
+
+				theCallback = =>
+
+					cb.call @, canceler
+
+				frames.every ms, theCallback
+
+		each: (cb = null) ->
+
+			if cb instanceof Function
+
+				# I have to use this loop, since the children
+				# might be put in another container
+				i = 0
+				child = null
+				counter = -1
+
+				loop
+
+					counter++
+
+					if child is @_children[i]
+
+						i++
+
+					child = @_children[i]
+
+					break unless child?
+
+					cb.call @, child, counter
+
+				return @
 
 			_interface = @_getNewInterface()
 

@@ -31,17 +31,6 @@ define(['../../../tools/css', '../tools/colorHolder'], function(css, ColorHolder
       return this;
     };
 
-    Fill_.prototype.fillWithColor = function(r, g, b) {
-      this._fill.bgColor.fromRgb(r, g, b);
-      this._styles.backgroundColor = this._fill.bgColor.toCss();
-      return null;
-    };
-
-    Fill_.prototype.fillWithHslColor = function(h, s, l) {
-      this._fill.bgColor.fromHsl(h, s, l);
-      return this._styles.backgroundColor = this._fill.bgColor.toCss();
-    };
-
     Fill_.prototype.rotateFillHue = function(amount) {
       this._fill.bgColor.rotateHue(amount);
       return this._styles.backgroundColor = this._fill.bgColor.toCss();
@@ -53,7 +42,20 @@ define(['../../../tools/css', '../tools/colorHolder'], function(css, ColorHolder
     };
 
     Fill_.prototype.makeHollow = function() {
-      return this._styles.color = this._fill.color = 'transparent';
+      return this._styles.bgColor = this._fill.bgColor = 'transparent';
+    };
+
+    Fill_.prototype.texturize = function(filename) {
+      var addr;
+
+      addr = "./images/" + filename;
+      this._styles.background = 'url(' + addr + ')';
+      return this;
+    };
+
+    Fill_.prototype.setTexturePosition = function(x, y) {
+      this._styles.backgroundPosition = "" + x + "px " + y + "px";
+      return this;
     };
 
     Fill_.prototype.setBorder = function(thickness, r, g, b) {
@@ -72,6 +74,12 @@ define(['../../../tools/css', '../tools/colorHolder'], function(css, ColorHolder
 
     Fill_.prototype.setOpacity = function(d) {
       this._styles.opacity = this._fill.opacity = d;
+      return this;
+    };
+
+    Fill_.prototype.adjustOpacity = function(d) {
+      this._fill.opacity += d;
+      this._styles.opacity = this._fill.opacity;
       return this;
     };
 

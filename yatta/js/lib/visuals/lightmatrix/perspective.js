@@ -11,6 +11,9 @@ define(function() {
     components: function(d) {
       var p;
 
+      if ((-0.00001 < d && d < 0.00001)) {
+        d = 0;
+      }
       if (d === 0) {
         p = 0;
       } else {

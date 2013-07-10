@@ -1,4 +1,7 @@
-define ['../../../tools/css', '../tools/colorHolder'], (css, ColorHolder) ->
+define [
+	'../../../tools/css'
+	'../tools/colorHolder'
+], (css, ColorHolder) ->
 
 	class Fill_
 
@@ -36,20 +39,6 @@ define ['../../../tools/css', '../tools/colorHolder'], (css, ColorHolder) ->
 
 			@
 
-		fillWithColor: (r, g, b) ->
-
-			@_fill.bgColor.fromRgb r, g, b
-
-			@_styles.backgroundColor = @_fill.bgColor.toCss()
-
-			null
-
-		fillWithHslColor: (h, s, l) ->
-
-			@_fill.bgColor.fromHsl h, s, l
-
-			@_styles.backgroundColor = @_fill.bgColor.toCss()
-
 		rotateFillHue: (amount) ->
 
 			@_fill.bgColor.rotateHue amount
@@ -64,7 +53,21 @@ define ['../../../tools/css', '../tools/colorHolder'], (css, ColorHolder) ->
 
 		makeHollow: ->
 
-			@_styles.color = @_fill.color = 'transparent'
+			@_styles.bgColor = @_fill.bgColor = 'transparent'
+
+		texturize: (filename) ->
+
+			addr = "./images/#{filename}"
+
+			@_styles.background = 'url(' + addr + ')'
+
+			@
+
+		setTexturePosition: (x, y) ->
+
+			@_styles.backgroundPosition = "#{x}px #{y}px"
+
+			@
 
 		setBorder: (thickness, r, g, b) ->
 
@@ -90,3 +93,10 @@ define ['../../../tools/css', '../tools/colorHolder'], (css, ColorHolder) ->
 
 			@
 
+		adjustOpacity: (d) ->
+
+			@_fill.opacity += d;
+
+			@_styles.opacity = @_fill.opacity
+
+			@

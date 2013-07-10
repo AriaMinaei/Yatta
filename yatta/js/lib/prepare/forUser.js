@@ -16,12 +16,6 @@ define(['../userTools/math', '../userTools/param'], function(math, Param) {
       return p.param.apply(p, arguments);
     });
   })();
-  window.centerX = function() {
-    return window.innerWidth / 2;
-  };
-  window.centerY = function() {
-    return window.innerHeight / 2;
-  };
   window.every = frames.every;
   window.wait = frames.wait;
   return null;

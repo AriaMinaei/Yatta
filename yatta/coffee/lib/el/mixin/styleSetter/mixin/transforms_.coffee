@@ -9,6 +9,14 @@ define [
 
 			@_transformer = new TypedMatrix
 
+			@_origin =
+
+				x: null
+
+				y: null
+
+				z: null
+
 			@_shouldUpdateTransforms = no
 
 			return
@@ -42,6 +50,20 @@ define [
 		go3d: ->
 
 			css.setTransformStyle @node, 'preserve-3d'
+
+			@
+
+		setOrigin: (x = 0, y = 0, z = 0) ->
+
+			@_origin.x = x
+			@_origin.y = y
+			@_origin.z = z
+
+			css.setTransformOrigin @node,
+
+				"#{@_origin.x}px #{@_origin.y}px #{@_origin.z}px"
+
+			do @el._updateAxis
 
 			@
 

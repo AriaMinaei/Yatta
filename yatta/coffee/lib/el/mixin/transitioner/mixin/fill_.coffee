@@ -16,6 +16,12 @@ define ->
 
 			return
 
+		__clonerForFill: (newTransitioner) ->
+
+			newTransitioner._currentFill = newTransitioner.el._styleSetter._fill
+
+			return
+
 		_adjustFromValuesForFill: ->
 
 			@_fromFill.opacity = @_currentFill.opacity
@@ -41,6 +47,16 @@ define ->
 		setOpacity: (d) ->
 
 			@_toFill.opacity = d
+
+			@_needsUpdate.opacity = yes
+
+			do @_update
+
+			@
+
+		adjustOpacity: (d) ->
+
+			@_toFill.opacity = @_currentFill.opacity + d
 
 			@_needsUpdate.opacity = yes
 

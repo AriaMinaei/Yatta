@@ -58,6 +58,14 @@ define ->
 
 			"hsl(#{h}, #{s}%, #{l}%)"
 
+		fromHsl: (h, s, l) ->
+
+			@h = h / 360
+			@s = s / 100
+			@l = l / 100
+
+			@
+
 		toRgb: ->
 
 			r = 0

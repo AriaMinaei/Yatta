@@ -53,6 +53,14 @@ define ->
 
 			180 * rad / Math.PI
 
+		backAndForth: (num, whole) ->
+
+			`
+			var f = (floor(num/whole) % 2);
+			return (whole * f) + (-2 * f + 1) * (num % whole);`
+
+			return
+
 	for key, val of math
 
 		continue unless val instanceof Function

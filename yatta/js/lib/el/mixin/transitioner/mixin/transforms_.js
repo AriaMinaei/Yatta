@@ -10,8 +10,8 @@ define(['../../../../visuals/typedMatrix'], function(TypedMatrix) {
       return this._currentMatrix = this.el._styleSetter._transformer._current;
     };
 
-    Transforms_.prototype.__clonerForTransforms = function(newObj) {
-      newObj._currentMatrix = newObj.el._styleSetter._transformer._current;
+    Transforms_.prototype.__clonerForTransforms = function(newTransitioner) {
+      newTransitioner._currentMatrix = newTransitioner.el._styleSetter._transformer._current;
     };
 
     Transforms_.prototype._adjustFromValuesForTransforms = function() {

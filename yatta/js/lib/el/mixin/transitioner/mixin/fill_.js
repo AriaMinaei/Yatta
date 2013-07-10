@@ -14,6 +14,10 @@ define(function() {
       this._currentFill = this.el._styleSetter._fill;
     };
 
+    Fill_.prototype.__clonerForFill = function(newTransitioner) {
+      newTransitioner._currentFill = newTransitioner.el._styleSetter._fill;
+    };
+
     Fill_.prototype._adjustFromValuesForFill = function() {
       this._fromFill.opacity = this._currentFill.opacity;
     };
@@ -31,6 +35,13 @@ define(function() {
 
     Fill_.prototype.setOpacity = function(d) {
       this._toFill.opacity = d;
+      this._needsUpdate.opacity = true;
+      this._update();
+      return this;
+    };
+
+    Fill_.prototype.adjustOpacity = function(d) {
+      this._toFill.opacity = this._currentFill.opacity + d;
       this._needsUpdate.opacity = true;
       this._update();
       return this;

@@ -16,6 +16,8 @@ define ->
 
 			@_styles.width = w + 'px'
 
+			do @el._updateAxis
+
 			@
 
 		setHeight: (h) ->
@@ -23,5 +25,7 @@ define ->
 			@_dims.height = h
 
 			@_styles.height = h + 'px'
+
+			do @el._updateAxis
 
 			@

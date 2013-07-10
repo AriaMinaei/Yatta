@@ -2,9 +2,13 @@ if typeof define isnt 'function' then define = require('amdefine')(module)
 
 define ->
 
-	Perspective = 
+	Perspective =
 
 		components: (d) ->
+
+			if -0.00001 < d < 0.00001
+
+				d = 0
 
 			if d is 0
 
@@ -64,13 +68,13 @@ define ->
 
 				p = - 1 / d
 
-			
+
 
 			b.m31 = b.m31  +  p * b.m41
 			b.m32 = b.m32  +  p * b.m42
 			b.m33 = b.m33  +  p * b.m43
 			b.m34 = b.m34  +  p * b.m44
-				
+
 
 
 			b

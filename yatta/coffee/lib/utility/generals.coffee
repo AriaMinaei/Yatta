@@ -39,29 +39,33 @@ define ->
 
 		classProto = classReference::
 
-		unless classProto.__cloners?
+		classReference.__mixinCloners = []
 
-			classProto.__cloners = []
+		classReference.__applyClonersFor = (instance, args = null) ->
 
-		unless classProto.__applyCloners?
+			for cloner in classReference.__mixinCloners
 
-			classProto.__applyCloners = ->
+				cloner.apply instance, args
 
-				for cloner in @__cloners
-
-					@[cloner].apply @, arguments
-
-				return
-
-		# unless classProto.__mixinInitializers?
+			return
 
 		classReference.__mixinInitializers = []
 
-		classReference.__initMixinsFor = (obj) ->
+		classReference.__initMixinsFor = (instance, args = null) ->
 
 			for initializer in classReference.__mixinInitializers
 
-				classReference[initializer].call obj
+				initializer.apply instance, args
+
+			return
+
+		classReference.__mixinQuitters = []
+
+		classReference.__applyQuittersFor = (instance, args = null) ->
+
+			for quitter in classReference.__mixinQuitters
+
+				quitter.apply instance, args
 
 			return
 
@@ -71,15 +75,21 @@ define ->
 
 				if member.substr(0, 11) is '__initMixin'
 
-					classReference.__mixinInitializers.push member
-
-					classReference[member] = mixin::[member]
+					classReference.__mixinInitializers.push mixin::[member]
 
 					continue
 
 				else if member.substr(0, 11) is '__clonerFor'
 
-					classProto.__cloners.push member
+					classReference.__mixinCloners.push mixin::[member]
+
+					continue
+
+				else if member.substr(0, 12) is '__quitterFor'
+
+					classReference.__mixinQuitters.push mixin::[member]
+
+					continue
 
 				unless Object.getOwnPropertyDescriptor classProto, member
 

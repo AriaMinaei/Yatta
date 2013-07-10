@@ -1,30 +1,36 @@
 var __slice = [].slice;
 
-define(['../../methodChain/methodChain'], function(MethodChain) {
+define(['../../methodChain/methodChain', '../../utility/array'], function(MethodChain, array) {
   var Interactions_;
 
   return Interactions_ = (function() {
     function Interactions_() {}
 
-    Interactions_._nextThenCallback = function(cb) {
-      return frames.laterInThisFrame(cb);
-    };
+    Interactions_.__methodChain = null;
 
     Interactions_.prototype.__initMixinInteractions = function() {
-      this._methodChain = null;
-      this._resetNextThenCallback();
+      this._quittersForInteractions = [];
       return null;
     };
 
-    Interactions_.prototype._resetNextThenCallback = function() {
-      return this._nextThenCallback = Interactions_._nextThenCallback;
+    Interactions_.prototype.__clonerForInteractions = function(newEl) {
+      return newEl._quittersForInteractions = [];
+    };
+
+    Interactions_.prototype.__quitterForInteractions = function() {
+      while (true) {
+        if (this._quittersForInteractions.length < 1) {
+          return;
+        }
+        this._quittersForInteractions.pop()();
+      }
     };
 
     Interactions_.prototype._getMethodChain = function() {
       var fn, key;
 
-      if (this._methodChain == null) {
-        this._methodChain = new MethodChain;
+      if (Interactions_.__methodChain == null) {
+        Interactions_.__methodChain = new MethodChain;
         for (key in this) {
           fn = this[key];
           if (key[0] === '_' || key === 'constructor') {
@@ -33,10 +39,10 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
           if (!(fn instanceof Function)) {
             continue;
           }
-          this._methodChain.addMethod(key);
+          Interactions_.__methodChain.addMethod(key);
         }
       }
-      return this._methodChain;
+      return Interactions_.__methodChain;
     };
 
     Interactions_.prototype._getNewInterface = function() {
@@ -47,7 +53,9 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
       var _this = this;
 
       return this._eventEnabledMethod(arguments, function(cb) {
-        return _this.node.addEventListener('click', cb);
+        return _this.node.addEventListener('click', function() {
+          return cb.call(_this);
+        });
       });
     };
 
@@ -57,7 +65,9 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
 
       ms = arguments[0], rest = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       return this._eventEnabledMethod(rest, function(cb) {
-        return frames.wait(ms, cb.bind(_this));
+        return frames.wait(ms, function() {
+          return cb.call(_this);
+        });
       });
     };
 
@@ -65,14 +75,21 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
       var _this = this;
 
       return this._eventEnabledMethod(arguments, function(cb) {
-        var cancel, frameCallback, startTime;
+        var canceled, canceler, startTime, theCallback;
 
         startTime = new Int32Array(1);
         startTime[0] = -1;
-        cancel = function() {
-          return frames.cancelEachFrame(frameCallback);
+        canceled = false;
+        canceler = function() {
+          if (canceled) {
+            return;
+          }
+          frames.cancelEachFrame(theCallback);
+          array.pluckOneItem(_this._quittersForInteractions, canceler);
+          return canceled = true;
         };
-        frameCallback = function(t) {
+        _this._quittersForInteractions.push(canceler);
+        theCallback = function(t) {
           var elapsedTime;
 
           if (startTime[0] < 0) {
@@ -81,21 +98,20 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
           } else {
             elapsedTime = t - startTime[0];
           }
-          cb(_this, elapsedTime, cancel);
+          cb.call(_this, elapsedTime, canceler);
           return null;
         };
-        return frames.onEachFrame(frameCallback);
+        return frames.onEachFrame(theCallback);
       });
     };
 
-    Interactions_.prototype.then = function() {
-      var rest,
-        _this = this;
+    Interactions_.prototype.run = function() {
+      var _this = this;
 
-      rest = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return this._eventEnabledMethod(rest, function(cb) {
-        return _this._nextThenCallback(cb.bind(_this));
+      this._eventEnabledMethod(arguments, function(cb) {
+        return cb.call(_this);
       });
+      return this;
     };
 
     Interactions_.prototype.every = function() {
@@ -104,14 +120,49 @@ define(['../../methodChain/methodChain'], function(MethodChain) {
 
       ms = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       return this._eventEnabledMethod(args, function(cb) {
-        return frames.every(ms, cb.bind(_this));
+        var canceled, canceler, theCallback;
+
+        canceled = false;
+        canceler = function() {
+          if (canceled) {
+            return;
+          }
+          frames.cancelEvery(theCallback);
+          array.pluckOneItem(_this._quittersForInteractions, canceler);
+          return canceled = true;
+        };
+        _this._quittersForInteractions.push(canceler);
+        theCallback = function() {
+          return cb.call(_this, canceler);
+        };
+        return frames.every(ms, theCallback);
       });
     };
 
-    Interactions_.prototype.each = function() {
-      var els, _interface,
+    Interactions_.prototype.each = function(cb) {
+      var child, counter, els, i, _interface,
         _this = this;
 
+      if (cb == null) {
+        cb = null;
+      }
+      if (cb instanceof Function) {
+        i = 0;
+        child = null;
+        counter = -1;
+        while (true) {
+          counter++;
+          if (child === this._children[i]) {
+            i++;
+          }
+          child = this._children[i];
+          if (child == null) {
+            break;
+          }
+          cb.call(this, child, counter);
+        }
+        return this;
+      }
       _interface = this._getNewInterface();
       els = this._children;
       if (els.length !== 0) {

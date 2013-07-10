@@ -1,6 +1,6 @@
-define ['../el', './typography_'], (El, Typography_) ->
+define ['../el'], (El) ->
 
-	mixing Typography_, class _Letter extends El
+	mixing class _Letter extends El
 
 		constructor: (letter = '') ->
 
@@ -23,4 +23,10 @@ define ['../el', './typography_'], (El, Typography_) ->
 
 		_applyLetter: ->
 
-			@node.innerHTML = @_letter
+			if @_letter is ' '
+
+				@node.innerHTML = '&nbsp'
+
+			else
+
+				@node.innerHTML = @_letter

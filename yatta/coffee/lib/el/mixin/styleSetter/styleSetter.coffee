@@ -2,12 +2,13 @@ define [
 	'./mixin/generals_'
 	'./mixin/layout_'
 	'./mixin/fill_'
+	'./mixin/typography_'
 	'./mixin/transforms_'
 	'./mixin/filters_'
 	'../../../utility/object'
-], (Generals_, Layout_, Fill_, Transforms_, Filters_, object) ->
+], (Generals_, Layout_, Fill_, Typography_, Transforms_, Filters_, object) ->
 
-	mixing Generals_, Layout_, Fill_, Transforms_, Filters_, class StyleSetter
+	mixing Generals_, Layout_, Fill_, Typography_, Transforms_, Filters_, class StyleSetter
 
 		constructor: (@el) ->
 
@@ -29,11 +30,11 @@ define [
 			newObj.node = el.node
 			newObj._styles = el.node.style
 
-			@__applyCloners newObj
+			StyleSetter.__applyClonersFor @, [newObj]
 
 			for key of @
 
-				continue if newObj[key]?
+				continue if newObj[key] isnt undefined
 
 				if @hasOwnProperty key
 

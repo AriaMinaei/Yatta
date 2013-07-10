@@ -6,8 +6,8 @@ display.enableTransition(500);
 var count = 19;
 
 // Center of the screen
-var cX = centerX();
-var cY = centerY();
+var cX = display.centerX;
+var cY = display.centerY;
 
 var radius = 250;
 

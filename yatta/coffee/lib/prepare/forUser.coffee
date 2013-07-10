@@ -3,7 +3,6 @@ define [
 	'../userTools/param'
 	], (math, Param) ->
 
-
 	for key of math
 
 		window[key] = math[key]
@@ -21,12 +20,6 @@ define [
 		window._param = returnLazily ->
 
 			p.param.apply p, arguments
-
-	# Center of the window in X axis
-	window.centerX = -> window.innerWidth / 2
-
-	# Center of the window in Y axis
-	window.centerY = -> window.innerHeight / 2
 
 	window.every = frames.every
 

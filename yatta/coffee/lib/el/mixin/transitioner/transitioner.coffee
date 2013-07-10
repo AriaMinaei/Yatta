@@ -81,11 +81,11 @@ define [
 				transformTranslation: no
 				opacity: no
 
-			@__applyCloners newObj
+			Transitioner.__applyClonersFor @, [newObj]
 
 			for key of @
 
-				continue if newObj[key]?
+				continue if newObj[key] isnt undefined
 
 				if @hasOwnProperty key
 
@@ -128,13 +128,7 @@ define [
 
 			return
 
-		_adjustFromValues: ->
 
-			do @_adjustFromValuesForTransforms
-
-			do @_adjustFromValuesForFill
-
-			@
 
 		_startOver: ->
 
@@ -145,6 +139,14 @@ define [
 			@_shouldUpdate = yes
 
 			do @_scheduleUpdate
+
+		_adjustFromValues: ->
+
+			do @_adjustFromValuesForTransforms
+
+			do @_adjustFromValuesForFill
+
+			@
 
 		_scheduleUpdate: ->
 

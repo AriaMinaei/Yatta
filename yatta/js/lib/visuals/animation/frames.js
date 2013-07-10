@@ -207,13 +207,13 @@ define(['../../utility/array', './frames/_timeoutPool', './frames/_intervalPool'
       return null;
     },
     _intervals: [],
-    _removeFromIntervals: [],
+    _toRemoveFromIntervals: [],
     every: function(ms, fn) {
       frames._intervals.push(_intervalPool.give(ms, frames.timeInMs[0], 0, fn));
       return null;
     },
     cancelEvery: function(fn) {
-      frames._removeFromIntervals.push(fn);
+      frames._toRemoveFromIntervals.push(fn);
       return null;
     },
     _callIntervals: function() {
@@ -223,7 +223,7 @@ define(['../../utility/array', './frames/_timeoutPool', './frames/_intervalPool'
         return;
       }
       t = frames.timeInMs[0];
-      _ref = frames._removeFromIntervals;
+      _ref = frames._toRemoveFromIntervals;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         fnToRemove = _ref[_i];
         array.pluckByCallback(frames._intervals, function(item) {

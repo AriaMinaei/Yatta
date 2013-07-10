@@ -6,6 +6,11 @@ define(['../../../../visuals/typedMatrix', '../../../tools/css'], function(Typed
 
     Transforms_.prototype.__initMixinTransforms = function() {
       this._transformer = new TypedMatrix;
+      this._origin = {
+        x: null,
+        y: null,
+        z: null
+      };
       this._shouldUpdateTransforms = false;
     };
 
@@ -33,6 +38,24 @@ define(['../../../../visuals/typedMatrix', '../../../tools/css'], function(Typed
 
     Transforms_.prototype.go3d = function() {
       css.setTransformStyle(this.node, 'preserve-3d');
+      return this;
+    };
+
+    Transforms_.prototype.setOrigin = function(x, y, z) {
+      if (x == null) {
+        x = 0;
+      }
+      if (y == null) {
+        y = 0;
+      }
+      if (z == null) {
+        z = 0;
+      }
+      this._origin.x = x;
+      this._origin.y = y;
+      this._origin.z = z;
+      css.setTransformOrigin(this.node, "" + this._origin.x + "px " + this._origin.y + "px " + this._origin.z + "px");
+      this.el._updateAxis();
       return this;
     };
 

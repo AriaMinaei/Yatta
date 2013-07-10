@@ -37,6 +37,11 @@ define(function() {
     },
     deg: function(rad) {
       return 180 * rad / Math.PI;
+    },
+    backAndForth: function(num, whole) {
+      
+			var f = (floor(num/whole) % 2);
+			return (whole * f) + (-2 * f + 1) * (num % whole);;
     }
   };
   for (key in math) {
