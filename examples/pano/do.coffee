@@ -80,3 +80,5 @@ do ->
 		r.z 500
 
 		r.clone().moveY(display.height - dif / 2)
+
+console.log 'Image from: http://erikcollinder.deviantart.com/art/Panorama-73725587'

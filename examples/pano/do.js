@@ -68,3 +68,5 @@ walls = makePanorama(7131, 2009, 'img.jpg', false);
     return r.clone().moveY(display.height - dif / 2);
   }
 })();
+
+console.log('Image from: http://erikcollinder.deviantart.com/art/Panorama-73725587');
