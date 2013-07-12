@@ -161,7 +161,7 @@ define(['../../../../visuals/typedMatrix'], function(TypedMatrix) {
 
 
     Transforms_.prototype._updateScale = function(progress) {
-      this._styleSetter.setScale(this._fromMatrix[3] + ((this._toMatrix[3] - this._fromMatrix[3]) * progress), this._fromMatrix[4] + ((this._toMatrix[4] - this._fromMatrix[4]) * progress), this._fromMatrix[5] + ((this._toMatrix[5] - this._fromMatrix[5]) * progress));
+      this._styleSetter.setScaleAll(this._fromMatrix[3] + ((this._toMatrix[3] - this._fromMatrix[3]) * progress), this._fromMatrix[4] + ((this._toMatrix[4] - this._fromMatrix[4]) * progress), this._fromMatrix[5] + ((this._toMatrix[5] - this._fromMatrix[5]) * progress));
       return null;
     };
 

@@ -222,7 +222,7 @@ define [
 
 		_updateScale: (progress) ->
 
-			@_styleSetter.setScale (
+			@_styleSetter.setScaleAll (
 					@_fromMatrix[3] +
 					((@_toMatrix[3] - @_fromMatrix[3]) * progress)
 				),
