@@ -65,7 +65,6 @@ define [
 			@_toMatrix[11] = @_currentMatrix[11]
 			@_toMatrix[12] = @_currentMatrix[12]
 
-
 			@
 
 		_updateTransitionForTransforms: (progress) ->
@@ -109,13 +108,25 @@ define [
 
 			null
 
+		_reportUpdateForMove: ->
+
+			return if @_needsUpdate.transformMovement
+
+			@_needsUpdate.transformMovement = yes
+
+			@_toMatrix[0] = @_currentMatrix[0]
+			@_toMatrix[1] = @_currentMatrix[1]
+			@_toMatrix[2] = @_currentMatrix[2]
+
+			return
+
 		resetMovement: ->
+
+			do @_reportUpdateForMove
 
 			@_toMatrix[0] = 0
 			@_toMatrix[1] = 0
 			@_toMatrix[2] = 0
-
-			@_needsUpdate.transformMovement = yes
 
 			do @_update
 
@@ -123,11 +134,11 @@ define [
 
 		setMovement: (x, y, z) ->
 
+			do @_reportUpdateForMove
+
 			@_toMatrix[0] = x
 			@_toMatrix[1] = y
 			@_toMatrix[2] = z
-
-			@_needsUpdate.transformMovement = yes
 
 			do @_update
 
@@ -135,9 +146,9 @@ define [
 
 		setMovementX: (x) ->
 
-			@_toMatrix[0] = x
+			do @_reportUpdateForMove
 
-			@_needsUpdate.transformMovement = yes
+			@_toMatrix[0] = x
 
 			do @_update
 
@@ -145,9 +156,9 @@ define [
 
 		setMovementY: (y) ->
 
-			@_toMatrix[1] = y
+			do @_reportUpdateForMove
 
-			@_needsUpdate.transformMovement = yes
+			@_toMatrix[1] = y
 
 			do @_update
 
@@ -155,9 +166,9 @@ define [
 
 		setMovementZ: (z) ->
 
-			@_toMatrix[2] = z
+			do @_reportUpdateForMove
 
-			@_needsUpdate.transformMovement = yes
+			@_toMatrix[2] = z
 
 			do @_update
 
@@ -165,11 +176,11 @@ define [
 
 		move: (x, y, z) ->
 
+			do @_reportUpdateForMove
+
 			@_toMatrix[0] = @_currentMatrix[0] + x
 			@_toMatrix[1] = @_currentMatrix[1] + y
 			@_toMatrix[2] = @_currentMatrix[2] + z
-
-			@_needsUpdate.transformMovement = yes
 
 			do @_update
 
@@ -177,9 +188,9 @@ define [
 
 		moveX: (x) ->
 
-			@_toMatrix[0] = @_currentMatrix[0] + x
+			do @_reportUpdateForMove
 
-			@_needsUpdate.transformMovement = yes
+			@_toMatrix[0] = @_currentMatrix[0] + x
 
 			do @_update
 
@@ -187,9 +198,9 @@ define [
 
 		moveY: (y) ->
 
-			@_toMatrix[1] = @_currentMatrix[1] + y
+			do @_reportUpdateForMove
 
-			@_needsUpdate.transformMovement = yes
+			@_toMatrix[1] = @_currentMatrix[1] + y
 
 			do @_update
 
@@ -197,9 +208,9 @@ define [
 
 		moveZ: (z) ->
 
-			@_toMatrix[2] = @_currentMatrix[2] + z
+			do @_reportUpdateForMove
 
-			@_needsUpdate.transformMovement = yes
+			@_toMatrix[2] = @_currentMatrix[2] + z
 
 			do @_update
 
@@ -226,111 +237,133 @@ define [
 
 			null
 
-		resetScale: ->
+		_reportUpdateForScale: ->
+
+			return if @_needsUpdate.transformScale
 
 			@_needsUpdate.transformScale = yes
 
-			do @_update
+			@_toMatrix[3] = @_currentMatrix[3]
+			@_toMatrix[4] = @_currentMatrix[4]
+			@_toMatrix[5] = @_currentMatrix[5]
+
+			return
+
+		resetScale: ->
+
+			do @_reportUpdateForScale
 
 			@_toMatrix[3] = 1
 			@_toMatrix[4] = 1
 			@_toMatrix[5] = 1
 
+			do @_update
+
 			@
 
 		setScale: (x, y, z) ->
 
-			@_needsUpdate.transformScale = yes
-
-			do @_update
+			do @_reportUpdateForScale
 
 			@_toMatrix[3] = x
 			@_toMatrix[4] = y
 			@_toMatrix[5] = z
+
+			do @_update
 
 			@
 
 		setScaleX: (x) ->
 
-			@_needsUpdate.transformScale = yes
-
-			do @_update
+			do @_reportUpdateForScale
 
 			@_toMatrix[3] = x
+
+			do @_update
 
 			@
 
 		setScaleY: (y) ->
 
-			@_needsUpdate.transformScale = yes
-
-			do @_update
+			do @_reportUpdateForScale
 
 			@_toMatrix[4] = y
+
+			do @_update
 
 			@
 
 		setScaleZ: (z) ->
 
-			@_needsUpdate.transformScale = yes
-
-			do @_update
+			do @_reportUpdateForScale
 
 			@_toMatrix[5] = z
+
+			do @_update
 
 			@
 
 		scale: (x, y, z) ->
 
-			@_needsUpdate.transformScale = yes
-
-			do @_update
+			do @_reportUpdateForScale
 
 			@_toMatrix[3] = @_currentMatrix[3] * x
 			@_toMatrix[4] = @_currentMatrix[4] * y
 			@_toMatrix[5] = @_currentMatrix[5] * z
+
+			do @_update
 
 			@
 
 		setScaleAll: (x) ->
 
-			@_needsUpdate.transformScale = yes
-
-			do @_update
+			do @_reportUpdateForScale
 
 			@_toMatrix[3] = @_toMatrix[4] = @_toMatrix[5] = x
+
+			do @_update
 
 			@
 
 		scaleX: (x) ->
 
-			@_needsUpdate.transformScale = yes
-
-			do @_update
+			do @_reportUpdateForScale
 
 			@_toMatrix[3] = @_currentMatrix[3] * x
+
+			do @_update
 
 			@
 
 		scaleY: (y) ->
 
-			@_needsUpdate.transformScale = yes
-
-			do @_update
+			do @_reportUpdateForScale
 
 			@_toMatrix[4] = @_currentMatrix[4] * y
+
+			do @_update
 
 			@
 
 		scaleZ: (z) ->
 
-			@_needsUpdate.transformScale = yes
-
-			do @_update
+			do @_reportUpdateForScale
 
 			@_toMatrix[5] = @_currentMatrix[5] * z
 
+			do @_update
+
 			@
+
+		_reportUpdateForPerspective: ->
+
+			return if @_needsUpdate.transformPerspective
+
+			@_needsUpdate.transformPerspective = yes
+
+			@_toMatrix[6] = @_currentMatrix[6]
+
+			return
 
 		###
 		Perspective
@@ -347,22 +380,21 @@ define [
 
 		resetPerspective: ->
 
-			@_needsUpdate.transformPerspective = yes
-
-			do @_update
+			do @_reportUpdateForPerspective
 
 			@_toMatrix[6] = 0
 
+			do @_update
 
 			@
 
 		setPerspective: (d) ->
 
-			@_needsUpdate.transformPerspective = yes
-
-			do @_update
+			do @_reportUpdateForPerspective
 
 			@_toMatrix[6] = d
+
+			do @_update
 
 			@
 
@@ -387,100 +419,111 @@ define [
 
 			null
 
-		resetRotation: ->
+		_reportUpdateForRotation: ->
+
+			return if @_needsUpdate.transformRotation
 
 			@_needsUpdate.transformRotation = yes
 
-			do @_update
+			@_toMatrix[7] = @_currentMatrix[7]
+			@_toMatrix[8] = @_currentMatrix[8]
+			@_toMatrix[9] = @_currentMatrix[9]
+
+			return
+
+		resetRotation: ->
+
+			do @_reportUpdateForRotation
 
 			@_toMatrix[7] = 0
 			@_toMatrix[8] = 0
 			@_toMatrix[9] = 0
 
+			do @_update
+
 			@
 
 		setRotation: (x, y, z) ->
 
-			@_needsUpdate.transformRotation = yes
-
-			do @_update
+			do @_reportUpdateForRotation
 
 			@_toMatrix[7] = x
 			@_toMatrix[8] = y
 			@_toMatrix[9] = z
+
+			do @_update
 
 			@
 
 		setRotationX: (x) ->
 
-			@_needsUpdate.transformRotation = yes
-
-			do @_update
+			do @_reportUpdateForRotation
 
 			@_toMatrix[7] = x
+
+			do @_update
 
 			@
 
 		setRotationY: (y) ->
 
-			@_needsUpdate.transformRotation = yes
-
-			do @_update
+			do @_reportUpdateForRotation
 
 			@_toMatrix[8] = y
+
+			do @_update
 
 			@
 
 		setRotationZ: (z) ->
 
-			@_needsUpdate.transformRotation = yes
-
-			do @_update
+			do @_reportUpdateForRotation
 
 			@_toMatrix[9] = z
+
+			do @_update
 
 			@
 
 		rotate: (x, y, z) ->
 
-			@_needsUpdate.transformRotation = yes
-
-			do @_update
+			do @_reportUpdateForRotation
 
 			@_toMatrix[7] = @_currentMatrix[7] + x
 			@_toMatrix[8] = @_currentMatrix[8] + y
 			@_toMatrix[9] = @_currentMatrix[9] + z
+
+			do @_update
 
 			@
 
 		rotateX: (x) ->
 
-			@_needsUpdate.transformRotation = yes
-
-			do @_update
+			do @_reportUpdateForRotation
 
 			@_toMatrix[7] = @_currentMatrix[7] + x
+
+			do @_update
 
 			@
 
 		rotateY: (y) ->
 
-			@_needsUpdate.transformRotation = yes
-
-			do @_update
+			do @_reportUpdateForRotation
 
 			@_toMatrix[8] = @_currentMatrix[8] + y
+
+			do @_update
 
 			@
 
 		rotateZ: (z) ->
 
-			@_needsUpdate.transformRotation = yes
-
-			do @_update
-
+			do @_reportUpdateForRotation
 
 			@_toMatrix[9] = @_currentMatrix[9] + z
+
+			do @_update
 
 			@
 
@@ -505,98 +548,110 @@ define [
 
 			null
 
-		resetTranslation: ->
+		_reportUpdateForTranslation: ->
+
+			return if @_needsUpdate.transformTranslation
 
 			@_needsUpdate.transformTranslation = yes
 
-			do @_update
+			@_toMatrix[10] = @_currentMatrix[10]
+			@_toMatrix[11] = @_currentMatrix[11]
+			@_toMatrix[12] = @_currentMatrix[12]
+
+			return
+
+		resetTranslation: ->
+
+			do @_reportUpdateForTranslation
 
 			@_toMatrix[10] = 0
 			@_toMatrix[11] = 0
 			@_toMatrix[12] = 0
 
+			do @_update
+
 			@
 
 		setTranslation: (x, y, z) ->
 
-			@_needsUpdate.transformTranslation = yes
-
-			do @_update
+			do @_reportUpdateForTranslation
 
 			@_toMatrix[10] = x
 			@_toMatrix[11] = y
 			@_toMatrix[12] = z
+
+			do @_update
 
 			@
 
 		setTranslationX: (x) ->
 
-			@_needsUpdate.transformTranslation = yes
-
-			do @_update
+			do @_reportUpdateForTranslation
 
 			@_toMatrix[10] = x
+
+			do @_update
 
 			@
 
 		setTranslationY: (y) ->
 
-			@_needsUpdate.transformTranslation = yes
-
-			do @_update
+			do @_reportUpdateForTranslation
 
 			@_toMatrix[11] = y
+
+			do @_update
 
 			@
 
 		setTranslationZ: (z) ->
 
-			@_needsUpdate.transformTranslation = yes
-
-			do @_update
+			do @_reportUpdateForTranslation
 
 			@_toMatrix[12] = z
+
+			do @_update
 
 			@
 
 		translate: (x, y, z) ->
 
-			@_needsUpdate.transformTranslation = yes
-
-			do @_update
+			do @_reportUpdateForTranslation
 
 			@_toMatrix[10] = @_currentMatrix[10] + x
 			@_toMatrix[11] = @_currentMatrix[11] + y
 			@_toMatrix[12] = @_currentMatrix[12] + z
+
+			do @_update
 
 			@
 
 		translateX: (x) ->
 
-			@_needsUpdate.transformTranslation = yes
-
-			do @_update
+			do @_reportUpdateForTranslation
 
 			@_toMatrix[10] = @_currentMatrix[10] + x
+
+			do @_update
 
 			@
 
 		translateY: (y) ->
 
-			@_needsUpdate.transformTranslation = yes
-
-			do @_update
+			do @_reportUpdateForTranslation
 
 			@_toMatrix[11] = @_currentMatrix[11] + y
+
+			do @_update
 
 			@
 
 		translateZ: (z) ->
 
-			@_needsUpdate.transformTranslation = yes
-
-			do @_update
+			do @_reportUpdateForTranslation
 
 			@_toMatrix[12] = @_currentMatrix[12] + z
+
+			do @_update
 
 			@
