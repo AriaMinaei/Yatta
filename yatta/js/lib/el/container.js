@@ -11,7 +11,7 @@ define(['./el'], function(El) {
       var node;
 
       node = document.createElement('div');
-      node.classList.add('container');
+      node.classList.add('yatta-container');
       Container.__super__.constructor.call(this, node);
     }
 

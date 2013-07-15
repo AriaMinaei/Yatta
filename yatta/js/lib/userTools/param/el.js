@@ -9,12 +9,12 @@ define(function() {
       var _this = this;
 
       this._containerNode = document.createElement('div');
-      this._containerNode.classList.add('param-container');
+      this._containerNode.classList.add('yatta-param-container');
       this._nameNode = document.createElement('span');
-      this._nameNode.classList.add('param-name');
+      this._nameNode.classList.add('yatta-param-name');
       this._containerNode.appendChild(this._nameNode);
       this._inputNode = document.createElement('input');
-      this._inputNode.classList.add('param-input');
+      this._inputNode.classList.add('yatta-param-input');
       this._containerNode.appendChild(this._inputNode);
       this._inputNode.addEventListener('keyup', function() {
         return setTimeout(function() {

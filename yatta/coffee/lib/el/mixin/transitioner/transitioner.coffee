@@ -128,8 +128,6 @@ define [
 
 			return
 
-
-
 		_startOver: ->
 
 			@_startTime[0] = frames.timeInMs[0]

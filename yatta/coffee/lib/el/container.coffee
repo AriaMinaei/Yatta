@@ -5,6 +5,6 @@ define ['./el'], (El) ->
 		constructor: ->
 
 			node = document.createElement 'div'
-			node.classList.add 'container'
+			node.classList.add 'yatta-container'
 
 			super node

@@ -1,43 +1,45 @@
-* {
+.yatta-el {
 	margin: 0;
 	padding: 0;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	position: absolute;
 }
 
-body {
+.yatta-display {
 	overflow: hidden;
 	background-color: #222;
 	cursor: default;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 }
 
-div, img {
-	position: absolute;
-
-}
-
-.ellipse {
+.yatta-ellipse {
 	border-radius: 50%;
 }
 
-.rectangle {
+.yatta-rectangle {
 	-webkit-backface-visibility: visible;
 	-moz-backface-visibility: visible;
 	-ms-backface-visibility: visible;
 	backface-visibility: visible;
 }
 
-.type {
+.yatta-type {
 
 }
 
-.letter {
+.yatta-letter {
 	display: inline-block;
+	position: relative;
 }
 
-.params-container {
+.yatta-params-container {
 	position: fixed;
 	width: 200px;
 
@@ -57,11 +59,11 @@ div, img {
 	transition: 0.3s all;
 }
 
-.params-container:hover {
+.yatta-params-container:hover {
 	left: 0;
 }
 
-.params-container:after {
+.yatta-params-container:after {
 	display: block;
 	content: "\0020";
 
@@ -76,11 +78,11 @@ div, img {
 	left: 200px;
 }
 
-.params-container:hover:after {
+.yatta-params-container:hover:after {
 	width: 400px;
 }
 
-.param-container {
+.yatta-param-container {
 	position: static;
 	display: block;
 
@@ -91,7 +93,7 @@ div, img {
 
 }
 
-.param-name {
+.yatta-param-name {
 	position: static;
 	display: block;
 	color: white;
@@ -103,7 +105,7 @@ div, img {
 	margin-bottom: 3px;
 }
 
-.param-input {
+.yatta-param-input {
 	position: static;
 	display: block;
 	color: white;
@@ -131,17 +133,17 @@ div, img {
 	user-select: text !important;
 }
 
-input:focus {
+.yatta-param-input:focus {
 	outline: none;
 
 	opacity: 1 !important;
 }
 
-input:hover {
+.yatta-param-input:hover {
 	opacity: 0.7;
 }
 
-.camera {
+.yatta-camera {
 	position: absolute;
 	width: 100%;
 	height: 100%;
@@ -152,14 +154,14 @@ input:hover {
 	transform-style: preserve-3d;
 }
 
-.display {
+.yatta-display {
 	-webkit-transform-style: preserve-3d;
 	-moz-transform-style: preserve-3d;
 	-ms-transform-style: preserve-3d;
 	transform-style: preserve-3d;
 }
 
-.container {
+.yatta-container {
 	/*width: 100%;
 	height: 100%;*/
 }

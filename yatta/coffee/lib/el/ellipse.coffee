@@ -16,7 +16,7 @@ define ['./el'], (El) ->
 
 			node = document.createElement 'div'
 
-			node.classList.add 'ellipse'
+			node.classList.add 'yatta-ellipse'
 
 			super node
 

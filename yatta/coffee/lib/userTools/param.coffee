@@ -15,7 +15,7 @@ define ['./param/el'], (ParamEl) ->
 			@_initialized = yes
 
 			@_containerNode = document.createElement 'div'
-			@_containerNode.classList.add 'params-container'
+			@_containerNode.classList.add 'yatta-params-container'
 
 			unless @_putIn
 

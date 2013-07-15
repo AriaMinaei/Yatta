@@ -7,14 +7,14 @@ define ->
 		constructor: (name, val) ->
 
 			@_containerNode = document.createElement 'div'
-			@_containerNode.classList.add 'param-container'
+			@_containerNode.classList.add 'yatta-param-container'
 
 			@_nameNode = document.createElement 'span'
-			@_nameNode.classList.add 'param-name'
+			@_nameNode.classList.add 'yatta-param-name'
 			@_containerNode.appendChild @_nameNode
 
 			@_inputNode = document.createElement 'input'
-			@_inputNode.classList.add 'param-input'
+			@_inputNode.classList.add 'yatta-param-input'
 			@_containerNode.appendChild @_inputNode
 
 			@_inputNode.addEventListener 'keyup', =>

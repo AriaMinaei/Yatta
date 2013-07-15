@@ -16,7 +16,7 @@ define ['./el'], (El) ->
 
 			node = document.createElement 'div'
 
-			node.classList.add 'rectangle'
+			node.classList.add 'yatta-rectangle'
 
 			super node
 

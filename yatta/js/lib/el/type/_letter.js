@@ -15,8 +15,8 @@ define(['../el'], function(El) {
       }
       this._shouldCloneInnerHTML = true;
       node = document.createElement('span');
-      node.classList.add('letter');
-      _Letter.__super__.constructor.call(this, node);
+      node.classList.add('yatta-letter');
+      _Letter.__super__.constructor.call(this, node, false);
       this.setLetter(letter);
       _Letter.__initMixinsFor(this);
     }

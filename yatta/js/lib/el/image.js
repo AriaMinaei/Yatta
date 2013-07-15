@@ -13,6 +13,7 @@ define(['./el'], function(El) {
       this.filename = filename;
       node = document.createElement('img');
       node.src = "./images/" + this.filename;
+      node.classList.add('yatta-img');
       Image.__super__.constructor.call(this, node);
     }
 

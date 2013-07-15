@@ -12,7 +12,7 @@ define(['./el'], function(El) {
         node = document.body;
       }
       Display.__super__.constructor.call(this, node);
-      node.classList.add('display');
+      node.classList.add('yatta-display');
       this._displayCoords = {
         centerX: 0,
         centerY: 0,
@@ -21,6 +21,10 @@ define(['./el'], function(El) {
       };
       this._displayCoordsInitialized = false;
     }
+
+    Display.prototype.disable = function() {
+      return this.node.classList.remove('yatta-display');
+    };
 
     Display.prototype._getDisplayCoords = function() {
       if (!this._displayCoordsInitialized) {

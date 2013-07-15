@@ -7,9 +7,9 @@ define ['../el'], (El) ->
 			@_shouldCloneInnerHTML = yes
 
 			node = document.createElement 'span'
-			node.classList.add 'letter'
+			node.classList.add 'yatta-letter'
 
-			super node
+			super node, no
 
 			@setLetter letter
 

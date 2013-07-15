@@ -14,8 +14,8 @@ define(['./el', './type/_letter'], function(El, _Letter) {
         text = '';
       }
       node = document.createElement('div');
-      node.classList.add('type');
-      Type.__super__.constructor.call(this, node);
+      node.classList.add('yatta-type');
+      Type.__super__.constructor.call(this, node, false);
       this._letters = [];
       this.setText(text);
       Type.__initMixinsFor(this);

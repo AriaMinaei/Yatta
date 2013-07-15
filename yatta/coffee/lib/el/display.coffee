@@ -6,7 +6,7 @@ define ['./el'], (El) ->
 
 			super node
 
-			node.classList.add 'display'
+			node.classList.add 'yatta-display'
 
 			@_displayCoords =
 
@@ -16,6 +16,10 @@ define ['./el'], (El) ->
 				height: 0
 
 			@_displayCoordsInitialized = no
+
+		disable: ->
+
+			@node.classList.remove 'yatta-display'
 
 		_getDisplayCoords: ->
 

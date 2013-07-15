@@ -8,9 +8,9 @@ define [
 		constructor: (text = '') ->
 
 			node = document.createElement 'div'
-			node.classList.add 'type'
+			node.classList.add 'yatta-type'
 
-			super node
+			super node, no
 
 			@_letters = []
 

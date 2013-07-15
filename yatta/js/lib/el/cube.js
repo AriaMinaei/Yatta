@@ -13,7 +13,7 @@ define(['./el', './rectangle'], function(El, Rectangle) {
       this._initialHue = _initialHue != null ? _initialHue : 0;
       this._initialSaturation = _initialSaturation != null ? _initialSaturation : 0;
       node = document.createElement('div');
-      node.classList.add('cube');
+      node.classList.add('yatta-cube');
       Cube.__super__.constructor.call(this, node);
       this.go3d();
       this._createSurfaces(width, height, depth);

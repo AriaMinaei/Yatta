@@ -17,7 +17,7 @@ define(['./el'], function(El) {
         this.y = parseFloat(y);
       }
       node = document.createElement('div');
-      node.classList.add('rectangle');
+      node.classList.add('yatta-rectangle');
       Rectangle.__super__.constructor.call(this, node);
       this.setWidth(this.x);
       this.setHeight(this.y);

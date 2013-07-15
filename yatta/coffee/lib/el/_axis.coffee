@@ -24,7 +24,7 @@ define ['./el', './cube', './type'], (El, Cube, Type) ->
 
 			node = document.createElement 'div'
 
-			node.classList.add 'axis'
+			node.classList.add 'yatta-axis'
 
 			super node
 

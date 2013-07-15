@@ -11,13 +11,15 @@ define [
 	# Yatta-specific functionality to native elements.
 	mixing HasStyles_, Interactions_, class El
 
-		constructor: (@node) ->
+		constructor: (@node, addYattaClass = yes) ->
 
 			if not @_shouldCloneInnerHTML?
 
 				@_shouldCloneInnerHTML = no
 
 			El.__initMixinsFor @
+
+			@node.classList.add 'yatta-el' if addYattaClass
 
 			@_beenAppended = no
 

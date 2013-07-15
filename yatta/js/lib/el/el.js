@@ -2,14 +2,20 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
   var El;
 
   return mixing(HasStyles_, Interactions_, El = (function() {
-    function El(node) {
+    function El(node, addYattaClass) {
       var _this = this;
 
       this.node = node;
+      if (addYattaClass == null) {
+        addYattaClass = true;
+      }
       if (this._shouldCloneInnerHTML == null) {
         this._shouldCloneInnerHTML = false;
       }
       El.__initMixinsFor(this);
+      if (addYattaClass) {
+        this.node.classList.add('yatta-el');
+      }
       this._beenAppended = false;
       this._parent = null;
       this._children = [];

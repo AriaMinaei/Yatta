@@ -6,7 +6,7 @@ define ['./el', './rectangle'], (El, Rectangle) ->
 
 			node = document.createElement 'div'
 
-			node.classList.add 'cube'
+			node.classList.add 'yatta-cube'
 
 			super node
 

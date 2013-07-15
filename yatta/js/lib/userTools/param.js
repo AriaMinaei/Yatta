@@ -13,7 +13,7 @@ define(['./param/el'], function(ParamEl) {
       }
       this._initialized = true;
       this._containerNode = document.createElement('div');
-      this._containerNode.classList.add('params-container');
+      this._containerNode.classList.add('yatta-params-container');
       if (!this._putIn) {
         this._putIn = document.body;
       }

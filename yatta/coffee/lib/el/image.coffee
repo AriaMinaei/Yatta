@@ -6,5 +6,6 @@ define ['./el'], (El) ->
 
 			node = document.createElement 'img'
 			node.src = "./images/#{@filename}"
+			node.classList.add 'yatta-img'
 
 			super node

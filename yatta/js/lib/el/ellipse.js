@@ -17,7 +17,7 @@ define(['./el'], function(El) {
         this.y = parseFloat(y);
       }
       node = document.createElement('div');
-      node.classList.add('ellipse');
+      node.classList.add('yatta-ellipse');
       Ellipse.__super__.constructor.call(this, node);
       this.setWidth(this.x);
       this.setHeight(this.y);

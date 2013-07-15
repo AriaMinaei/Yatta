@@ -27,7 +27,7 @@ define(['./el', './cube', './type'], function(El, Cube, Type) {
       this._sizeMultiplier = _sizeMultiplier != null ? _sizeMultiplier : 1;
       this._lengthToDepth = _lengthToDepth != null ? _lengthToDepth : 30;
       node = document.createElement('div');
-      node.classList.add('axis');
+      node.classList.add('yatta-axis');
       _Axis.__super__.constructor.call(this, node);
       this.go3d();
       this._createAxis();
