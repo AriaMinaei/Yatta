@@ -51,7 +51,32 @@ define [
 
 			@_eventEnabledMethod arguments, (cb) =>
 
-				@node.addEventListener 'click', =>
+				@node.addEventListener 'click', (e) =>
+
+					e.stopPropagation()
+					e.preventDefault()
+
+					cb.call @
+
+		onMouseOver: ->
+
+			@_eventEnabledMethod arguments, (cb) =>
+
+				@node.addEventListener 'mouseover', (e) =>
+
+					e.stopPropagation()
+					e.preventDefault()
+
+					cb.call @
+
+		onMouseOut: ->
+
+			@_eventEnabledMethod arguments, (cb) =>
+
+				@node.addEventListener 'mouseout', (e) =>
+
+					e.stopPropagation()
+					e.preventDefault()
 
 					cb.call @
 

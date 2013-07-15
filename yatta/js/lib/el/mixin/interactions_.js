@@ -53,7 +53,33 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
       var _this = this;
 
       return this._eventEnabledMethod(arguments, function(cb) {
-        return _this.node.addEventListener('click', function() {
+        return _this.node.addEventListener('click', function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          return cb.call(_this);
+        });
+      });
+    };
+
+    Interactions_.prototype.onMouseOver = function() {
+      var _this = this;
+
+      return this._eventEnabledMethod(arguments, function(cb) {
+        return _this.node.addEventListener('mouseover', function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          return cb.call(_this);
+        });
+      });
+    };
+
+    Interactions_.prototype.onMouseOut = function() {
+      var _this = this;
+
+      return this._eventEnabledMethod(arguments, function(cb) {
+        return _this.node.addEventListener('mouseout', function(e) {
+          e.stopPropagation();
+          e.preventDefault();
           return cb.call(_this);
         });
       });
