@@ -2,7 +2,7 @@ define ['./el', './rectangle'], (El, Rectangle) ->
 
 	class Cube extends El
 
-		constructor: (width, height, depth, @_initialHue = 0, @_initialSaturation = 0) ->
+		constructor: (@width, @height, @depth, @_initialHue = 0, @_initialSaturation = 0) ->
 
 			node = document.createElement 'div'
 
@@ -12,7 +12,7 @@ define ['./el', './rectangle'], (El, Rectangle) ->
 
 			@go3d()
 
-			@_createSurfaces width, height, depth
+			@_createSurfaces @width, @height, @depth
 
 		_createSurfaces: (width, height, depth) ->
 
@@ -24,8 +24,8 @@ define ['./el', './rectangle'], (El, Rectangle) ->
 			@bottomSurface = new Rectangle width, depth
 			@bottomSurface
 			.rotateX(-PI / 2)
-			.setMovementZ(depth)
-			.setMovementY(height)
+			.moveZTo(depth)
+			.moveYTo(height)
 			.putIn @
 
 			@frontSurface = new Rectangle width, height
@@ -34,29 +34,47 @@ define ['./el', './rectangle'], (El, Rectangle) ->
 
 			@backSurface = new Rectangle width, height
 			@backSurface
-			.setMovementZ(depth)
+			.moveZTo(depth)
 			.putIn @
 
 			@leftSurface = new Rectangle depth, height
 			@leftSurface
 			.rotateY(PI / 2)
-			.setMovementZ(depth)
+			.moveZTo(depth)
 			.putIn @
 
 			@rightSurface = new Rectangle depth, height
 			@rightSurface
 			.rotateY(PI / 2)
-			.setMovementZ(depth)
-			.setMovementX(width)
+			.moveZTo(depth)
+			.moveXTo(width)
 			.putIn @
 
-			@setOrigin(width / 2, height / 2, depth / 2);
+			do @originToCenter
 
 			for child in @_children
 
 				child.fill.withHsl(@_initialHue,  @_initialSaturation, rand(50, 90))
 
 				child.setOrigin(0, 0, 0)
+
+			@
+
+		originToCenter: ->
+
+			@setOrigin(@width / 2, @height / 2, @depth / 2)
+
+			@
+
+		originToBottom: ->
+
+			@setOrigin(@width / 2, @height, @depth / 2)
+
+			@
+
+		originToTop: ->
+
+			@setOrigin(@width / 2, 0, @depth / 2)
 
 			@
 

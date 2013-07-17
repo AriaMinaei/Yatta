@@ -15,7 +15,7 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
         transformRotation: false,
         transformScale: false,
         transformPerspective: false,
-        transformTranslation: false,
+        transformLocalMovement: false,
         opacity: false
       };
       this._shouldUpdate = false;
@@ -58,7 +58,7 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
         transformRotation: false,
         transformScale: false,
         transformPerspective: false,
-        transformTranslation: false,
+        transformLocalMovement: false,
         opacity: false
       };
       Transitioner.__applyClonersFor(this, [newObj]);
@@ -68,7 +68,6 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
         }
         if (this.hasOwnProperty(key)) {
           newObj[key] = object.clone(this[key], true);
-          console.log;
         }
       }
       return newObj;

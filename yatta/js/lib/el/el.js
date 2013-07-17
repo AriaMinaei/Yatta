@@ -2,6 +2,16 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
   var El;
 
   return mixing(HasStyles_, Interactions_, El = (function() {
+    El._defaultContainer = null;
+
+    El._getDefaultContainer = function() {
+      if (this._defaultContainer != null) {
+        return this._defaultContainer;
+      } else {
+        return document.body;
+      }
+    };
+
     function El(node, addYattaClass) {
       var _this = this;
 
@@ -24,7 +34,7 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
       frames.nextTick(function() {
         if (!_this._beenAppended) {
           if ((_this.node.parentElement == null) && _this.node.tagName !== 'BODY') {
-            return _this.putIn(display);
+            return _this.putIn(El._getDefaultContainer());
           } else {
             return _this._beenAppended = true;
           }
@@ -89,7 +99,7 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
 
     El.prototype.putIn = function(el) {
       if (el == null) {
-        el = display;
+        el = El._getDefaultContainer();
       }
       if (this._parent != null) {
         this._parent._notYourChildAnymore(this);
@@ -111,6 +121,11 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
       }
       this._parent = null;
       this._beenAppended = false;
+      return this;
+    };
+
+    El.prototype.setAsDefaultContainer = function() {
+      El._defaultContainer = this;
       return this;
     };
 
@@ -171,19 +186,29 @@ define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../
     };
 
     El.prototype._updateAxis = function() {
-      var dims, origin;
+      var origin,
+        _this = this;
 
       if (this._axis == null) {
         return;
       }
       origin = this._styleSetter._origin;
-      dims = this._styleSetter._dims;
       if (origin.x != null) {
-        this._axis.setMovement(origin.x, origin.y, origin.z);
-      } else if (dims.width != null) {
-        this._axis.setMovement(dims.width / 2, dims.height / 2, 0);
+        this._axis.moveTo(origin.x, origin.y, origin.z);
       } else {
-        this._axis.setMovement(0, 0, 0);
+        wait(50, function() {
+          var cssOrigin, parts;
+
+          cssOrigin = getComputedStyle(_this.node).webkitTransformOrigin;
+          parts = cssOrigin.split(" ").map(function(num) {
+            return parseFloat(num);
+          });
+          if (parts.length === 2) {
+            return _this._axis.moveTo(parts[0], parts[1], 0);
+          } else {
+            return _this._axis.moveTo(0, 0, 0);
+          }
+        });
       }
       return this;
     };

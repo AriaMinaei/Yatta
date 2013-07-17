@@ -147,18 +147,12 @@
 	position: absolute;
 	width: 100%;
 	height: 100%;
-
-	-webkit-transform-style: preserve-3d;
-	-moz-transform-style: preserve-3d;
-	-ms-transform-style: preserve-3d;
-	transform-style: preserve-3d;
 }
 
 .yatta-display {
-	-webkit-transform-style: preserve-3d;
-	-moz-transform-style: preserve-3d;
-	-ms-transform-style: preserve-3d;
-	transform-style: preserve-3d;
+	position: absolute;
+	width: 100%;
+	height: 100%;
 }
 
 .yatta-container {

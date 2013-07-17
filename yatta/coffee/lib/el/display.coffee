@@ -17,6 +17,8 @@ define ['./el'], (El) ->
 
 			@_displayCoordsInitialized = no
 
+			@setAsDefaultContainer()
+
 		disable: ->
 
 			@node.classList.remove 'yatta-display'

@@ -26,7 +26,7 @@ define [
 				transformRotation: no
 				transformScale: no
 				transformPerspective: no
-				transformTranslation: no
+				transformLocalMovement: no
 				opacity: no
 
 			@_shouldUpdate = no
@@ -78,7 +78,7 @@ define [
 				transformRotation: no
 				transformScale: no
 				transformPerspective: no
-				transformTranslation: no
+				transformLocalMovement: no
 				opacity: no
 
 			Transitioner.__applyClonersFor @, [newObj]
@@ -90,8 +90,6 @@ define [
 				if @hasOwnProperty key
 
 					newObj[key] = object.clone @[key], yes
-
-					console.log
 
 			newObj
 

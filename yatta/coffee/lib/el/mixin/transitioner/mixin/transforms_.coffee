@@ -38,6 +38,10 @@ define [
 			@_fromMatrix[11] = @_currentMatrix[11]
 			@_fromMatrix[12] = @_currentMatrix[12]
 
+			@_fromMatrix[13] = @_currentMatrix[13]
+			@_fromMatrix[14] = @_currentMatrix[14]
+			@_fromMatrix[15] = @_currentMatrix[15]
+
 			@
 
 		_disableTransitionForTransforms: ->
@@ -60,10 +64,15 @@ define [
 			@_toMatrix[8] = @_currentMatrix[8]
 			@_toMatrix[9] = @_currentMatrix[9]
 
-			@_needsUpdate.transformTranslation = no
+			@_needsUpdate.transformLocalMovement = no
 			@_toMatrix[10] = @_currentMatrix[10]
 			@_toMatrix[11] = @_currentMatrix[11]
 			@_toMatrix[12] = @_currentMatrix[12]
+
+			@_needsUpdate.transformLocalRotation = no
+			@_toMatrix[13] = @_currentMatrix[13]
+			@_toMatrix[14] = @_currentMatrix[14]
+			@_toMatrix[15] = @_currentMatrix[15]
 
 			@
 
@@ -85,15 +94,19 @@ define [
 
 				@_updatePerspective progress
 
-			if @_needsUpdate.transformTranslation
+			if @_needsUpdate.transformLocalMovement
 
-				@_updateTranslation progress
+				@_updateLocalMovement progress
+
+			if @_needsUpdate.transformLocalRotation
+
+				@_updateLocalRotation progress
 
 			return
 
 		_updateMovement: (progress) ->
 
-			@_styleSetter.setMovement (
+			@_styleSetter.moveTo (
 					@_fromMatrix[0] +
 					((@_toMatrix[0] - @_fromMatrix[0]) * progress)
 				),
@@ -132,7 +145,7 @@ define [
 
 			@
 
-		setMovement: (x, y, z) ->
+		moveTo: (x, y, z) ->
 
 			do @_reportUpdateForMove
 
@@ -144,7 +157,7 @@ define [
 
 			@
 
-		setMovementX: (x) ->
+		moveXTo: (x) ->
 
 			do @_reportUpdateForMove
 
@@ -154,7 +167,7 @@ define [
 
 			@
 
-		setMovementY: (y) ->
+		moveYTo: (y) ->
 
 			do @_reportUpdateForMove
 
@@ -164,7 +177,7 @@ define [
 
 			@
 
-		setMovementZ: (z) ->
+		moveZTo: (z) ->
 
 			do @_reportUpdateForMove
 
@@ -222,7 +235,7 @@ define [
 
 		_updateScale: (progress) ->
 
-			@_styleSetter.setScale (
+			@_styleSetter.scaleTo (
 					@_fromMatrix[3] +
 					((@_toMatrix[3] - @_fromMatrix[3]) * progress)
 				),
@@ -261,7 +274,7 @@ define [
 
 			@
 
-		setScale: (x, y, z) ->
+		scaleTo: (x, y, z) ->
 
 			do @_reportUpdateForScale
 
@@ -273,7 +286,7 @@ define [
 
 			@
 
-		setScaleX: (x) ->
+		scaleXTo: (x) ->
 
 			do @_reportUpdateForScale
 
@@ -283,7 +296,7 @@ define [
 
 			@
 
-		setScaleY: (y) ->
+		scaleYTo: (y) ->
 
 			do @_reportUpdateForScale
 
@@ -293,7 +306,7 @@ define [
 
 			@
 
-		setScaleZ: (z) ->
+		scaleZTo: (z) ->
 
 			do @_reportUpdateForScale
 
@@ -315,7 +328,7 @@ define [
 
 			@
 
-		setScaleAll: (x) ->
+		scaleAllTo: (x) ->
 
 			do @_reportUpdateForScale
 
@@ -371,7 +384,7 @@ define [
 
 		_updatePerspective: (progress) ->
 
-			@_styleSetter.setPerspective (
+			@_styleSetter.perspective (
 					@_fromMatrix[6] +
 					((@_toMatrix[6] - @_fromMatrix[6]) * progress)
 				)
@@ -388,7 +401,7 @@ define [
 
 			@
 
-		setPerspective: (d) ->
+		perspective: (d) ->
 
 			do @_reportUpdateForPerspective
 
@@ -404,7 +417,7 @@ define [
 
 		_updateRotation: (progress) ->
 
-			@_styleSetter.setRotation (
+			@_styleSetter.rotateTo (
 					@_fromMatrix[7] +
 					((@_toMatrix[7] - @_fromMatrix[7]) * progress)
 				),
@@ -443,7 +456,7 @@ define [
 
 			@
 
-		setRotation: (x, y, z) ->
+		rotateTo: (x, y, z) ->
 
 			do @_reportUpdateForRotation
 
@@ -455,7 +468,7 @@ define [
 
 			@
 
-		setRotationX: (x) ->
+		rotateXTo: (x) ->
 
 			do @_reportUpdateForRotation
 
@@ -465,7 +478,7 @@ define [
 
 			@
 
-		setRotationY: (y) ->
+		rotateYTo: (y) ->
 
 			do @_reportUpdateForRotation
 
@@ -475,7 +488,7 @@ define [
 
 			@
 
-		setRotationZ: (z) ->
+		rotateZTo: (z) ->
 
 			do @_reportUpdateForRotation
 
@@ -528,12 +541,12 @@ define [
 			@
 
 		###
-		Translation
+		LocalMovement
 		###
 
-		_updateTranslation: (progress) ->
+		_updateLocalMovement: (progress) ->
 
-			@_styleSetter.setTranslation (
+			@_styleSetter.localMoveTo (
 					@_fromMatrix[10] +
 					((@_toMatrix[10] - @_fromMatrix[10]) * progress)
 				),
@@ -548,11 +561,11 @@ define [
 
 			null
 
-		_reportUpdateForTranslation: ->
+		_reportUpdateForLocalMovement: ->
 
-			return if @_needsUpdate.transformTranslation
+			return if @_needsUpdate.transformLocalMovement
 
-			@_needsUpdate.transformTranslation = yes
+			@_needsUpdate.transformLocalMovement = yes
 
 			@_toMatrix[10] = @_currentMatrix[10]
 			@_toMatrix[11] = @_currentMatrix[11]
@@ -560,9 +573,9 @@ define [
 
 			return
 
-		resetTranslation: ->
+		resetLocalMovement: ->
 
-			do @_reportUpdateForTranslation
+			do @_reportUpdateForLocalMovement
 
 			@_toMatrix[10] = 0
 			@_toMatrix[11] = 0
@@ -572,9 +585,9 @@ define [
 
 			@
 
-		setTranslation: (x, y, z) ->
+		localMoveTo: (x, y, z) ->
 
-			do @_reportUpdateForTranslation
+			do @_reportUpdateForLocalMovement
 
 			@_toMatrix[10] = x
 			@_toMatrix[11] = y
@@ -584,9 +597,9 @@ define [
 
 			@
 
-		setTranslationX: (x) ->
+		localMoveXTo: (x) ->
 
-			do @_reportUpdateForTranslation
+			do @_reportUpdateForLocalMovement
 
 			@_toMatrix[10] = x
 
@@ -594,9 +607,9 @@ define [
 
 			@
 
-		setTranslationY: (y) ->
+		localMoveYTo: (y) ->
 
-			do @_reportUpdateForTranslation
+			do @_reportUpdateForLocalMovement
 
 			@_toMatrix[11] = y
 
@@ -604,9 +617,9 @@ define [
 
 			@
 
-		setTranslationZ: (z) ->
+		localMoveZTo: (z) ->
 
-			do @_reportUpdateForTranslation
+			do @_reportUpdateForLocalMovement
 
 			@_toMatrix[12] = z
 
@@ -614,9 +627,9 @@ define [
 
 			@
 
-		translate: (x, y, z) ->
+		localMove: (x, y, z) ->
 
-			do @_reportUpdateForTranslation
+			do @_reportUpdateForLocalMovement
 
 			@_toMatrix[10] = @_currentMatrix[10] + x
 			@_toMatrix[11] = @_currentMatrix[11] + y
@@ -626,9 +639,9 @@ define [
 
 			@
 
-		translateX: (x) ->
+		localMoveX: (x) ->
 
-			do @_reportUpdateForTranslation
+			do @_reportUpdateForLocalMovement
 
 			@_toMatrix[10] = @_currentMatrix[10] + x
 
@@ -636,9 +649,9 @@ define [
 
 			@
 
-		translateY: (y) ->
+		localMoveY: (y) ->
 
-			do @_reportUpdateForTranslation
+			do @_reportUpdateForLocalMovement
 
 			@_toMatrix[11] = @_currentMatrix[11] + y
 
@@ -646,11 +659,140 @@ define [
 
 			@
 
-		translateZ: (z) ->
+		localMoveZ: (z) ->
 
-			do @_reportUpdateForTranslation
+			do @_reportUpdateForLocalMovement
 
 			@_toMatrix[12] = @_currentMatrix[12] + z
+
+			do @_update
+
+			@
+
+		###
+		Rotation
+		###
+
+		_updateLocalRotation: (progress) ->
+
+			@_styleSetter.localRotateTo (
+					@_fromMatrix[13] +
+					((@_toMatrix[13] - @_fromMatrix[13]) * progress)
+				),
+				(
+					@_fromMatrix[14] +
+					((@_toMatrix[14] - @_fromMatrix[14]) * progress)
+				),
+				(
+					@_fromMatrix[15] +
+					((@_toMatrix[15] - @_fromMatrix[15]) * progress)
+				)
+
+			null
+
+		_reportUpdateForLocalRotation: ->
+
+			return if @_needsUpdate.transformLocalRotation
+
+			@_needsUpdate.transformLocalRotation = yes
+
+			@_toMatrix[13] = @_currentMatrix[13]
+			@_toMatrix[14] = @_currentMatrix[14]
+			@_toMatrix[15] = @_currentMatrix[15]
+
+			return
+
+		resetLocalRotation: ->
+
+			do @_reportUpdateForLocalRotation
+
+			@_toMatrix[13] = 0
+			@_toMatrix[14] = 0
+			@_toMatrix[15] = 0
+
+			do @_update
+
+			@
+
+		localRotateTo: (x, y, z) ->
+
+			do @_reportUpdateForLocalRotation
+
+			@_toMatrix[13] = x
+			@_toMatrix[14] = y
+			@_toMatrix[15] = z
+
+			do @_update
+
+			@
+
+		localRotateXTo: (x) ->
+
+			do @_reportUpdateForLocalRotation
+
+			@_toMatrix[13] = x
+
+			do @_update
+
+			@
+
+		localRotateYTo: (y) ->
+
+			do @_reportUpdateForLocalRotation
+
+			@_toMatrix[14] = y
+
+			do @_update
+
+			@
+
+		localRotateZTo: (z) ->
+
+			do @_reportUpdateForLocalRotation
+
+			@_toMatrix[15] = z
+
+			do @_update
+
+			@
+
+		localRotate: (x, y, z) ->
+
+			do @_reportUpdateForLocalRotation
+
+			@_toMatrix[13] = @_currentMatrix[13] + x
+			@_toMatrix[14] = @_currentMatrix[14] + y
+			@_toMatrix[15] = @_currentMatrix[15] + z
+
+			do @_update
+
+			@
+
+		localRotateX: (x) ->
+
+			do @_reportUpdateForLocalRotation
+
+			@_toMatrix[13] = @_currentMatrix[13] + x
+
+			do @_update
+
+			@
+
+		localRotateY: (y) ->
+
+			do @_reportUpdateForLocalRotation
+
+			@_toMatrix[14] = @_currentMatrix[14] + y
+
+			do @_update
+
+			@
+
+		localRotateZ: (z) ->
+
+			do @_reportUpdateForLocalRotation
+
+			@_toMatrix[15] = @_currentMatrix[15] + z
 
 			do @_update
 

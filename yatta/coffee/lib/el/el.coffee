@@ -11,6 +11,18 @@ define [
 	# Yatta-specific functionality to native elements.
 	mixing HasStyles_, Interactions_, class El
 
+		@_defaultContainer: null
+
+		@_getDefaultContainer: ->
+
+			if @_defaultContainer?
+
+				return @_defaultContainer
+
+			else
+
+				return document.body
+
 		constructor: (@node, addYattaClass = yes) ->
 
 			if not @_shouldCloneInnerHTML?
@@ -37,7 +49,7 @@ define [
 
 					if not @node.parentElement? and @node.tagName isnt 'BODY'
 
-						@putIn display
+						@putIn El._getDefaultContainer()
 
 					else
 
@@ -106,7 +118,7 @@ define [
 
 			@
 
-		putIn: (el = display) ->
+		putIn: (el = El._getDefaultContainer()) ->
 
 			if @_parent?
 
@@ -135,6 +147,12 @@ define [
 			@_parent = null
 
 			@_beenAppended = no
+
+			@
+
+		setAsDefaultContainer: ->
+
+			El._defaultContainer = @
 
 			@
 
@@ -211,18 +229,38 @@ define [
 			return unless @_axis?
 
 			origin = @_styleSetter._origin
-			dims = @_styleSetter._dims
+			# dims = @_styleSetter._dims
 
 			if origin.x?
 
-				@_axis.setMovement origin.x, origin.y, origin.z
-
-			else if dims.width?
-
-				@_axis.setMovement dims.width / 2, dims.height / 2, 0
+				@_axis.moveTo origin.x, origin.y, origin.z
 
 			else
 
-				@_axis.setMovement 0, 0, 0
+				wait 50, =>
+
+					cssOrigin = getComputedStyle(@node).webkitTransformOrigin
+
+					parts = cssOrigin.split(" ").map (num) -> parseFloat num
+
+					if parts.length is 2
+
+						@_axis.moveTo parts[0], parts[1], 0
+
+					else
+
+						@_axis.moveTo 0, 0, 0
+
+
+
+
+
+			# else if dims.width?
+
+			# 	@_axis.moveTo dims.width / 2, dims.height / 2, 0
+
+			# else
+
+			# 	@_axis.moveTo 0, 0, 0
 
 			@

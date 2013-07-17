@@ -10,13 +10,16 @@ define(['./el', './rectangle'], function(El, Rectangle) {
     function Cube(width, height, depth, _initialHue, _initialSaturation) {
       var node;
 
+      this.width = width;
+      this.height = height;
+      this.depth = depth;
       this._initialHue = _initialHue != null ? _initialHue : 0;
       this._initialSaturation = _initialSaturation != null ? _initialSaturation : 0;
       node = document.createElement('div');
       node.classList.add('yatta-cube');
       Cube.__super__.constructor.call(this, node);
       this.go3d();
-      this._createSurfaces(width, height, depth);
+      this._createSurfaces(this.width, this.height, this.depth);
     }
 
     Cube.prototype._createSurfaces = function(width, height, depth) {
@@ -25,22 +28,37 @@ define(['./el', './rectangle'], function(El, Rectangle) {
       this.topSurface = new Rectangle(width, depth);
       this.topSurface.rotateX(PI / 2).putIn(this);
       this.bottomSurface = new Rectangle(width, depth);
-      this.bottomSurface.rotateX(-PI / 2).setMovementZ(depth).setMovementY(height).putIn(this);
+      this.bottomSurface.rotateX(-PI / 2).moveZTo(depth).moveYTo(height).putIn(this);
       this.frontSurface = new Rectangle(width, height);
       this.frontSurface.putIn(this);
       this.backSurface = new Rectangle(width, height);
-      this.backSurface.setMovementZ(depth).putIn(this);
+      this.backSurface.moveZTo(depth).putIn(this);
       this.leftSurface = new Rectangle(depth, height);
-      this.leftSurface.rotateY(PI / 2).setMovementZ(depth).putIn(this);
+      this.leftSurface.rotateY(PI / 2).moveZTo(depth).putIn(this);
       this.rightSurface = new Rectangle(depth, height);
-      this.rightSurface.rotateY(PI / 2).setMovementZ(depth).setMovementX(width).putIn(this);
-      this.setOrigin(width / 2, height / 2, depth / 2);
+      this.rightSurface.rotateY(PI / 2).moveZTo(depth).moveXTo(width).putIn(this);
+      this.originToCenter();
       _ref = this._children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
         child.fill.withHsl(this._initialHue, this._initialSaturation, rand(50, 90));
         child.setOrigin(0, 0, 0);
       }
+      return this;
+    };
+
+    Cube.prototype.originToCenter = function() {
+      this.setOrigin(this.width / 2, this.height / 2, this.depth / 2);
+      return this;
+    };
+
+    Cube.prototype.originToBottom = function() {
+      this.setOrigin(this.width / 2, this.height, this.depth / 2);
+      return this;
+    };
+
+    Cube.prototype.originToTop = function() {
+      this.setOrigin(this.width / 2, 0, this.depth / 2);
       return this;
     };
 

@@ -119,6 +119,10 @@ define [
 
 			@
 
+		trans: (duration) -> @enableTransition duration
+
+		noTrans: -> do @disableTransition
+
 		ease: (fn) ->
 
 			@_transitioner.ease fn

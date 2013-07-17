@@ -30,6 +30,10 @@ define [
 		a[11] = 0
 		a[12] = 0
 
+		a[13] = 0
+		a[14] = 0
+		a[15] = 0
+
 		a
 
 
@@ -52,6 +56,10 @@ define [
 		to[10] = from[10]
 		to[11] = from[11]
 		to[12] = from[12]
+
+		to[13] = from[13]
+		to[14] = from[14]
+		to[15] = from[15]
 
 		return
 
@@ -76,7 +84,9 @@ define [
 
 				scale: no
 
-				translation: no
+				localMovement: no
+
+				localRotation: no
 
 
 			@_identityMatrix = Base.identity()
@@ -122,7 +132,7 @@ define [
 			# Gotta figure out why this outperforms toCss() and toStupidCss()
 
 			# movement
-			if @_has.m
+			if @_has.movement
 
 				css = Translation.toPlainCss @_current[0], @_current[1], @_current[2]
 
@@ -131,30 +141,35 @@ define [
 				css = ''
 
 			# scale
-			if @_has.s
+			if @_has.scale
 
 				css += Scale.toPlainCss @_current[3], @_current[4], @_current[5]
 
 			# perspectove
-			if @_has.p
+			if @_has.perspective
 
 				css += Perspective.toPlainCss @_current[6]
 
 			# rotation
-			if @_has.r
+			if @_has.rotation
 
 				css += Rotation.toPlainCss @_current[7], @_current[8], @_current[9]
 
 			# translation
-			if @_has.t
+			if @_has.localMovement
 
 				css += Translation.toPlainCss @_current[10], @_current[11], @_current[12]
+
+			# rotation
+			if @_has.localRotation
+
+				css += Rotation.toPlainCss @_current[13], @_current[14], @_current[15]
 
 			css
 
 		toStupidCss: ->
 
-			"translate3d(#{@_current[0]}px, #{@_current[1]}px, #{@_current[2]}px) scale3d(#{@_current[3]}, #{@_current[4]}, #{@_current[5]}) perspective(#{@_current[6]}) rotateX(#{@_current[7]}) rotateY(#{@_current[8]}) rotateZ(#{@_current[9]}) translate3d(#{@_current[10]}px, #{@_current[11]}px, #{@_current[12]}px)"
+			"translate3d(#{@_current[0]}px, #{@_current[1]}px, #{@_current[2]}px) scale3d(#{@_current[3]}, #{@_current[4]}, #{@_current[5]}) perspective(#{@_current[6]}) rotateX(#{@_current[7]}) rotateY(#{@_current[8]}) rotateZ(#{@_current[9]}) translate3d(#{@_current[10]}px, #{@_current[11]}px, #{@_current[12]}px) rotateX(#{@_current[13]}) rotateY(#{@_current[14]}) rotateZ(#{@_current[15]})"
 
 		toArray: ->
 
@@ -165,29 +180,34 @@ define [
 			soFar = @_getIdentityMatrix()
 
 			# movement
-			if @_has.m
+			if @_has.movement
 
 				soFar = Translation.setTo soFar, @_current[0], @_current[1], @_current[2]
 
 			# scale
-			if @_has.s
+			if @_has.scale
 
 				Scale.applyTo soFar, @_current[3], @_current[4], @_current[5]
 
 			# perspectove
-			if @_has.p
+			if @_has.perspective
 
 				Perspective.applyTo soFar, @_current[6]
 
 			# rotation
-			if @_has.r
+			if @_has.rotation
 
 				Rotation.applyTo soFar, @_current[7], @_current[8], @_current[9]
 
 			# translation
-			if @_has.t
+			if @_has.localMovement
 
 				Translation.applyTo soFar, @_current[10], @_current[11], @_current[12]
+
+			# localRotation
+			if @_has.localRotation
+
+				Rotation.applyTo soFar, @_current[13], @_current[14], @_current[15]
 
 			soFar
 
@@ -203,7 +223,7 @@ define [
 
 		resetMovement: ->
 
-			@_has.m = no
+			@_has.movement = no
 
 			@_current[0] = 0
 			@_current[1] = 0
@@ -219,9 +239,9 @@ define [
 				z: @_current[2]
 			}
 
-		setMovement: (x, y, z) ->
+		moveTo: (x, y, z) ->
 
-			@_has.m = yes
+			@_has.movement = yes
 
 			@_current[0] = x
 			@_current[1] = y
@@ -229,25 +249,25 @@ define [
 
 			@
 
-		setMovementX: (x) ->
+		moveXTo: (x) ->
 
-			@_has.m = yes
+			@_has.movement = yes
 
 			@_current[0] = x
 
 			@
 
-		setMovementY: (y) ->
+		moveYTo: (y) ->
 
-			@_has.m = yes
+			@_has.movement = yes
 
 			@_current[1] = y
 
 			@
 
-		setMovementZ: (z) ->
+		moveZTo: (z) ->
 
-			@_has.m = yes
+			@_has.movement = yes
 
 			@_current[2] = z
 
@@ -256,7 +276,7 @@ define [
 		move: (x, y, z) ->
 
 			# This *does* work most of the times
-			@_has.m = yes
+			@_has.movement = yes
 
 			@_current[0] += x
 			@_current[1] += y
@@ -266,7 +286,7 @@ define [
 
 		moveX: (x) ->
 
-			@_has.m = yes
+			@_has.movement = yes
 
 			@_current[0] += x
 
@@ -274,7 +294,7 @@ define [
 
 		moveY: (y) ->
 
-			@_has.m = yes
+			@_has.movement = yes
 
 			@_current[1] += y
 
@@ -282,7 +302,7 @@ define [
 
 		moveZ: (z) ->
 
-			@_has.m = yes
+			@_has.movement = yes
 
 			@_current[2] += z
 
@@ -294,7 +314,7 @@ define [
 
 		resetScale: ->
 
-			@_has.s = no
+			@_has.scale = no
 
 			@_current[3] = 1
 			@_current[4] = 1
@@ -310,9 +330,9 @@ define [
 				z: @_current[5]
 			}
 
-		setScale: (x, y, z) ->
+		scaleTo: (x, y, z) ->
 
-			@_has.s = yes
+			@_has.scale = yes
 
 			@_current[3] = x
 			@_current[4] = y
@@ -320,25 +340,25 @@ define [
 
 			@
 
-		setScaleX: (x) ->
+		scaleXTo: (x) ->
 
-			@_has.s = yes
+			@_has.scale = yes
 
 			@_current[3] = x
 
 			@
 
-		setScaleY: (y) ->
+		scaleYTo: (y) ->
 
-			@_has.s = yes
+			@_has.scale = yes
 
 			@_current[4] = y
 
 			@
 
-		setScaleZ: (z) ->
+		scaleZTo: (z) ->
 
-			@_has.s = yes
+			@_has.scale = yes
 
 			@_current[5] = z
 
@@ -347,7 +367,7 @@ define [
 		scale: (x, y, z) ->
 
 			# This *does* work most of the times
-			@_has.s = yes
+			@_has.scale = yes
 
 			@_current[3] *= x
 			@_current[4] *= y
@@ -355,15 +375,15 @@ define [
 
 			@
 
-		setScaleAll: (x) ->
+		scaleAllTo: (x) ->
 
 			if x is 1
 
-				@_has.s = no
+				@_has.scale = no
 
 			else
 
-				@_has.s = yes
+				@_has.scale = yes
 
 			@_current[3] = @_current[4] = @_current[5] = x
 
@@ -371,7 +391,7 @@ define [
 
 		scaleX: (x) ->
 
-			@_has.s = yes
+			@_has.scale = yes
 
 			@_current[3] *= x
 
@@ -379,7 +399,7 @@ define [
 
 		scaleY: (y) ->
 
-			@_has.s = yes
+			@_has.scale = yes
 
 			@_current[4] *= y
 
@@ -387,7 +407,7 @@ define [
 
 		scaleZ: (z) ->
 
-			@_has.s = yes
+			@_has.scale = yes
 
 			@_current[5] *= z
 
@@ -397,21 +417,21 @@ define [
 		Perspective
 		###
 
-		resetPerspective: ->
+		reperspective: ->
 
 			@_current[6] = 0
 
-			@_has.p = no
+			@_has.perspective = no
 
 			@
 
-		setPerspective: (d) ->
+		perspective: (d) ->
 
 			@_current[6] = d
 
 			if d
 
-				@_has.p = yes
+				@_has.perspective = yes
 
 			@
 
@@ -421,7 +441,7 @@ define [
 
 		resetRotation: ->
 
-			@_has.r = no
+			@_has.rotation = no
 
 			@_current[7] = 0
 			@_current[8] = 0
@@ -437,9 +457,9 @@ define [
 				z: @_current[9]
 			}
 
-		setRotation: (x, y, z) ->
+		rotateTo: (x, y, z) ->
 
-			@_has.r = yes
+			@_has.rotation = yes
 
 			@_current[7] = x
 			@_current[8] = y
@@ -447,25 +467,25 @@ define [
 
 			@
 
-		setRotationX: (x) ->
+		rotateXTo: (x) ->
 
-			@_has.r = yes
+			@_has.rotation = yes
 
 			@_current[7] = x
 
 			@
 
-		setRotationY: (y) ->
+		rotateYTo: (y) ->
 
-			@_has.r = yes
+			@_has.rotation = yes
 
 			@_current[8] = y
 
 			@
 
-		setRotationZ: (z) ->
+		rotateZTo: (z) ->
 
-			@_has.r = yes
+			@_has.rotation = yes
 
 			@_current[9] = z
 
@@ -474,7 +494,7 @@ define [
 		rotate: (x, y, z) ->
 
 			# This *does* work most of the times
-			@_has.r = yes
+			@_has.rotation = yes
 
 			@_current[7] += x
 			@_current[8] += y
@@ -484,7 +504,7 @@ define [
 
 		rotateX: (x) ->
 
-			@_has.r = yes
+			@_has.rotation = yes
 
 			@_current[7] += x
 
@@ -492,7 +512,7 @@ define [
 
 		rotateY: (y) ->
 
-			@_has.r = yes
+			@_has.rotation = yes
 
 			@_current[8] += y
 
@@ -500,19 +520,19 @@ define [
 
 		rotateZ: (z) ->
 
-			@_has.r = yes
+			@_has.rotation = yes
 
 			@_current[9] += z
 
 			@
 
 		###
-		Translation
+		Local Movement
 		###
 
-		resetTranslation: ->
+		resetLocalMovement: ->
 
-			@_has.t = no
+			@_has.localMovement = no
 
 			@_current[10] = 0
 			@_current[11] = 0
@@ -520,7 +540,7 @@ define [
 
 			@
 
-		translation: ->
+		localMovement: ->
 
 			{
 				x: @_current[10]
@@ -528,9 +548,9 @@ define [
 				z: @_current[12]
 			}
 
-		setTranslation: (x, y, z) ->
+		localMoveTo: (x, y, z) ->
 
-			@_has.t = no if not x and not y and not z
+			@_has.localMovement = yes
 
 			@_current[10] = x
 			@_current[11] = y
@@ -538,34 +558,34 @@ define [
 
 			@
 
-		setTranslationX: (x) ->
+		localMoveXTo: (x) ->
 
-			@_has.t = yes
+			@_has.localMovement = yes
 
 			@_current[10] = x
 
 			@
 
-		setTranslationY: (y) ->
+		localMoveYTo: (y) ->
 
-			@_has.t = yes
+			@_has.localMovement = yes
 
 			@_current[11] = y
 
 			@
 
-		setTranslationZ: (z) ->
+		localMoveZTo: (z) ->
 
-			@_has.t = yes
+			@_has.localMovement = yes
 
 			@_current[12] = z
 
 			@
 
-		translate: (x, y, z) ->
+		localMove: (x, y, z) ->
 
 			# This *does* work most of the times
-			@_has.t = yes
+			@_has.localMovement = yes
 
 			@_current[10] += x
 			@_current[11] += y
@@ -573,26 +593,117 @@ define [
 
 			@
 
-		translateX: (x) ->
+		localMoveX: (x) ->
 
-			@_has.t = yes
+			@_has.localMovement = yes
 
 			@_current[10] += x
 
 			@
 
-		translateY: (y) ->
+		localMoveY: (y) ->
 
-			@_has.t = yes
+			@_has.localMovement = yes
 
 			@_current[11] += y
 
 			@
 
-		translateZ: (z) ->
+		localMoveZ: (z) ->
 
-			@_has.t = yes
+			@_has.localMovement = yes
 
 			@_current[12] += z
+
+			@
+
+		###
+		Local Rotation
+		###
+
+		resetLocalRotation: ->
+
+			@_has.localRotation = no
+
+			@_current[13] = 0
+			@_current[14] = 0
+			@_current[15] = 0
+
+			@
+
+		localRotation: ->
+
+			{
+				x: @_current[13]
+				y: @_current[14]
+				z: @_current[15]
+			}
+
+		localRotateTo: (x, y, z) ->
+
+			@_has.localRotation = yes
+
+			@_current[13] = x
+			@_current[14] = y
+			@_current[15] = z
+
+			@
+
+		localRotateXTo: (x) ->
+
+			@_has.localRotation = yes
+
+			@_current[13] = x
+
+			@
+
+		localRotateYTo: (y) ->
+
+			@_has.localRotation = yes
+
+			@_current[14] = y
+
+			@
+
+		localRotateZTo: (z) ->
+
+			@_has.localRotation = yes
+
+			@_current[15] = z
+
+			@
+
+		localRotate: (x, y, z) ->
+
+			# This *does* work most of the times
+			@_has.localRotation = yes
+
+			@_current[13] += x
+			@_current[14] += y
+			@_current[15] += z
+
+			@
+
+		localRotateX: (x) ->
+
+			@_has.localRotation = yes
+
+			@_current[13] += x
+
+			@
+
+		localRotateY: (y) ->
+
+			@_has.localRotation = yes
+
+			@_current[14] += y
+
+			@
+
+		localRotateZ: (z) ->
+
+			@_has.localRotation = yes
+
+			@_current[15] += z
 
 			@

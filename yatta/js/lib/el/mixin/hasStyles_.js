@@ -89,6 +89,14 @@ define(['./styleSetter/styleSetter', './transitioner/transitioner'], function(St
       return this;
     };
 
+    HasStyles_.prototype.trans = function(duration) {
+      return this.enableTransition(duration);
+    };
+
+    HasStyles_.prototype.noTrans = function() {
+      return this.disableTransition();
+    };
+
     HasStyles_.prototype.ease = function(fn) {
       this._transitioner.ease(fn);
       return this;

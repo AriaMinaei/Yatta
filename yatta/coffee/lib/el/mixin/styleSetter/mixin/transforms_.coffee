@@ -53,6 +53,12 @@ define [
 
 			@
 
+		goFlat: ->
+
+			css.setTransformStyle @node, 'flat'
+
+			@
+
 		setOrigin: (x = 0, y = 0, z = 0) ->
 
 			@_origin.x = x

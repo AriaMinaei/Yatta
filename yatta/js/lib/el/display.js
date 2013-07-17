@@ -20,6 +20,7 @@ define(['./el'], function(El) {
         height: 0
       };
       this._displayCoordsInitialized = false;
+      this.setAsDefaultContainer();
     }
 
     Display.prototype.disable = function() {

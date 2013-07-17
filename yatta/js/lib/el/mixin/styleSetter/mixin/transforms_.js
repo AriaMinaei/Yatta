@@ -41,6 +41,11 @@ define(['../../../../visuals/typedMatrix', '../../../tools/css'], function(Typed
       return this;
     };
 
+    Transforms_.prototype.goFlat = function() {
+      css.setTransformStyle(this.node, 'flat');
+      return this;
+    };
+
     Transforms_.prototype.setOrigin = function(x, y, z) {
       if (x == null) {
         x = 0;

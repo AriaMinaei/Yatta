@@ -11,9 +11,10 @@ define(['./el'], function(El) {
       var node;
 
       node = document.createElement('div');
-      node.classList.add('yatta-container');
+      node.classList.add('yatta-camera');
       Container.__super__.constructor.call(this, node);
       this.go3d();
+      this.perspective(1200);
     }
 
     return Container;
