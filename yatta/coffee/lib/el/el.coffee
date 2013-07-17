@@ -1,15 +1,16 @@
 define [
 	'./mixin/hasStyles_'
 	'./mixin/interactions_'
+	'./mixin/reactive_'
 	'../utility/object'
 	'../utility/array'
 	# No dependency for _Axis, 'cause of the circular dependency, and the
 	# fact that its only used by the user; I'll do something cleaner later.
-	], (HasStyles_, Interactions_, object, array) ->
+	], (HasStyles_, Interactions_, Reactive_, object, array) ->
 
 	# Every Yatta-enabled node in the app is an instance of El, which adds
 	# Yatta-specific functionality to native elements.
-	mixing HasStyles_, Interactions_, class El
+	mixing HasStyles_, Interactions_, Reactive_, class El
 
 		@_defaultContainer: null
 

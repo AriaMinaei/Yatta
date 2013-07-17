@@ -1,7 +1,7 @@
-define(['./mixin/hasStyles_', './mixin/interactions_', '../utility/object', '../utility/array'], function(HasStyles_, Interactions_, object, array) {
+define(['./mixin/hasStyles_', './mixin/interactions_', './mixin/reactive_', '../utility/object', '../utility/array'], function(HasStyles_, Interactions_, Reactive_, object, array) {
   var El;
 
-  return mixing(HasStyles_, Interactions_, El = (function() {
+  return mixing(HasStyles_, Interactions_, Reactive_, El = (function() {
     El._defaultContainer = null;
 
     El._getDefaultContainer = function() {
