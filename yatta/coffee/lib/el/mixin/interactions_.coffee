@@ -88,6 +88,14 @@ define [
 
 					cb.call @
 
+		immediately: ->
+
+			@_eventEnabledMethod arguments, (cb) =>
+
+				frames.laterInThisFrame =>
+
+					cb.call @
+
 		eachFrame: ->
 
 			@_eventEnabledMethod arguments, (cb) =>

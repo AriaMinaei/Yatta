@@ -97,6 +97,16 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
       });
     };
 
+    Interactions_.prototype.immediately = function() {
+      var _this = this;
+
+      return this._eventEnabledMethod(arguments, function(cb) {
+        return frames.laterInThisFrame(function() {
+          return cb.call(_this);
+        });
+      });
+    };
+
     Interactions_.prototype.eachFrame = function() {
       var _this = this;
 
