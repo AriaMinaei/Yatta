@@ -5,8 +5,6 @@ define [
 
 	class Interactions_
 
-		@__methodChain: null
-
 		__initMixinInteractions: ->
 
 			@_quittersForInteractions = []
@@ -29,9 +27,9 @@ define [
 
 		_getMethodChain: ->
 
-			unless Interactions_.__methodChain?
+			unless @constructor.__methodChain?
 
-				Interactions_.__methodChain = new MethodChain
+				@constructor.__methodChain = new MethodChain
 
 				for key, fn of @
 
@@ -39,9 +37,9 @@ define [
 
 					continue unless fn instanceof Function
 
-					Interactions_.__methodChain.addMethod key
+					@constructor.__methodChain.addMethod key
 
-			Interactions_.__methodChain
+			@constructor.__methodChain
 
 		_getNewInterface: ->
 

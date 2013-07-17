@@ -6,8 +6,6 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
   return Interactions_ = (function() {
     function Interactions_() {}
 
-    Interactions_.__methodChain = null;
-
     Interactions_.prototype.__initMixinInteractions = function() {
       this._quittersForInteractions = [];
       return null;
@@ -29,8 +27,8 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
     Interactions_.prototype._getMethodChain = function() {
       var fn, key;
 
-      if (Interactions_.__methodChain == null) {
-        Interactions_.__methodChain = new MethodChain;
+      if (this.constructor.__methodChain == null) {
+        this.constructor.__methodChain = new MethodChain;
         for (key in this) {
           fn = this[key];
           if (key[0] === '_' || key === 'constructor') {
@@ -39,10 +37,10 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
           if (!(fn instanceof Function)) {
             continue;
           }
-          Interactions_.__methodChain.addMethod(key);
+          this.constructor.__methodChain.addMethod(key);
         }
       }
-      return Interactions_.__methodChain;
+      return this.constructor.__methodChain;
     };
 
     Interactions_.prototype._getNewInterface = function() {
