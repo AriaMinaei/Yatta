@@ -173,6 +173,32 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
       });
     };
 
+    Interactions_.prototype.everyAndNow = function() {
+      var args, ms,
+        _this = this;
+
+      ms = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      return this._eventEnabledMethod(args, function(cb) {
+        var canceled, canceler, theCallback;
+
+        canceled = false;
+        canceler = function() {
+          if (canceled) {
+            return;
+          }
+          frames.cancelEvery(theCallback);
+          array.pluckOneItem(_this._quittersForInteractions, canceler);
+          return canceled = true;
+        };
+        _this._quittersForInteractions.push(canceler);
+        theCallback = function() {
+          return cb.call(_this, canceler);
+        };
+        frames.every(ms, theCallback);
+        return frames.laterInThisFrame(theCallback);
+      });
+    };
+
     Interactions_.prototype.each = function(cb) {
       var child, counter, els, i, _interface,
         _this = this;

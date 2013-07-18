@@ -23,25 +23,7 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
     }
 
     Transitioner.prototype.ease = function(func) {
-      var f, part, parts, _i, _len;
-
-      if (func instanceof Function) {
-        this._easing = func;
-        return this;
-      }
-      if (typeof func !== 'string') {
-        throw Error("func should either be a function or a string, like qubic.easeOut");
-      }
-      parts = func.split('.');
-      f = easing;
-      for (_i = 0, _len = parts.length; _i < _len; _i++) {
-        part = parts[_i];
-        f = f[part];
-      }
-      if (typeof f === 'undefined') {
-        throw Error("Cannot find easing function `" + func + "`");
-      }
-      this._easing = f;
+      this._easing = easing.get(func);
       return this;
     };
 

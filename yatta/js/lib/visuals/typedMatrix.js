@@ -319,7 +319,7 @@ define(['./typedMatrix/base', './typedMatrix/translation', './typedMatrix/scale'
     */
 
 
-    TypedMatrix.prototype.reperspective = function() {
+    TypedMatrix.prototype.resetPerspective = function() {
       this._current[6] = 0;
       this._has.perspective = false;
       return this;

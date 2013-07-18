@@ -28,6 +28,26 @@ define(function() {
           }
         }
       };
+    },
+    get: function(func) {
+      var f, part, parts, _i, _len;
+
+      if (func instanceof Function) {
+        return func;
+      }
+      if (typeof func !== 'string') {
+        throw Error("func should either be a function or a string, like qubic.easeOut");
+      }
+      parts = func.split('.');
+      f = Easing;
+      for (_i = 0, _len = parts.length; _i < _len; _i++) {
+        part = parts[_i];
+        f = f[part];
+      }
+      if (typeof f === 'undefined') {
+        throw Error("Cannot find easing function `" + func + "`");
+      }
+      return f;
     }
   };
   Easing.define({

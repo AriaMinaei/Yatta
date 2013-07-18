@@ -35,6 +35,30 @@ define ->
 					else
 						return 0.5 * ( 2 - func( 2 * ( 1 - p ) ) )
 
+		get: (func) ->
+
+			if func instanceof Function
+
+				return func
+
+			unless typeof func is 'string'
+
+				throw Error "func should either be a function or a string, like qubic.easeOut"
+
+			parts = func.split '.'
+
+			f = Easing
+
+			for part in parts
+
+				f = f[part]
+
+			if typeof f is 'undefined'
+
+				throw Error "Cannot find easing function `#{func}`"
+
+			f
+
 	# Defining the standard easings
 	Easing.define
 

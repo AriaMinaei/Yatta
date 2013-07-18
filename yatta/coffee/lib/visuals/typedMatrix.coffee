@@ -417,7 +417,7 @@ define [
 		Perspective
 		###
 
-		reperspective: ->
+		resetPerspective: ->
 
 			@_current[6] = 0
 

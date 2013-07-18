@@ -2,9 +2,9 @@
 t = new Type('yatta');
 
 // Types are actually elements, so:
-t.setMovement(display.centerX - 90, display.centerY - 40, 0)
+t.moveTo(display.centerX - 90, display.centerY - 40, 0)
 .rotateY(rad(-180))
-.wait(500).enableTransition(300).rotateY(rad(360+180));
+.wait(500).trans(300).rotateY(rad(360+180));
 
 // And these methods are available to types, just like
 // all other elements:
@@ -18,7 +18,7 @@ t.setText('YATTA!');
 // Each letter in a type is actually an element of its own, which
 // means types are just containers of a few letters:
 t.each(function(letter, i){
-	letter.enableTransition(200).wait(500).moveY(rand(-8, 8))
+	letter.trans(200).wait(500).moveY(rand(-8, 8))
 });
 
 // As expected, each() supports chaining too:

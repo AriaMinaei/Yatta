@@ -165,6 +165,33 @@ define [
 
 				frames.every ms, theCallback
 
+		everyAndNow: (ms, args...) ->
+
+			@_eventEnabledMethod args, (cb) =>
+
+				canceled = no
+
+				canceler = =>
+
+					return if canceled
+
+					frames.cancelEvery theCallback
+
+					array.pluckOneItem @_quittersForInteractions, canceler
+
+					canceled = yes
+
+				@_quittersForInteractions.push canceler
+
+				theCallback = =>
+
+					cb.call @, canceler
+
+				frames.every ms, theCallback
+
+				frames.laterInThisFrame theCallback
+
+
 		each: (cb = null) ->
 
 			if cb instanceof Function

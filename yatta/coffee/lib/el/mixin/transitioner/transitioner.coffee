@@ -35,29 +35,7 @@ define [
 
 		ease: (func) ->
 
-			if func instanceof Function
-
-				@_easing = func
-
-				return @
-
-			unless typeof func is 'string'
-
-				throw Error "func should either be a function or a string, like qubic.easeOut"
-
-			parts = func.split '.'
-
-			f = easing
-
-			for part in parts
-
-				f = f[part]
-
-			if typeof f is 'undefined'
-
-				throw Error "Cannot find easing function `#{func}`"
-
-			@_easing = f
+			@_easing = easing.get func
 
 			@
 

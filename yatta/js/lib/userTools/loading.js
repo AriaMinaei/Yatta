@@ -29,7 +29,7 @@ define(function() {
     indicator.setFace('"HelveticaNeueLT Std Thin", Helvetica, Arial');
     indicator.moveX(display.centerX - 60);
     indicator.moveY(display.centerY - 20);
-    indicator.setOpacity(0.5).setScaleAll(0.95).enableTransition(900).setOpacity(1).setScaleAll(1).every(2500).setOpacity(0.5).setScaleAll(0.95).wait(900).setOpacity(1).setScaleAll(1);
+    indicator.setOpacity(0.5).scaleAllTo(0.95).enableTransition(900).setOpacity(1).scaleAllTo(1).every(2500).setOpacity(0.5).scaleAllTo(0.95).wait(900).setOpacity(1).scaleAllTo(1);
   };
   loadImg = function(addr, cb) {
     var img;

@@ -38,16 +38,16 @@ define ->
 
 		indicator
 		.setOpacity(0.5)
-		.setScaleAll(0.95)
+		.scaleAllTo(0.95)
 		.enableTransition(900)
 		.setOpacity(1)
-		.setScaleAll(1)
+		.scaleAllTo(1)
 		.every(2500)
 		.setOpacity(0.5)
-		.setScaleAll(0.95)
+		.scaleAllTo(0.95)
 		.wait(900)
 		.setOpacity(1)
-		.setScaleAll(1)
+		.scaleAllTo(1)
 
 		return
 
