@@ -191,7 +191,6 @@ define [
 
 				frames.laterInThisFrame theCallback
 
-
 		each: (cb = null) ->
 
 			if cb instanceof Function

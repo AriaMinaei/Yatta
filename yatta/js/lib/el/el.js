@@ -69,7 +69,11 @@ define(['./mixin/hasStyles_', './mixin/interactions_', './mixin/reactive_', '../
         }
       }
       newEl._parent = null;
-      parent = (_ref1 = (_ref2 = this.node._parent) != null ? _ref2 : this.node.parentElement) != null ? _ref1 : null;
+      if (this._parent != null) {
+        parent = this._parent;
+      } else {
+        parent = (_ref1 = (_ref2 = this.node._parent) != null ? _ref2 : this.node.parentElement) != null ? _ref1 : null;
+      }
       newEl._beenAppended = false;
       frames.laterInThisFrame(function() {
         if (!newEl._beenAppended) {
@@ -132,6 +136,7 @@ define(['./mixin/hasStyles_', './mixin/interactions_', './mixin/reactive_', '../
     El.prototype._append = function(el) {
       var node;
 
+      console.log(el);
       if (el instanceof El) {
         node = el.node;
         this._children.push(el);

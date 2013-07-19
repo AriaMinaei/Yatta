@@ -85,7 +85,13 @@ define [
 			# Deciding on the parent
 			newEl._parent = null
 
-			parent = @node._parent ? @node.parentElement ? null
+			if @_parent?
+
+				parent = @_parent
+
+			else
+
+				parent = @node._parent ? @node.parentElement ? null
 
 			newEl._beenAppended = no
 
@@ -158,6 +164,8 @@ define [
 			@
 
 		_append: (el) ->
+
+			console.log el
 
 			if el instanceof El
 

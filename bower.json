@@ -1,6 +1,6 @@
 {
   "name": "Yatta",
-  "version": "0.4.21",
+  "version": "0.4.22",
   "main": "yatta/start.js",
   "ignore": [
     "**/.*",
