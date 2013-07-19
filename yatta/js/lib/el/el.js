@@ -136,7 +136,6 @@ define(['./mixin/hasStyles_', './mixin/interactions_', './mixin/reactive_', '../
     El.prototype._append = function(el) {
       var node;
 
-      console.log(el);
       if (el instanceof El) {
         node = el.node;
         this._children.push(el);

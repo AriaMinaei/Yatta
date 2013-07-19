@@ -102,9 +102,6 @@ define(['./typedMatrix/base', './typedMatrix/translation', './typedMatrix/scale'
       } else {
         css = '';
       }
-      if (this._has.scale) {
-        css += Scale.toPlainCss(this._current[3], this._current[4], this._current[5]);
-      }
       if (this._has.perspective) {
         css += Perspective.toPlainCss(this._current[6]);
       }
@@ -116,6 +113,9 @@ define(['./typedMatrix/base', './typedMatrix/translation', './typedMatrix/scale'
       }
       if (this._has.localRotation) {
         css += Rotation.toPlainCss(this._current[13], this._current[14], this._current[15]);
+      }
+      if (this._has.scale) {
+        css += Scale.toPlainCss(this._current[3], this._current[4], this._current[5]);
       }
       return css;
     };

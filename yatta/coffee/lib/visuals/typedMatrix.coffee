@@ -140,11 +140,6 @@ define [
 
 				css = ''
 
-			# scale
-			if @_has.scale
-
-				css += Scale.toPlainCss @_current[3], @_current[4], @_current[5]
-
 			# perspectove
 			if @_has.perspective
 
@@ -164,6 +159,11 @@ define [
 			if @_has.localRotation
 
 				css += Rotation.toPlainCss @_current[13], @_current[14], @_current[15]
+
+			# scale
+			if @_has.scale
+
+				css += Scale.toPlainCss @_current[3], @_current[4], @_current[5]
 
 			css
 

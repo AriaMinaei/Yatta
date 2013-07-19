@@ -165,8 +165,6 @@ define [
 
 		_append: (el) ->
 
-			console.log el
-
 			if el instanceof El
 
 				node = el.node
