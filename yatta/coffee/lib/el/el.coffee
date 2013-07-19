@@ -271,3 +271,78 @@ define [
 			# 	@_axis.moveTo 0, 0, 0
 
 			@
+
+		each: (cb = null) ->
+
+			if cb instanceof Function
+
+				# I have to use this loop, since the children
+				# might be put in another container
+				i = 0
+				child = null
+				counter = -1
+
+				loop
+
+					counter++
+
+					if child is @_children[i]
+
+						i++
+
+					child = @_children[i]
+
+					break unless child?
+
+					cb.call @, child, counter
+
+				return @
+
+			_interface = @_getNewInterface()
+
+			els = @_children
+
+			if els.length isnt 0
+
+				frames.laterInThisFrame =>
+
+					for el in els
+
+						@_getMethodChain().run _interface, el
+
+					null
+
+			return _interface
+
+		onClick: ->
+
+			@_eventEnabledMethod arguments, (cb) =>
+
+				@node.addEventListener 'click', (e) =>
+
+					e.stopPropagation()
+					e.preventDefault()
+
+					cb.call @
+
+		onMouseOver: ->
+
+			@_eventEnabledMethod arguments, (cb) =>
+
+				@node.addEventListener 'mouseover', (e) =>
+
+					e.stopPropagation()
+					e.preventDefault()
+
+					cb.call @
+
+		onMouseOut: ->
+
+			@_eventEnabledMethod arguments, (cb) =>
+
+				@node.addEventListener 'mouseout', (e) =>
+
+					e.stopPropagation()
+					e.preventDefault()
+
+					cb.call @

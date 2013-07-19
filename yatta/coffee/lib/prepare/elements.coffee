@@ -9,7 +9,8 @@ define [
 	'../el/display'
 	'../el/camera'
 	'../el/_axis'
-	], (El, Rectangle, Ellipse, Type, Image, Container, Cube, Display, Camera, _Axis) ->
+	'../el/audier'
+	], (El, Rectangle, Ellipse, Type, Image, Container, Cube, Display, Camera, _Axis, Audier) ->
 
 	display = new Display document.body
 
@@ -22,3 +23,4 @@ define [
 	window._Axis = _Axis
 	window.display = display
 	window.Camera = Camera
+	window.Audier = Audier

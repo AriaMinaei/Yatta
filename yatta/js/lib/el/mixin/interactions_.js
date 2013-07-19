@@ -47,42 +47,6 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
       return this._getMethodChain().getInterface();
     };
 
-    Interactions_.prototype.onClick = function() {
-      var _this = this;
-
-      return this._eventEnabledMethod(arguments, function(cb) {
-        return _this.node.addEventListener('click', function(e) {
-          e.stopPropagation();
-          e.preventDefault();
-          return cb.call(_this);
-        });
-      });
-    };
-
-    Interactions_.prototype.onMouseOver = function() {
-      var _this = this;
-
-      return this._eventEnabledMethod(arguments, function(cb) {
-        return _this.node.addEventListener('mouseover', function(e) {
-          e.stopPropagation();
-          e.preventDefault();
-          return cb.call(_this);
-        });
-      });
-    };
-
-    Interactions_.prototype.onMouseOut = function() {
-      var _this = this;
-
-      return this._eventEnabledMethod(arguments, function(cb) {
-        return _this.node.addEventListener('mouseout', function(e) {
-          e.stopPropagation();
-          e.preventDefault();
-          return cb.call(_this);
-        });
-      });
-    };
-
     Interactions_.prototype.wait = function() {
       var ms, rest,
         _this = this;
@@ -197,46 +161,6 @@ define(['../../methodChain/methodChain', '../../utility/array'], function(Method
         frames.every(ms, theCallback);
         return frames.laterInThisFrame(theCallback);
       });
-    };
-
-    Interactions_.prototype.each = function(cb) {
-      var child, counter, els, i, _interface,
-        _this = this;
-
-      if (cb == null) {
-        cb = null;
-      }
-      if (cb instanceof Function) {
-        i = 0;
-        child = null;
-        counter = -1;
-        while (true) {
-          counter++;
-          if (child === this._children[i]) {
-            i++;
-          }
-          child = this._children[i];
-          if (child == null) {
-            break;
-          }
-          cb.call(this, child, counter);
-        }
-        return this;
-      }
-      _interface = this._getNewInterface();
-      els = this._children;
-      if (els.length !== 0) {
-        frames.laterInThisFrame(function() {
-          var el, _i, _len;
-
-          for (_i = 0, _len = els.length; _i < _len; _i++) {
-            el = els[_i];
-            _this._getMethodChain().run(_interface, el);
-          }
-          return null;
-        });
-      }
-      return _interface;
     };
 
     Interactions_.prototype._eventEnabledMethod = function(args, runCallback) {

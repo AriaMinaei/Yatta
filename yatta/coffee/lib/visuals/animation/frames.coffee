@@ -30,6 +30,8 @@ define [
 
 		timeInMs: new Int32Array 1
 
+		speed: 1
+
 		_toCallLaterInThisFrame: []
 
 		_toCallOnNextTick: []
@@ -274,6 +276,8 @@ define [
 			return
 
 		_theLoop: (t) ->
+
+			t = t * frames.speed
 
 			_nextFrame frames._theLoop
 

@@ -25,6 +25,7 @@ define(['../../utility/array', './frames/_timeoutPool', './frames/_intervalPool'
     getTime: getTime,
     time: new Float64Array(1),
     timeInMs: new Int32Array(1),
+    speed: 1,
     _toCallLaterInThisFrame: [],
     _toCallOnNextTick: [],
     _nextTickTimeout: null,
@@ -244,6 +245,7 @@ define(['../../utility/array', './frames/_timeoutPool', './frames/_intervalPool'
       }
     },
     _theLoop: function(t) {
+      t = t * frames.speed;
       _nextFrame(frames._theLoop);
       frames.time[0] = t;
       t = parseInt(t);

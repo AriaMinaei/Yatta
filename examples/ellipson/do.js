@@ -1,3 +1,5 @@
+frames.speed = 1
+
 // Set background color in RGB
 display.fill.withRgb(200, 195, 190)
 display.trans(500);
