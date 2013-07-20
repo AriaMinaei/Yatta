@@ -28,7 +28,7 @@ define(['./mixin/interactions_'], function(Interactions_) {
     Audier.prototype.play = function() {
       var _this = this;
 
-      this._eventEnabledMethod(arguments, function(cb) {
+      return this._eventEnabledMethod(arguments, function(cb) {
         if (_this.node.readyState === 4) {
           _this._play();
           return cb();
@@ -39,7 +39,6 @@ define(['./mixin/interactions_'], function(Interactions_) {
           });
         }
       });
-      return this;
     };
 
     Audier.prototype._play = function() {

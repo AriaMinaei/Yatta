@@ -48,8 +48,6 @@ define ['./mixin/interactions_'], (Interactions_) ->
 
 						do cb
 
-			@
-
 		_play: ->
 
 			@node.playbackRate = frames.speed
