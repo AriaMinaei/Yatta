@@ -24,7 +24,8 @@ define(['./el'], function(El) {
     }
 
     Display.prototype.disable = function() {
-      return this.node.classList.remove('yatta-display');
+      this.node.classList.remove('yatta-display');
+      return this.node.classList.remove('yatta-el');
     };
 
     Display.prototype._getDisplayCoords = function() {

@@ -22,6 +22,7 @@ define ['./el'], (El) ->
 		disable: ->
 
 			@node.classList.remove 'yatta-display'
+			@node.classList.remove 'yatta-el'
 
 		_getDisplayCoords: ->
 

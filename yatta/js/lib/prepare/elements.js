@@ -2,6 +2,7 @@ define(['../el/el', '../el/rectangle', '../el/ellipse', '../el/type', '../el/ima
   var display;
 
   display = new Display(document.body);
+  window.El = El;
   window.Rectangle = Rectangle;
   window.Ellipse = Ellipse;
   window.Type = Type;

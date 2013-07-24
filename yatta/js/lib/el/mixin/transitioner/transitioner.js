@@ -111,12 +111,14 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
       progress = ellapsed / this._duration;
       if (progress >= 1) {
         progress = 1;
-        this._stop();
       } else {
         this._scheduleUpdate();
       }
       progress = this._ease(progress);
       this._updateByProgress(progress);
+      if (progress === 1) {
+        this._stop();
+      }
     };
 
     Transitioner.prototype._updateByProgress = function(progress) {

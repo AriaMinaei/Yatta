@@ -797,3 +797,12 @@ define [
 			do @_update
 
 			@
+
+		resetAll: ->
+
+			do @resetMovement
+			do @resetScale
+			do @resetPerspective
+			do @resetRotation
+			do @resetLocalMovement
+			do @resetLocalRotation

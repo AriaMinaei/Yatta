@@ -560,6 +560,15 @@ define(['../../../../visuals/typedMatrix'], function(TypedMatrix) {
       return this;
     };
 
+    Transforms_.prototype.resetAll = function() {
+      this.resetMovement();
+      this.resetScale();
+      this.resetPerspective();
+      this.resetRotation();
+      this.resetLocalMovement();
+      return this.resetLocalRotation();
+    };
+
     return Transforms_;
 
   })();

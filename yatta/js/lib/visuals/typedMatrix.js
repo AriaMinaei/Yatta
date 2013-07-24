@@ -552,6 +552,15 @@ define(['./typedMatrix/base', './typedMatrix/translation', './typedMatrix/scale'
       return this;
     };
 
+    TypedMatrix.prototype.resetAll = function() {
+      this.resetMovement();
+      this.resetScale();
+      this.resetPerspective();
+      this.resetRotation();
+      this.resetLocalMovement();
+      return this.resetLocalRotation();
+    };
+
     return TypedMatrix;
 
   })();

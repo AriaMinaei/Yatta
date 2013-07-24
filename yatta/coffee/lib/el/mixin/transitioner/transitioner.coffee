@@ -142,8 +142,6 @@ define [
 
 				progress = 1
 
-				do @_stop
-
 			else
 
 				do @_scheduleUpdate
@@ -151,6 +149,10 @@ define [
 			progress = @_ease progress
 
 			@_updateByProgress progress
+
+			if progress is 1
+
+				do @_stop
 
 			return
 

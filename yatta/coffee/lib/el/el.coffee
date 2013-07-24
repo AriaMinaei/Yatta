@@ -320,7 +320,6 @@ define [
 
 				@node.addEventListener 'click', (e) =>
 
-					e.stopPropagation()
 					e.preventDefault()
 
 					cb.call @
@@ -331,7 +330,6 @@ define [
 
 				@node.addEventListener 'mouseover', (e) =>
 
-					e.stopPropagation()
 					e.preventDefault()
 
 					cb.call @
@@ -342,7 +340,6 @@ define [
 
 				@node.addEventListener 'mouseout', (e) =>
 
-					e.stopPropagation()
 					e.preventDefault()
 
 					cb.call @

@@ -707,3 +707,12 @@ define [
 			@_current[15] += z
 
 			@
+
+		resetAll: ->
+
+			do @resetMovement
+			do @resetScale
+			do @resetPerspective
+			do @resetRotation
+			do @resetLocalMovement
+			do @resetLocalRotation

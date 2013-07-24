@@ -14,6 +14,7 @@ define [
 
 	display = new Display document.body
 
+	window.El = El
 	window.Rectangle = Rectangle
 	window.Ellipse = Ellipse
 	window.Type = Type
