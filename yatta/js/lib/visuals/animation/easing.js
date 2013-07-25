@@ -1,4 +1,4 @@
-define(function() {
+define(['./bezier'], function(Bezier) {
   var Easing;
 
   Easing = {
@@ -30,13 +30,18 @@ define(function() {
       };
     },
     get: function(func) {
-      var f, part, parts, _i, _len;
+      var b, f, part, parts, _i, _len;
 
       if (func instanceof Function) {
         return func;
+      } else if (arguments.length === 4) {
+        b = new Bezier(arguments[0], arguments[1], arguments[2], arguments[3]);
+        return function(p) {
+          return b.solve(p, Bezier.epsilon);
+        };
       }
       if (typeof func !== 'string') {
-        throw Error("func should either be a function or a string, like qubic.easeOut");
+        throw Error("func should either be a function or a string, like cubic.easeOut");
       }
       parts = func.split('.');
       f = Easing;

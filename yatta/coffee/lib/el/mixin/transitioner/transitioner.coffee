@@ -33,9 +33,9 @@ define [
 
 			@ease 'cubic.easeOut'
 
-		ease: (func) ->
+		ease: (funcNameOrFirstNumOfCubicBezier, secondNum, thirdNum, fourthNum) ->
 
-			@_easing = easing.get func
+			@_easing = easing.get.apply easing, arguments
 
 			@
 

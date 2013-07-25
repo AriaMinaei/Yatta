@@ -22,4 +22,7 @@ expo.easeIn, 	expo.easeOut, 	expo.easeInOut
 circ.easeIn, 	circ.easeOut, 	circ.easeInOut
 sine.easeIn, 	sine.easeOut, 	sine.easeInOut
 
+# Numbers of a cubic bezier
+el.ease .17,.67,.63,1.31
+
 # Only transformations and Opacity transitions. Everything else jumps.

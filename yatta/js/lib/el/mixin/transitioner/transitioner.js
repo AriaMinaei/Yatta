@@ -22,8 +22,8 @@ define(['./mixin/fill_', './mixin/transforms_', '../../../utility/object', '../.
       this.ease('cubic.easeOut');
     }
 
-    Transitioner.prototype.ease = function(func) {
-      this._easing = easing.get(func);
+    Transitioner.prototype.ease = function(funcNameOrFirstNumOfCubicBezier, secondNum, thirdNum, fourthNum) {
+      this._easing = easing.get.apply(easing, arguments);
       return this;
     };
 

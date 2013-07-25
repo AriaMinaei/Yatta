@@ -123,9 +123,9 @@ define [
 
 		noTrans: -> do @disableTransition
 
-		ease: (fn) ->
+		ease: (funcNameOrFirstNumOfCubicBezier, secondNum, thirdNum, fourthNum) ->
 
-			@_transitioner.ease fn
+			@_transitioner.ease funcNameOrFirstNumOfCubicBezier, secondNum, thirdNum, fourthNum
 
 			@
 

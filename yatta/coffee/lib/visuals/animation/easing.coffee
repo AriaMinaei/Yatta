@@ -1,4 +1,4 @@
-define ->
+define ['./bezier'], (Bezier) ->
 
 	# Some standard easing curves for tween animations, originally from MooTools.
 	#
@@ -41,9 +41,17 @@ define ->
 
 				return func
 
+			else if arguments.length is 4
+
+				b = new Bezier arguments[0], arguments[1], arguments[2], arguments[3]
+
+				return (p) ->
+
+					b.solve p, Bezier.epsilon
+
 			unless typeof func is 'string'
 
-				throw Error "func should either be a function or a string, like qubic.easeOut"
+				throw Error "func should either be a function or a string, like cubic.easeOut"
 
 			parts = func.split '.'
 

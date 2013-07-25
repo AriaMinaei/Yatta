@@ -97,8 +97,8 @@ define(['./styleSetter/styleSetter', './transitioner/transitioner'], function(St
       return this.disableTransition();
     };
 
-    HasStyles_.prototype.ease = function(fn) {
-      this._transitioner.ease(fn);
+    HasStyles_.prototype.ease = function(funcNameOrFirstNumOfCubicBezier, secondNum, thirdNum, fourthNum) {
+      this._transitioner.ease(funcNameOrFirstNumOfCubicBezier, secondNum, thirdNum, fourthNum);
       return this;
     };
 
