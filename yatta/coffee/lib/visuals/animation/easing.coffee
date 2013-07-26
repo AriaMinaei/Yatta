@@ -41,7 +41,7 @@ define ['./bezier'], (Bezier) ->
 
 				return func
 
-			else if arguments.length is 4
+			else if arguments[1]? and arguments[2]? and arguments[3]?
 
 				b = new Bezier arguments[0], arguments[1], arguments[2], arguments[3]
 

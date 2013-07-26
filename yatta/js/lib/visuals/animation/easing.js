@@ -34,7 +34,7 @@ define(['./bezier'], function(Bezier) {
 
       if (func instanceof Function) {
         return func;
-      } else if (arguments.length === 4) {
+      } else if ((arguments[1] != null) && (arguments[2] != null) && (arguments[3] != null)) {
         b = new Bezier(arguments[0], arguments[1], arguments[2], arguments[3]);
         return function(p) {
           return b.solve(p, Bezier.epsilon);
