@@ -64,6 +64,16 @@ define(['../../../../visuals/typedMatrix', '../../../tools/css'], function(Typed
       return this;
     };
 
+    Transforms_.prototype.originToBottom = function() {
+      css.setTransformOrigin(this.node, "50% 100%");
+      return this;
+    };
+
+    Transforms_.prototype.originToTop = function() {
+      css.setTransformOrigin(this.node, "50% 0");
+      return this;
+    };
+
     return Transforms_;
 
   })();

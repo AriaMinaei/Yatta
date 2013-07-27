@@ -35,11 +35,7 @@ wait(500, function(){
 		clone
 		.trans(350)
 		.ease('linear')
-		// ... move the clone away from the circle now:
-		.moveX((v * cos(PI * 2 * i / steps)))
-		.moveY((v * sin(PI * 2 * i / steps)))
-		// ... and then every 100 milliseconds:
-		.every(350)
+		.everyAndNow(350)
 		// ... move the clone away from the circle:
 		.moveX((v * cos(PI * 2 * i / steps)))
 		.moveY((v * sin(PI * 2 * i / steps)))
@@ -61,6 +57,5 @@ wait(500, function(){
 
 display
 .trans(20000)
-.rotateZ(-PI * 2)
 .ease('linear')
-.every(20000).rotateZ(-PI * 2)
+.everyAndNow(20000).rotateZ(-PI * 2)

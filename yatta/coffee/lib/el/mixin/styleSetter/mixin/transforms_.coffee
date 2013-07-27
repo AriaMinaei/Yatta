@@ -73,6 +73,22 @@ define [
 
 			@
 
+		originToBottom: ->
+
+			css.setTransformOrigin @node,
+
+				"50% 100%"
+
+			@
+
+		originToTop: ->
+
+			css.setTransformOrigin @node,
+
+				"50% 0"
+
+			@
+
 	ClassPrototype = Transforms_.prototype
 
 	for methodName, method of TypedMatrix.prototype
