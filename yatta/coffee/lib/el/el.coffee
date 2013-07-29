@@ -328,13 +328,13 @@ define [
 
 			@_eventEnabledMethod arguments, (cb) =>
 
-				@node.addEventListener 'click', (e) =>
+				@node.addEventListener 'touchstart', (e) =>
 
 					e.preventDefault()
 
 					cb.call @
 
-				@node.addEventListener 'touchstart', (e) =>
+				@node.addEventListener 'click', (e) =>
 
 					e.preventDefault()
 
