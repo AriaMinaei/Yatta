@@ -268,6 +268,21 @@ define(['./mixin/hasStyles_', './mixin/interactions_', './mixin/reactive_', '../
       });
     };
 
+    El.prototype.onTap = function() {
+      var _this = this;
+
+      return this._eventEnabledMethod(arguments, function(cb) {
+        _this.node.addEventListener('click', function(e) {
+          e.preventDefault();
+          return cb.call(_this);
+        });
+        return _this.node.addEventListener('touchstart', function(e) {
+          e.preventDefault();
+          return cb.call(_this);
+        });
+      });
+    };
+
     El.prototype.onMouseOver = function() {
       var _this = this;
 

@@ -74,6 +74,38 @@ define(['../../../../visuals/typedMatrix', '../../../tools/css'], function(Typed
       return this;
     };
 
+    Transforms_.prototype.pivot = function(x, y) {
+      var _x, _y;
+
+      if (x == null) {
+        x = 0;
+      }
+      if (y == null) {
+        y = 0;
+      }
+      if (x === -1) {
+        _x = '0%';
+      } else if (x === 0) {
+        _x = '50%';
+      } else if (x === 1) {
+        _x = '100%';
+      } else {
+        throw Error("pivot() only takes -1, 0, and 1 for its arguments");
+      }
+      if (y === -1) {
+        _y = '0%';
+      } else if (y === 0) {
+        _y = '50%';
+      } else if (y === 1) {
+        _y = '100%';
+      } else {
+        throw Error("pivot() only takes -1, 0, and 1 for its arguments");
+      }
+      css.setTransformOrigin(this.node, "" + _x + " " + _y);
+      this.el._updateAxis();
+      return this;
+    };
+
     return Transforms_;
 
   })();

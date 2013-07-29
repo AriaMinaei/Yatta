@@ -324,6 +324,22 @@ define [
 
 					cb.call @
 
+		onTap: ->
+
+			@_eventEnabledMethod arguments, (cb) =>
+
+				@node.addEventListener 'click', (e) =>
+
+					e.preventDefault()
+
+					cb.call @
+
+				@node.addEventListener 'touchstart', (e) =>
+
+					e.preventDefault()
+
+					cb.call @
+
 		onMouseOver: ->
 
 			@_eventEnabledMethod arguments, (cb) =>

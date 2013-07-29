@@ -89,6 +89,50 @@ define [
 
 			@
 
+		pivot: (x = 0, y = 0) ->
+
+			if x is -1
+
+				_x = '0%'
+
+			else if x is 0
+
+				_x = '50%'
+
+			else if x is 1
+
+
+				_x = '100%'
+
+			else
+
+				throw Error "pivot() only takes -1, 0, and 1 for its arguments"
+
+			if y is -1
+
+				_y = '0%'
+
+			else if y is 0
+
+				_y = '50%'
+
+			else if y is 1
+
+
+				_y = '100%'
+
+			else
+
+				throw Error "pivot() only takes -1, 0, and 1 for its arguments"
+
+			css.setTransformOrigin @node,
+
+				"#{_x} #{_y}"
+
+			do @el._updateAxis
+
+			@
+
 	ClassPrototype = Transforms_.prototype
 
 	for methodName, method of TypedMatrix.prototype
